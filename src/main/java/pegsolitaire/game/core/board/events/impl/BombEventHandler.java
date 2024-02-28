@@ -1,7 +1,7 @@
-package pegsolitaire.core.board.events.impl;
+package pegsolitaire.game.core.board.events.impl;
 
-import pegsolitaire.core.board.commands.BoardCommand;
-import pegsolitaire.core.board.events.BoardEventHandler;
+import pegsolitaire.game.core.board.commands.BoardCommand;
+import pegsolitaire.game.core.board.events.BoardEventHandler;
 
 public class BombEventHandler implements BoardEventHandler {
     @Override

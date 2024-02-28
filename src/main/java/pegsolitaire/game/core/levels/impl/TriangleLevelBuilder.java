@@ -1,7 +1,7 @@
-package pegsolitaire.core.levels.impl;
+package pegsolitaire.game.core.levels.impl;
 
-import pegsolitaire.core.board.BoardCell;
-import pegsolitaire.core.levels.LevelBuilder;
+import pegsolitaire.game.core.board.BoardCell;
+import pegsolitaire.game.core.levels.LevelBuilder;
 
 public class TriangleLevelBuilder extends LevelBuilder {
     @Override
