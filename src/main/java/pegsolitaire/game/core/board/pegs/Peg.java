@@ -1,11 +1,11 @@
-package pegsolitaire.core.board.pegs;
+package pegsolitaire.game.core.board.pegs;
 
-import pegsolitaire.core.board.events.BoardEvent;
+import pegsolitaire.game.core.board.events.BoardEvent;
 
 import java.awt.*;
 
 public interface Peg {
-    Peg clone(Peg src);
+    Peg clone();
 
     void onMove(BoardEvent.Type type);
     BoardEvent.Type getMoveEvent();
