@@ -9,8 +9,7 @@ import pegsolitaire.game.core.board.events.BoardEventManager;
 import pegsolitaire.game.core.levels.LevelBuilder;
 import pegsolitaire.game.core.levels.impl.ClassicLevelBuilder;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -22,8 +21,10 @@ public class Game {
     @NonNull BoardEventManager eventManager;
     @NonNull LevelBuilder levelBuilder;
     Board board;
+    List<int[]> possibleMovesFromSelectedPosition;
     int[] selectedPegPosition;
     boolean started;
+
     public void start() {
         var cells = this.levelBuilder.build();
         this.board = Board.builder()
@@ -42,36 +43,61 @@ public class Game {
         }
     }
 
-    public boolean makeMove(int[] to) {
+    public boolean makeMove(int x, int y) {
         if (this.selectedPegPosition == null) {
             // TODO: log
             return false;
         }
 
-        return this.board.makeMove(selectedPegPosition, to);
-    }
-
-    public boolean undoMove() {
-        return this.board.undoMove();
-    }
-
-    /**
-     * @param position Position of main peg
-     * @return True if and only if peg on this position can be selected.
-     */
-    public boolean selectPeg(int[] position) {
-        BoardCell boardCell = board.getBoardCellAt(position);
-        if (boardCell != null &&
-            boardCell.getState().equals(BoardCell.State.OCCUPIED)) {
-            this.selectedPegPosition = position;
+        if (this.board.makeMove(selectedPegPosition, new int[]{x, y})) {
+            this.selectedPegPosition = new int[]{-1, -1};
             return true;
         }
 
         return false;
     }
 
+    public boolean undoMove() {
+        return this.board.undoMove();
+    }
+
+    public List<int[]> getPossibleMoves() {
+        if (this.selectedPegPosition == null) {
+            return Collections.emptyList();
+        }
+
+        if (this.possibleMovesFromSelectedPosition == null) {
+            this.possibleMovesFromSelectedPosition =
+                this.board.getPossibleMoves(selectedPegPosition[0], selectedPegPosition[1]);
+        }
+
+        return possibleMovesFromSelectedPosition;
+    }
+    /**
+     * @return True if and only if peg on this position can be selected.
+     */
+    public boolean selectPeg(int x, int y) {
+        BoardCell boardCell = board.getBoardCellAt(x, y);
+        if (boardCell != null &&
+            boardCell.getState().equals(BoardCell.State.OCCUPIED)) {
+            this.possibleMovesFromSelectedPosition = null;
+            this.selectedPegPosition = new int[]{x, y};
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isPegSelected() {
+        if (this.selectedPegPosition == null) {
+            return false;
+        }
+
+        return this.selectedPegPosition[0] != -1 && this.selectedPegPosition[1] != -1;
+    }
+
     public Set<Class<? extends LevelBuilder>> getLevelBuilders() {
-        Reflections reflections = new Reflections("pegsolitaire.game.core.levels");
+        var reflections = new Reflections("pegsolitaire.game.core.levels");
         return reflections.getSubTypesOf(LevelBuilder.class);
     }
 
