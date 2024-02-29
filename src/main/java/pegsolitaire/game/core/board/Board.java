@@ -10,6 +10,8 @@ import pegsolitaire.game.core.board.commands.impl.RemoveCommand;
 import pegsolitaire.game.core.board.events.BoardEventManager;
 import pegsolitaire.game.core.board.pegs.Peg;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 @Data
@@ -17,8 +19,12 @@ import java.util.Stack;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Board {
-    @Builder.Default Stack<BoardCommand> history = new Stack<>();
+    @NonNull
+    @Builder.Default
+    Stack<BoardCommand> history = new Stack<>();
+
     @NonFinal BoardCell[][] boardCells;
+
     BoardEventManager eventManager;
 
     public boolean makeMove(int[] from, int[] to) {
@@ -92,11 +98,39 @@ public class Board {
             throw new IllegalArgumentException("Position has to be in format [x, y]");
         }
 
-        if (position[0] >= boardCells[0].length || position[1] >= boardCells.length) {
+        if (position[0] <= 0 || position[1] <= 0 ||
+            position[0] >= boardCells[0].length || position[1] >= boardCells.length) {
             return null;
         }
 
         return boardCells[position[1]][position[0]];
+    }
+
+    public List<int[]> getPossibleMoves(int[] from) {
+        var fromCell = getBoardCellAt(from);
+        if (fromCell == null ||
+            !fromCell.getState().equals(BoardCell.State.OCCUPIED)) {
+            return new ArrayList<>();
+        }
+
+        List<List<Integer>> distances = new ArrayList<>();
+        distances.add(List.of(2, 0));
+        distances.add(List.of(-2, 0));
+        distances.add(List.of(0, -2));
+        distances.add(List.of(0, 2));
+
+        List<int[]> moves = new ArrayList<>();
+
+        for (List<Integer> distance : distances) {
+            var position = new int[] {distance.get(0) + from[0], distance.get(1) + from[1]};
+            System.out.println(position[0] + position[1]);
+            var bCellOn = getBoardCellAt(position);
+            if (bCellOn != null && bCellOn.getState().equals(BoardCell.State.EMPTY)) {
+                moves.add(position);
+            }
+        }
+
+        return moves;
     }
 
     public boolean isSolved() {
@@ -115,8 +149,8 @@ public class Board {
 
         return false;
     }
-    @Override
-    public String toString() {
-        return " ";
+
+    public void clearHistory() {
+        this.history.clear();
     }
 }

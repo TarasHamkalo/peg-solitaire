@@ -1,15 +1,22 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'org.tarashamkalo'
 version = '1.0'
 
+application {
+    mainClass = 'Main'
+}
 repositories {
     mavenCentral()
 }
 
 dependencies {
+
+    implementation 'com.github.kwhat:jnativehook:2.2.2'
+    implementation 'org.reflections:reflections:0.10.2'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
