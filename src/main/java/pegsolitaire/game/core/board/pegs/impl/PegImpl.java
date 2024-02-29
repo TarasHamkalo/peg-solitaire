@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import pegsolitaire.game.core.board.events.BoardEvent;
+import pegsolitaire.game.core.board.Color;
 import pegsolitaire.game.core.board.pegs.Peg;
-
-import java.awt.*;
 
 
 @Builder
@@ -16,7 +15,7 @@ public class PegImpl implements Peg {
     @Getter
     @NonNull
     @Builder.Default
-    Color color = Color.RED;
+    Color color = Color.BRIGHT_YELLOW;
 
     @NonNull
     @Builder.Default

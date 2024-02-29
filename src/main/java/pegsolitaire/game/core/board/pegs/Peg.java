@@ -1,8 +1,8 @@
 package pegsolitaire.game.core.board.pegs;
 
+import pegsolitaire.game.core.board.Color;
 import pegsolitaire.game.core.board.events.BoardEvent;
 
-import java.awt.*;
 
 public interface Peg {
     Peg clone();
