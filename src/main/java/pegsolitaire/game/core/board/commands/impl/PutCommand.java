@@ -8,7 +8,8 @@ import pegsolitaire.game.core.board.commands.BoardCommand;
 public class PutCommand extends BoardCommand {
     @Override
     public boolean exec() {
-        var putOntoCell = this.getBoard().getBoardCellAt(this.getFinalPosition());
+        var pos = this.getFinalPosition();
+        var putOntoCell = this.getBoard().getBoardCellAt(pos[0], pos[1]);
         if (isInvalid(putOntoCell)) {
             return false;
         }
@@ -19,7 +20,8 @@ public class PutCommand extends BoardCommand {
 
     @Override
     public boolean undo() {
-        var putOntoCell = this.getBoard().getBoardCellAt(this.getFinalPosition());
+        var pos = this.getFinalPosition();
+        var putOntoCell = this.getBoard().getBoardCellAt(pos[0], pos[1]);
         putOntoCell.setPeg(null);
         return true;
     }

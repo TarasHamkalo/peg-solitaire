@@ -10,22 +10,24 @@ import pegsolitaire.game.core.board.commands.impl.RemoveCommand;
 import pegsolitaire.game.core.board.events.BoardEventManager;
 import pegsolitaire.game.core.board.pegs.Peg;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Board {
+    public static final int MOVE_DISTANCE = 2;
+
     @NonNull
     @Builder.Default
     Stack<BoardCommand> history = new Stack<>();
 
-    @NonFinal BoardCell[][] boardCells;
-
+    @NonNull
     BoardEventManager eventManager;
+
+    @NonFinal
+    BoardCell[][] boardCells;
 
     public boolean makeMove(int[] from, int[] to) {
         // mark start of move
@@ -75,6 +77,7 @@ public class Board {
             }
 
             if (!command.undo()) {
+                // TODO: logging
                 System.err.println("History can not be undone, restart the game");
                 history.clear();
                 return false;
@@ -90,43 +93,33 @@ public class Board {
     }
 
     /**
-     * @param position Array in format [x, y]
-     * @return if position is valid, then nullable BoardCell on this position
+     * @return if coordinates are valid, then nullable BoardCell on this position
      */
-    public BoardCell getBoardCellAt(int[] position) {
-        if (position.length != 2) {
-            throw new IllegalArgumentException("Position has to be in format [x, y]");
-        }
-
-        if (position[0] <= 0 || position[1] <= 0 ||
-            position[0] >= boardCells[0].length || position[1] >= boardCells.length) {
+    public BoardCell getBoardCellAt(int x, int y) {
+        if (x < 0 || y < 0 ||
+            x >= boardCells[0].length || y >= boardCells.length) {
             return null;
         }
 
-        return boardCells[position[1]][position[0]];
+        return boardCells[y][x];
     }
 
-    public List<int[]> getPossibleMoves(int[] from) {
-        var fromCell = getBoardCellAt(from);
+    public List<int[]> getPossibleMoves(int x, int y) {
+        var fromCell = getBoardCellAt(x, y);
         if (fromCell == null ||
             !fromCell.getState().equals(BoardCell.State.OCCUPIED)) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
-        List<List<Integer>> distances = new ArrayList<>();
-        distances.add(List.of(2, 0));
-        distances.add(List.of(-2, 0));
-        distances.add(List.of(0, -2));
-        distances.add(List.of(0, 2));
-
         List<int[]> moves = new ArrayList<>();
+        for (Direction direction : Direction.values()) {
+            int dx = x + direction.getX() * Board.MOVE_DISTANCE;
+            int dy = y + direction.getY() * Board.MOVE_DISTANCE;
 
-        for (List<Integer> distance : distances) {
-            var position = new int[] {distance.get(0) + from[0], distance.get(1) + from[1]};
-            System.out.println(position[0] + position[1]);
-            var bCellOn = getBoardCellAt(position);
-            if (bCellOn != null && bCellOn.getState().equals(BoardCell.State.EMPTY)) {
-                moves.add(position);
+            var boardCellOn = getBoardCellAt(dx, dy);
+            if (boardCellOn != null &&
+                boardCellOn.getState().equals(BoardCell.State.EMPTY)) {
+                moves.add(new int[]{dx, dy});
             }
         }
 
@@ -134,11 +127,23 @@ public class Board {
     }
 
     public boolean isSolved() {
-        throw new IllegalStateException();
+        return Arrays.stream(this.boardCells)
+            .flatMap(Arrays::stream)
+            .parallel()
+            .filter(b -> b.getState().equals(BoardCell.State.OCCUPIED))
+            .count() == 1;
     }
 
-    public boolean isValidMove(int[] from, int[] to) {
-        throw new IllegalStateException();
+    public boolean hasAvailableMoves() {
+        for (int i = 0; i < boardCells.length; i++) {
+            for (int j = 0; j < boardCells[0].length; j++) {
+                if (!getPossibleMoves(i, j).isEmpty()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private boolean execCommand(@NonNull BoardCommand command) {

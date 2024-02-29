@@ -8,14 +8,24 @@ import pegsolitaire.game.core.board.pegs.Peg;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BoardCell {
+    @Getter
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+    public enum State {
+        OCCUPIED(Color.BLACK_BG), EMPTY(Color.BRIGHT_BLACK_BG), DESTROYED(Color.RED_BG);
+        Color color;
+    }
+
+    @NonNull State state;
+
     Peg peg;
-    State state;
+
 
     public BoardCell() {
         this.state = State.EMPTY;
     }
 
-    public BoardCell(@NonNull Peg peg) {
+    public BoardCell(Peg peg) {
         this.peg = peg;
         this.state = State.OCCUPIED;
     }
@@ -33,5 +43,4 @@ public class BoardCell {
         }
     }
 
-    public enum State {OCCUPIED, EMPTY, DESTROYED}
 }

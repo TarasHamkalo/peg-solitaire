@@ -8,7 +8,8 @@ import pegsolitaire.game.core.board.commands.BoardCommand;
 public class RemoveCommand extends BoardCommand {
     @Override
     public boolean exec() {
-        var removeFrom = this.getBoard().getBoardCellAt(this.getInitialPosition());
+        var pos =  this.getInitialPosition();
+        var removeFrom = this.getBoard().getBoardCellAt(pos[0], pos[1]);
         if (isInvalid(removeFrom)) {
             return false;
         }
@@ -20,7 +21,8 @@ public class RemoveCommand extends BoardCommand {
 
     @Override
     public boolean undo() {
-        var putOnCell = this.getBoard().getBoardCellAt(this.getFinalPosition());
+        var pos =  this.getFinalPosition();
+        var putOnCell = this.getBoard().getBoardCellAt(pos[0], pos[1]);
         putOnCell.setPeg(this.getPeg());
         this.setPeg(null);
         return true;
