@@ -7,11 +7,10 @@ import pegsolitaire.game.core.board.Board;
 import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.board.events.BoardEventManager;
 import pegsolitaire.game.core.levels.LevelBuilder;
-import pegsolitaire.game.core.levels.impl.ClassicLevelBuilder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -21,26 +20,36 @@ public class Game {
     @NonNull BoardEventManager eventManager;
     @NonNull LevelBuilder levelBuilder;
     Board board;
-    List<int[]> possibleMovesFromSelectedPosition;
     int[] selectedPegPosition;
     boolean started;
 
+    public static List<Class<? extends LevelBuilder>> getLevelBuilders() {
+        var reflections = new Reflections("pegsolitaire.game.core.levels");
+        return new ArrayList<>(reflections.getSubTypesOf(LevelBuilder.class));
+    }
+
     public void start() {
+        if (this.started) {
+            stop();
+        }
+
         var cells = this.levelBuilder.build();
         this.board = Board.builder()
             .boardCells(cells)
             .eventManager(this.eventManager)
             .build();
+
         this.started = true;
     }
 
     public void stop() {
         if (this.board != null) {
             this.board.clearHistory();
-            this.board.setBoardCells(this.levelBuilder.build());
-            this.selectedPegPosition = null;
-            this.started = false;
+            this.board.setBoardCells(null);
         }
+
+        this.selectedPegPosition = null;
+        this.started = false;
     }
 
     public boolean makeMove(int x, int y) {
@@ -50,7 +59,7 @@ public class Game {
         }
 
         if (this.board.makeMove(selectedPegPosition, new int[]{x, y})) {
-            this.selectedPegPosition = new int[]{-1, -1};
+            this.selectedPegPosition = null;
             return true;
         }
 
@@ -58,6 +67,7 @@ public class Game {
     }
 
     public boolean undoMove() {
+        this.selectedPegPosition = null;
         return this.board.undoMove();
     }
 
@@ -66,13 +76,9 @@ public class Game {
             return Collections.emptyList();
         }
 
-        if (this.possibleMovesFromSelectedPosition == null) {
-            this.possibleMovesFromSelectedPosition =
-                this.board.getPossibleMoves(selectedPegPosition[0], selectedPegPosition[1]);
-        }
-
-        return possibleMovesFromSelectedPosition;
+        return this.board.getPossibleMoves(selectedPegPosition[0], selectedPegPosition[1]);
     }
+
     /**
      * @return True if and only if peg on this position can be selected.
      */
@@ -80,7 +86,6 @@ public class Game {
         BoardCell boardCell = board.getBoardCellAt(x, y);
         if (boardCell != null &&
             boardCell.getState().equals(BoardCell.State.OCCUPIED)) {
-            this.possibleMovesFromSelectedPosition = null;
             this.selectedPegPosition = new int[]{x, y};
             return true;
         }
@@ -89,25 +94,6 @@ public class Game {
     }
 
     public boolean isPegSelected() {
-        if (this.selectedPegPosition == null) {
-            return false;
-        }
-
-        return this.selectedPegPosition[0] != -1 && this.selectedPegPosition[1] != -1;
-    }
-
-    public Set<Class<? extends LevelBuilder>> getLevelBuilders() {
-        var reflections = new Reflections("pegsolitaire.game.core.levels");
-        return reflections.getSubTypesOf(LevelBuilder.class);
-    }
-
-    public void setLevelBuilder(Class<? extends LevelBuilder> levelBuilderClass) {
-        try {
-            this.levelBuilder = levelBuilderClass.getDeclaredConstructor().newInstance();
-        } catch (Exception ignore) {
-            // TODO: log
-            System.err.println("Provided level builder does not have noArgsConstructor");
-            this.levelBuilder = new ClassicLevelBuilder();
-        }
+        return selectedPegPosition != null;
     }
 }
