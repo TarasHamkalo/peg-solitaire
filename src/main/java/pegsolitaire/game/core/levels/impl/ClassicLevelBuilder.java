@@ -9,16 +9,16 @@ import pegsolitaire.game.core.levels.LevelBuilder;
 public class ClassicLevelBuilder extends LevelBuilder {
     @Override
     public BoardCell[][] build() {
-        Peg peg = PegImpl.builder().build();
+        Peg peg = new PegImpl();
         BoardCell[][] boardCells = new BoardCell[7][7];
         for (int i = 0; i < 7; i++) {
             if (i < 2 || i > 4) {
                 for (int j = 2; j < 5; j++) {
-                    boardCells[i][j] = new BoardCell(peg.clone());
+                    boardCells[i][j] = new BoardCell(peg.clonePeg());
                 }
             } else {
                 for (int j = 0; j < 7; j++) {
-                    boardCells[i][j] = new BoardCell(peg.clone());
+                    boardCells[i][j] = new BoardCell(peg.clonePeg());
                 }
             }
         }

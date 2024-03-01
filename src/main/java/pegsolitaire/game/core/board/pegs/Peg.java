@@ -5,7 +5,7 @@ import pegsolitaire.game.core.board.events.BoardEvent;
 
 
 public interface Peg {
-    Peg clone();
+    Peg clonePeg();
 
     void onMove(BoardEvent.Type type);
     BoardEvent.Type getMoveEvent();

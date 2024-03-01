@@ -1,15 +1,13 @@
 package pegsolitaire.game.core.board.pegs.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import pegsolitaire.game.core.board.events.BoardEvent;
 import pegsolitaire.game.core.board.Color;
 import pegsolitaire.game.core.board.pegs.Peg;
 
 
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class PegImpl implements Peg {
     @Getter
@@ -32,7 +30,7 @@ public class PegImpl implements Peg {
     }
 
     @Override
-    public Peg clone() {
+    public Peg clonePeg() {
         return new PegImpl(this);
     }
 
@@ -54,5 +52,10 @@ public class PegImpl implements Peg {
     @Override
     public BoardEvent.Type getRemoveEvent() {
         return this.removeEventType;
+    }
+
+    @Override
+    public String toString() {
+        return "o";
     }
 }
