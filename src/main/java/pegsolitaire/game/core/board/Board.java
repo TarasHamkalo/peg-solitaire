@@ -12,6 +12,7 @@ import pegsolitaire.game.core.board.pegs.Peg;
 
 import java.util.*;
 
+// TODO: destroy cell
 @Data
 @Builder
 @AllArgsConstructor
@@ -30,6 +31,11 @@ public class Board {
     BoardCell[][] boardCells;
 
     public boolean makeMove(int[] from, int[] to) {
+        if (Math.abs(from[0] - to[0]) < MOVE_DISTANCE &&
+            Math.abs(from[1] - to[1]) < MOVE_DISTANCE) {
+            return false;
+        }
+
         // mark start of move
         execCommand(MoveCommand.builder()
             .board(this)
@@ -39,6 +45,15 @@ public class Board {
         );
 
         if (!removePeg(from)) {
+            return false;
+        }
+
+        int[] middle = new int[]{
+            (from[0] + to[0]) / 2, (from[1] + to[1]) / 2
+        };
+
+        if (!removePeg(middle)) {
+            undoMove();
             return false;
         }
 
@@ -78,7 +93,6 @@ public class Board {
 
             if (!command.undo()) {
                 // TODO: logging
-                System.err.println("History can not be undone, restart the game");
                 history.clear();
                 return false;
             }
@@ -115,9 +129,16 @@ public class Board {
         for (Direction direction : Direction.values()) {
             int dx = x + direction.getX() * Board.MOVE_DISTANCE;
             int dy = y + direction.getY() * Board.MOVE_DISTANCE;
+            int mx = x + direction.getX() * Board.MOVE_DISTANCE / 2;
+            int my = y + direction.getY() * Board.MOVE_DISTANCE / 2;
 
             var boardCellOn = getBoardCellAt(dx, dy);
-            if (boardCellOn != null &&
+            var boardCellMiddle = getBoardCellAt(mx, my);
+            if (boardCellOn == null || boardCellMiddle == null) {
+                continue;
+            }
+
+            if (boardCellMiddle.getState().equals(BoardCell.State.OCCUPIED) &&
                 boardCellOn.getState().equals(BoardCell.State.EMPTY)) {
                 moves.add(new int[]{dx, dy});
             }

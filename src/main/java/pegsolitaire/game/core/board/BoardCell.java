@@ -43,4 +43,15 @@ public class BoardCell {
         }
     }
 
+    @Override
+    public String toString() {
+        var bg = this.state.getColor().getCode();
+        if (this.peg != null) {
+            return String.format(
+                "%s%s %s %s", bg, this.peg.getColor().getCode(), this.peg, Color.RESET
+            );
+        }
+
+        return bg + " . " + Color.RESET;
+    }
 }
