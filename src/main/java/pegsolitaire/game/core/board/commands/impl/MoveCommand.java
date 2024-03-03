@@ -11,15 +11,15 @@ public class MoveCommand extends BoardCommand {
     public boolean exec() {
         int[] from = this.getInitialPosition();
         int[] to = this.getFinalPosition();
+        var board = this.getBoard();
+        if (Math.abs(from[0] - to[0]) != Board.MOVE_DISTANCE &&
+            Math.abs(from[1] - to[1]) != Board.MOVE_DISTANCE) {
+            return false;
+        }
+
         int[] middle = new int[]{
             (from[0] + to[0]) / 2, (from[1] + to[1]) / 2
         };
-
-        var board = this.getBoard();
-        if (Math.abs(from[0] - to[0]) < Board.MOVE_DISTANCE &&
-            Math.abs(from[1] - to[1]) < Board.MOVE_DISTANCE) {
-            return false;
-        }
 
         if (!board.removePeg(from) ||
             !board.removePeg(middle) ||
