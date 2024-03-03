@@ -34,6 +34,10 @@ public class ConsoleUIImpl implements ConsoleUI {
         GlobalScreen.registerNativeHook();
     }
 
+    private static void positionAtScreen(int x, int y) {
+        System.out.printf("\033[%d;%dH", y, x);
+    }
+
     public void start(@NonNull Game game) {
         this.game = game;
         this.keyboardListener = new KeyboardListener(this);
@@ -56,11 +60,7 @@ public class ConsoleUIImpl implements ConsoleUI {
     @Override
     public void stop() {
         if (this.game != null && this.game.isStarted()) {
-            var boardCells = this.game.getBoard().getBoardCells();
-            long pegsCount = this.game.getBoard().getPegsCount();
             this.game.stop();
-            showEndScreen(boardCells, (int) pegsCount);
-//            drawPrompt();
         }
 
         GlobalScreen.removeNativeKeyListener(this.keyboardListener);
@@ -137,16 +137,18 @@ public class ConsoleUIImpl implements ConsoleUI {
 
         var boardCells = this.game.getBoard().getBoardCells();
         var res = this.game.makeMove(x, y);
-        if (!this.game.getBoard().hasAvailableMoves()) {
-            stop();
-            return true;
-        }
-
         saveCursor();
 
         this.boardSelections = new int[boardCells.length][boardCells[0].length];
         System.out.print("\033[H");
         printBoard(boardCells);
+
+        if (!this.game.getBoard().hasAvailableMoves()) {
+            showResultScreen();
+            restoreCursor();
+            stop();
+            return true;
+        }
 
         restoreCursor();
         return res;
@@ -198,24 +200,18 @@ public class ConsoleUIImpl implements ConsoleUI {
 
     }
 
-    private static void positionAtScreen(int x, int y) {
-        System.out.printf("\033[%d;%dH", y, x);
-    }
-
     private int[] logicalXYToScreen(int x, int y) {
         return new int[]{
             3 * (x + 1) - 2 + BOARD_OFFSET_X, y + 1 + BOARD_OFFSET_Y
         };
     }
 
-    private void showEndScreen(BoardCell[][] boardCells, int pegsCount) {
-        System.out.print("\033[H");
-        clearScreen();
-        printBoard(boardCells);
+    private void showResultScreen() {
+        long pegsCount = this.game.getBoard().getPegsCount();
         if (pegsCount == 1) {
             System.out.println("You have solved the game.\n");
         } else {
-            System.out.printf("You have failed with pegs %d left.\n", pegsCount);
+            System.out.printf("You have failed with %d pegs left.\n", pegsCount);
         }
 
     }

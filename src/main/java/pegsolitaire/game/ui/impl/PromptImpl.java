@@ -175,6 +175,7 @@ public class PromptImpl implements Prompt {
 
     public void stop() {
         this.consoleUI.stop();
+        clearPrompt();
     }
 
     public void help() {
