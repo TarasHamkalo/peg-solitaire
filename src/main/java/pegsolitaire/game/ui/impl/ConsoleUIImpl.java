@@ -11,7 +11,6 @@ import pegsolitaire.game.core.Game;
 import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.board.Color;
 import pegsolitaire.game.ui.ConsoleUI;
-import pegsolitaire.game.ui.KeyboardListener;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package pegsolitaire.game.ui;
+package pegsolitaire.game.ui.impl;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import pegsolitaire.game.core.board.Direction;
+import pegsolitaire.game.ui.ConsoleUI;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KeyboardListener implements NativeKeyListener {
