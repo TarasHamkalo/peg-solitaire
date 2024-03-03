@@ -7,6 +7,7 @@ public class Main {
     @SneakyThrows
     public static void main(String[] args) {
         ConsoleUI ui = new ConsoleUIImpl();
-        new PromptImpl(ui).play();
+//        System.out.print("\033[?1049h");
+        new PromptImpl(ui).begin();
     }
 }

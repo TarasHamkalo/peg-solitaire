@@ -34,10 +34,6 @@ public class ConsoleUIImpl implements ConsoleUI {
         GlobalScreen.registerNativeHook();
     }
 
-    private static void positionAtScreen(int x, int y) {
-        System.out.printf("\033[%d;%dH", y, x);
-    }
-
     public void start(@NonNull Game game) {
         this.game = game;
         this.keyboardListener = new KeyboardListener(this);
@@ -59,16 +55,24 @@ public class ConsoleUIImpl implements ConsoleUI {
 
     @Override
     public void stop() {
+        if (this.game != null && this.game.isStarted()) {
+            var boardCells = this.game.getBoard().getBoardCells();
+            long pegsCount = this.game.getBoard().getPegsCount();
+            this.game.stop();
+            showEndScreen(boardCells, (int) pegsCount);
+//            drawPrompt();
+        }
+
         GlobalScreen.removeNativeKeyListener(this.keyboardListener);
-        this.game.stop();
-        clearScreen();
         showCursor();
     }
 
     @Override
     @SneakyThrows
     public void exit() {
-        stop();
+        if (this.game != null && this.game.isStarted()) {
+            stop();
+        }
         GlobalScreen.unregisterNativeHook();
     }
 
@@ -133,6 +137,11 @@ public class ConsoleUIImpl implements ConsoleUI {
 
         var boardCells = this.game.getBoard().getBoardCells();
         var res = this.game.makeMove(x, y);
+        if (!this.game.getBoard().hasAvailableMoves()) {
+            stop();
+            return true;
+        }
+
         saveCursor();
 
         this.boardSelections = new int[boardCells.length][boardCells[0].length];
@@ -161,7 +170,6 @@ public class ConsoleUIImpl implements ConsoleUI {
         Screen positioning and printing
     */
     public void printBoard(@NonNull BoardCell[][] cells) {
-
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 System.out.print((cells[i][j] == null) ? "   " : cells[i][j]);
@@ -190,19 +198,41 @@ public class ConsoleUIImpl implements ConsoleUI {
 
     }
 
+    private static void positionAtScreen(int x, int y) {
+        System.out.printf("\033[%d;%dH", y, x);
+    }
+
     private int[] logicalXYToScreen(int x, int y) {
         return new int[]{
             3 * (x + 1) - 2 + BOARD_OFFSET_X, y + 1 + BOARD_OFFSET_Y
         };
     }
 
+    private void showEndScreen(BoardCell[][] boardCells, int pegsCount) {
+        System.out.print("\033[H");
+        clearScreen();
+        printBoard(boardCells);
+        if (pegsCount == 1) {
+            System.out.println("You have solved the game.\n");
+        } else {
+            System.out.printf("You have failed with pegs %d left.\n", pegsCount);
+        }
+
+    }
+
+    @Override
+    public void drawPrompt() {
+        positionPrompt();
+        System.out.print("~> ");
+    }
+
     @Override
     public void positionPrompt() {
         if (this.game != null && this.game.isStarted()) {
             int propmtY = this.game.getBoard().getBoardCells().length + BOARD_OFFSET_Y + 2;
-            positionAtScreen(0, propmtY);
+            positionAtScreen(1, propmtY);
         } else {
-            positionAtScreen(0, 1);
+            positionAtScreen(1, 1);
         }
     }
 
@@ -223,8 +253,8 @@ public class ConsoleUIImpl implements ConsoleUI {
     }
 
     public void clearScreen() {
-        System.out.print("\033[2J");
         System.out.print("\033[0H");
+        System.out.print("\033[2J");
     }
 
 }

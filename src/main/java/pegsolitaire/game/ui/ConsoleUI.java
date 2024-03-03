@@ -8,6 +8,8 @@ import pegsolitaire.game.core.board.BoardCell;
 public interface ConsoleUI {
     void printBoard(@NonNull BoardCell[][] cells);
 
+    void drawPrompt();
+
     void positionPrompt();
 
     void clearScreen();
