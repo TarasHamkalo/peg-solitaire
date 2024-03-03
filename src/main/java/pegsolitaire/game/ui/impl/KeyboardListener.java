@@ -25,12 +25,12 @@ public class KeyboardListener implements NativeKeyListener {
             }
 
             case NativeKeyEvent.VC_UP: {
-                console.adjustCursor(Direction.SOUTH.getX(), Direction.SOUTH.getY());
+                console.adjustCursor(Direction.NORTH.getX(), Direction.NORTH.getY());
                 break;
             }
 
             case NativeKeyEvent.VC_DOWN: {
-                console.adjustCursor(Direction.NORTH.getX(), Direction.NORTH.getY());
+                console.adjustCursor(Direction.SOUTH.getX(), Direction.SOUTH.getY());
                 break;
             }
 
@@ -49,5 +49,4 @@ public class KeyboardListener implements NativeKeyListener {
             }
         }
     }
-
 }
