@@ -2,6 +2,7 @@ package pegsolitaire.game.ui.impl;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import pegsolitaire.game.core.Game;
 import pegsolitaire.game.core.board.events.BoardEvent;
@@ -15,11 +16,9 @@ import pegsolitaire.game.core.levels.impl.ClassicLevelBuilder;
 import pegsolitaire.game.ui.ConsoleUI;
 import pegsolitaire.game.ui.Prompt;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-//import java.util.
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PromptImpl implements Prompt {
@@ -30,7 +29,7 @@ public class PromptImpl implements Prompt {
         Map.entry(BoardEvent.Type.TRIVIAL_REMOVE, (command) -> {})
     );
 
-    //    private static final Pattern BASE_CMDS = Pattern.compile("help|start|stop|undo|exit");
+    private static final Pattern BASE_CMDS = Pattern.compile("help|start|stop|undo|exit");
     private static final Pattern LEVELS_CDM = Pattern.compile("levels(\s(?<args>[0-9]))?");
     private static final Pattern PEGS_CDM = Pattern.compile("pegs(\s(?<args>([0-9],?)+))?");
 
@@ -43,7 +42,7 @@ public class PromptImpl implements Prompt {
     List<Class<? extends LevelBuilder>> levelBuilders;
     boolean running;
 
-    public PromptImpl(ConsoleUI consoleUI) throws FileNotFoundException {
+    public PromptImpl(ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;
         this.levelBuilders = Game.getLevelBuilders();
         this.selectedPegEvents = new ArrayList<>(
@@ -56,25 +55,23 @@ public class PromptImpl implements Prompt {
         this.running = true;
     }
 
-    public void play() {
+    @Override
+    public void begin() {
         consoleUI.clearScreen();
         while (running) {
-            draw();
+            consoleUI.drawPrompt();
             parseInput();
         }
     }
 
     @Override
-    public void draw() {
-        consoleUI.positionPrompt();
-        System.out.print("\033[0K~> ");
-    }
-
-    @Override
+    @SneakyThrows
     public void parseInput() {
         var line = scanner.nextLine().trim().toLowerCase(Locale.ENGLISH);
         clearPrompt();
-        if (invokeBaseCMD(line) || this.game != null && this.game.isStarted()) {
+        var baseMatcher = BASE_CMDS.matcher(line);
+        if (baseMatcher.matches()) {
+            this.getClass().getMethod(line).invoke(this);
             return;
         }
 
@@ -97,7 +94,7 @@ public class PromptImpl implements Prompt {
             }
 
         } else {
-            System.out.printf("Invalid input %s.\n", line);
+            System.out.printf("\nInvalid input %s.\n", line);
         }
     }
 
@@ -114,9 +111,8 @@ public class PromptImpl implements Prompt {
     }
 
     public void displayPegEvents() {
-        System.out.println("\nPeg event types present:");
         var events = BoardEvent.Type.values();
-        System.out.println("In use:");
+        System.out.println("\nIn use:");
         for (int i = 0; i < selectedPegEvents.size(); i++) {
             System.out.printf("%4d. %s\n", i, selectedPegEvents.get(i).toString());
         }
@@ -127,20 +123,11 @@ public class PromptImpl implements Prompt {
         }
     }
 
-    private boolean invokeBaseCMD(String line) {
-        try {
-            this.getClass().getMethod(line).invoke(this);
-            return true;
-        } catch (ReflectiveOperationException ignore) {
-            return false;
-        }
-    }
-
     public void levelsCmd(int level) {
         if (level == -1) {
             System.out.println("\nChoose level builder to use:");
             for (int i = 0; i < this.levelBuilders.size(); i++) {
-                System.out.printf("%d. %s\n", i, this.levelBuilders.get(i).getSimpleName());
+                System.out.printf("%4c%d. %s\n", ' ', i, this.levelBuilders.get(i).getSimpleName());
             }
 
         } else {
@@ -148,6 +135,7 @@ public class PromptImpl implements Prompt {
                 this.selectedLevel =
                     levelBuilders.get(level).getDeclaredConstructor().newInstance();
             } catch (Exception ignore) {
+                return;
             }
 
             System.out.printf(
@@ -191,19 +179,19 @@ public class PromptImpl implements Prompt {
 
     public void help() {
         System.out.println("""
-            \nUsage info:
-                help: shows this information
-                start: starts the game
-                stop: stops the current game;
-                undo: undo previous move
-                exit: exits the program
-                pegs {1,2,3...}:
-                    without parameters: displays peg types
-                    with parameters: selects types
-                levels {n}:
-                    without parameter: displays levels
-                    with parameter: selects types
-                """);
+        \nUsage info:
+            help: shows this information
+            start: starts the game
+            stop: stops the current game;
+            undo: undo previous move
+            exit: exits the program
+            pegs {1,2,3...}:
+                without parameters: displays peg types
+                with parameters: selects types
+            levels {n}:
+                without parameter: displays levels
+                with parameter: selects types
+        """);
     }
 
     public void clearPrompt() {
