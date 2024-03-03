@@ -12,10 +12,6 @@ import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.board.Color;
 import pegsolitaire.game.ui.ConsoleUI;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsoleUIImpl implements ConsoleUI {
@@ -28,16 +24,18 @@ public class ConsoleUIImpl implements ConsoleUI {
     private static final int BOARD_OFFSET_Y = 0;
     private static final int BOARD_OFFSET_X = 0;
 
-    PrintStream output = new PrintStream(new FileOutputStream("terminal.out"));
-    KeyboardListener keyboardListener;
     Game game;
-    // 0 none, 1 possible move, 2 selected
+    KeyboardListener keyboardListener;
     int[][] boardSelections;
     int x;
     int y;
 
-    public ConsoleUIImpl() throws NativeHookException, FileNotFoundException {
+    public ConsoleUIImpl() throws NativeHookException {
         GlobalScreen.registerNativeHook();
+    }
+
+    private static void positionAtScreen(int x, int y) {
+        System.out.printf("\033[%d;%dH", y, x);
     }
 
     public void start(@NonNull Game game) {
@@ -48,8 +46,8 @@ public class ConsoleUIImpl implements ConsoleUI {
         this.game.start();
 
         var cells = this.game.getBoard().getBoardCells();
+
         this.boardSelections = new int[cells.length][cells[0].length];
-        output.println(boardSelections[0].length);
         this.x = (cells[0].length) / 2;
         this.y = cells.length / 2;
 
@@ -66,7 +64,6 @@ public class ConsoleUIImpl implements ConsoleUI {
         System.out.print("\033[?25h");
         clearScreen();
     }
-
 
     @Override
     @SneakyThrows
@@ -87,7 +84,6 @@ public class ConsoleUIImpl implements ConsoleUI {
             var currentCell = this.game.getBoard().getBoardCellAt(this.x, this.y);
 
             saveCursor();
-            output.println(this.x + " " + this.y);
 
             printCellAt(currentCell, this.x, this.y);
             printCursor(dx, dy, MAIN_CURSOR);
@@ -98,7 +94,6 @@ public class ConsoleUIImpl implements ConsoleUI {
             this.y = dy;
         }
     }
-
 
     private void printCellAt(BoardCell cell, int x, int y) {
         int[] pos = logicalXYToScreen(this.x, this.y);
@@ -138,7 +133,6 @@ public class ConsoleUIImpl implements ConsoleUI {
 
         var boardCells = this.game.getBoard().getBoardCells();
         var res = this.game.makeMove(x, y);
-        output.println(res);
         saveCursor();
 
         this.boardSelections = new int[boardCells.length][boardCells[0].length];
@@ -180,6 +174,8 @@ public class ConsoleUIImpl implements ConsoleUI {
     private void printCursor(int x, int y, Color color) {
         int[] position = logicalXYToScreen(x, y);
         char[] brackets = {'[', ']'};
+        var boardCell = this.game.getBoard().getBoardCellAt(x, y);
+        System.out.print(boardCell.getState().getColor());
         System.out.print(color);
         if (POSSIBLE_MOVE_CURSOR.equals(color)) {
             brackets = new char[]{'(', ')'};
@@ -192,10 +188,6 @@ public class ConsoleUIImpl implements ConsoleUI {
         positionAtScreen(position[0] + 2, position[1]);
         System.out.print(brackets[1] + Color.RESET.getCode());
 
-    }
-
-    private static void positionAtScreen(int x, int y) {
-        System.out.printf("\033[%d;%dH", y, x);
     }
 
     private int[] logicalXYToScreen(int x, int y) {
