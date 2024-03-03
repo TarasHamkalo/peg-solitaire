@@ -7,6 +7,7 @@ import pegsolitaire.game.core.board.commands.BoardCommand;
 import pegsolitaire.game.core.board.commands.impl.MoveCommand;
 import pegsolitaire.game.core.board.commands.impl.PutCommand;
 import pegsolitaire.game.core.board.commands.impl.RemoveCommand;
+import pegsolitaire.game.core.board.commands.impl.UndoMarkerCommand;
 import pegsolitaire.game.core.board.events.BoardEventManager;
 import pegsolitaire.game.core.board.pegs.Peg;
 
@@ -31,38 +32,21 @@ public class Board {
     BoardCell[][] boardCells;
 
     public boolean makeMove(int[] from, int[] to) {
-        if (Math.abs(from[0] - to[0]) < MOVE_DISTANCE &&
-            Math.abs(from[1] - to[1]) < MOVE_DISTANCE) {
-            return false;
-        }
-
         // mark start of move
-        execCommand(MoveCommand.builder()
+        execCommand(UndoMarkerCommand.builder()
             .board(this)
             .initialPosition(from)
             .finalPosition(to)
             .build()
         );
 
-        if (!removePeg(from)) {
-            return false;
-        }
 
-        int[] middle = new int[]{
-            (from[0] + to[0]) / 2, (from[1] + to[1]) / 2
-        };
-
-        if (!removePeg(middle)) {
-            undoMove();
-            return false;
-        }
-
-        if (!putPeg(history.peek().getPeg(), to)) {
-            undoMove();
-            return false;
-        }
-
-        return true;
+        return execCommand(MoveCommand.builder()
+            .board(this)
+            .initialPosition(from)
+            .finalPosition(to)
+            .build()
+        );
     }
 
     public boolean putPeg(Peg peg, int[] onto) {
@@ -87,7 +71,7 @@ public class Board {
     public boolean undoMove() {
         while (!history.isEmpty()) {
             var command = history.pop();
-            if (command instanceof MoveCommand) {
+            if (command instanceof UndoMarkerCommand) {
                 break;
             }
 
