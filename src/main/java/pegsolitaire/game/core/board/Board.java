@@ -11,6 +11,9 @@ import pegsolitaire.game.core.board.commands.impl.UndoMarkerCommand;
 import pegsolitaire.game.core.board.events.BoardEventManager;
 import pegsolitaire.game.core.board.pegs.Peg;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 // TODO: destroy cell
@@ -23,6 +26,7 @@ public class Board {
 
     @NonNull
     @Builder.Default
+    @ToString.Exclude
     Stack<BoardCommand> history = new Stack<>();
 
     @NonNull
@@ -111,14 +115,16 @@ public class Board {
 
         List<int[]> moves = new ArrayList<>();
         for (Direction direction : Direction.values()) {
+//        Arrays.stream(Direction.values()).parallel().forEach(direction -> {
             int dx = x + direction.getX() * Board.MOVE_DISTANCE;
             int dy = y + direction.getY() * Board.MOVE_DISTANCE;
-            int mx = x + direction.getX() * Board.MOVE_DISTANCE / 2;
-            int my = y + direction.getY() * Board.MOVE_DISTANCE / 2;
-
+            int mx = (x + dx) / 2;
+            int my = (y + dy) / 2;
             var boardCellOn = getBoardCellAt(dx, dy);
             var boardCellMiddle = getBoardCellAt(mx, my);
+
             if (boardCellOn == null || boardCellMiddle == null) {
+//                return;
                 continue;
             }
 
@@ -132,17 +138,22 @@ public class Board {
     }
 
     public boolean isSolved() {
+        return getPegsCount() == 1;
+    }
+
+    public long getPegsCount() {
         return Arrays.stream(this.boardCells)
             .flatMap(Arrays::stream)
             .parallel()
+            .filter(Objects::nonNull)
             .filter(b -> b.getState().equals(BoardCell.State.OCCUPIED))
-            .count() == 1;
+            .count();
     }
 
     public boolean hasAvailableMoves() {
         for (int i = 0; i < boardCells.length; i++) {
             for (int j = 0; j < boardCells[0].length; j++) {
-                if (!getPossibleMoves(i, j).isEmpty()) {
+                if (!getPossibleMoves(j, i).isEmpty()) {
                     return true;
                 }
             }
@@ -163,4 +174,5 @@ public class Board {
     public void clearHistory() {
         this.history.clear();
     }
+
 }
