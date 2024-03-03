@@ -51,7 +51,7 @@ public class ConsoleUIImpl implements ConsoleUI {
         this.x = (cells[0].length) / 2;
         this.y = cells.length / 2;
 
-        System.out.print("\033[?25l");
+        hideCursor();
         clearScreen();
         printBoard(cells);
         printCursor(x, y, MAIN_CURSOR);
@@ -61,8 +61,8 @@ public class ConsoleUIImpl implements ConsoleUI {
     public void stop() {
         GlobalScreen.removeNativeKeyListener(this.keyboardListener);
         this.game.stop();
-        System.out.print("\033[?25h");
         clearScreen();
+        showCursor();
     }
 
     @Override
@@ -212,6 +212,14 @@ public class ConsoleUIImpl implements ConsoleUI {
 
     private void saveCursor() {
         System.out.print("\033[s");
+    }
+
+    public void hideCursor() {
+        System.out.print("\033[?25l");
+    }
+
+    public void showCursor() {
+        System.out.print("\033[?25h");
     }
 
     public void clearScreen() {
