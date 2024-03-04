@@ -7,9 +7,9 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import pegsolitaire.game.core.Game;
-import pegsolitaire.game.core.board.BoardCell;
-import pegsolitaire.game.core.board.Color;
+import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.Color;
+import pegsolitaire.game.core.game.Game;
 import pegsolitaire.game.ui.ConsoleUI;
 
 @Data
@@ -21,9 +21,8 @@ public class ConsoleUIImpl implements ConsoleUI {
 
     private static final int POSSIBLE_MOVE_CODE = 1;
     private static final int SELECTED_CURSOR_CODE = 2;
-    private static final int BOARD_OFFSET_Y = 0;
-    private static final int BOARD_OFFSET_X = 0;
 
+    @NonNull
     Game game;
     KeyboardListener keyboardListener;
     int[][] boardSelections;
@@ -34,26 +33,21 @@ public class ConsoleUIImpl implements ConsoleUI {
         GlobalScreen.registerNativeHook();
     }
 
-    private static void positionAtScreen(int x, int y) {
-        System.out.printf("\033[%d;%dH", y, x);
-    }
-
     public void start(@NonNull Game game) {
         this.game = game;
         this.keyboardListener = new KeyboardListener(this);
         GlobalScreen.addNativeKeyListener(this.keyboardListener);
 
         this.game.start();
+        var boardCells = this.game.getBoard().getBoardCells();
 
-        var cells = this.game.getBoard().getBoardCells();
-
-        this.boardSelections = new int[cells.length][cells[0].length];
-        this.x = (cells[0].length) / 2;
-        this.y = cells.length / 2;
+        this.boardSelections = new int[boardCells.length][boardCells[0].length];
+        this.x = (boardCells[0].length) / 2;
+        this.y = boardCells.length / 2;
 
         hideCursor();
         clearScreen();
-        printBoard(cells);
+        printBoard(boardCells);
         printCursor(x, y, MAIN_CURSOR);
     }
 
@@ -73,6 +67,7 @@ public class ConsoleUIImpl implements ConsoleUI {
         if (this.game != null && this.game.isStarted()) {
             stop();
         }
+
         GlobalScreen.unregisterNativeHook();
     }
 
@@ -96,17 +91,6 @@ public class ConsoleUIImpl implements ConsoleUI {
 
             this.x = dx;
             this.y = dy;
-        }
-    }
-
-    private void printCellAt(BoardCell cell, int x, int y) {
-        int[] pos = logicalXYToScreen(this.x, this.y);
-        positionAtScreen(pos[0], pos[1]);
-        System.out.print(cell);
-        if (this.boardSelections[y][x] == POSSIBLE_MOVE_CODE) {
-            printCursor(x, y, POSSIBLE_MOVE_CURSOR);
-        } else if (this.boardSelections[y][x] == SELECTED_CURSOR_CODE) {
-            printCursor(x, y, SELECTED_CURSOR);
         }
     }
 
@@ -140,11 +124,11 @@ public class ConsoleUIImpl implements ConsoleUI {
         saveCursor();
 
         this.boardSelections = new int[boardCells.length][boardCells[0].length];
-        System.out.print("\033[H");
+        positionAtScreen(1, 1);
         printBoard(boardCells);
 
         if (!this.game.getBoard().hasAvailableMoves()) {
-            showResultScreen();
+            printResult();
             restoreCursor();
             stop();
             return true;
@@ -158,12 +142,15 @@ public class ConsoleUIImpl implements ConsoleUI {
     public void undo() {
         if (this.game != null && this.game.isStarted()) {
             this.game.undoMove();
-            saveCursor();
             var boardCells = this.game.getBoard().getBoardCells();
             this.boardSelections = new int[boardCells.length][boardCells[0].length];
-            System.out.print("\033[H");
+
+            saveCursor();
+
+            positionAtScreen(1, 1);
             printBoard(boardCells);
             printCursor(this.x, this.y, MAIN_CURSOR);
+
             restoreCursor();
         }
     }
@@ -181,32 +168,47 @@ public class ConsoleUIImpl implements ConsoleUI {
         }
     }
 
+    private void printCellAt(BoardCell cell, int x, int y) {
+        int[] logicalXY = logicalXYToScreen(this.x, this.y);
+        positionAtScreen(logicalXY[0], logicalXY[1]);
+        System.out.print(cell);
+        if (this.boardSelections[y][x] == POSSIBLE_MOVE_CODE) {
+            printCursor(x, y, POSSIBLE_MOVE_CURSOR);
+        } else if (this.boardSelections[y][x] == SELECTED_CURSOR_CODE) {
+            printCursor(x, y, SELECTED_CURSOR);
+        }
+    }
+
+    private static void positionAtScreen(int x, int y) {
+        System.out.printf("\033[%d;%dH", y, x);
+    }
+
     private void printCursor(int x, int y, Color color) {
-        int[] position = logicalXYToScreen(x, y);
+        int[] logicalXY = logicalXYToScreen(x, y);
         char[] brackets = {'[', ']'};
         var boardCell = this.game.getBoard().getBoardCellAt(x, y);
+
         System.out.print(boardCell.getState().getColor());
         System.out.print(color);
+
         if (POSSIBLE_MOVE_CURSOR.equals(color)) {
             brackets = new char[]{'(', ')'};
         } else if (SELECTED_CURSOR.equals(color)) {
             brackets = new char[]{'{', '}'};
         }
 
-        positionAtScreen(position[0], position[1]);
+        positionAtScreen(logicalXY[0], logicalXY[1]);
         System.out.print(brackets[0]);
-        positionAtScreen(position[0] + 2, position[1]);
+        positionAtScreen(logicalXY[0] + 2, logicalXY[1]);
         System.out.print(brackets[1] + Color.RESET.getCode());
 
     }
 
     private int[] logicalXYToScreen(int x, int y) {
-        return new int[]{
-            3 * (x + 1) - 2 + BOARD_OFFSET_X, y + 1 + BOARD_OFFSET_Y
-        };
+        return new int[]{3 * (x + 1) - 2, y + 1};
     }
 
-    private void showResultScreen() {
+    private void printResult() {
         long pegsCount = this.game.getBoard().getPegsCount();
         if (pegsCount == 1) {
             System.out.println("You have solved the game.\n");
@@ -225,7 +227,7 @@ public class ConsoleUIImpl implements ConsoleUI {
     @Override
     public void positionPrompt() {
         if (this.game != null && this.game.isStarted()) {
-            int propmtY = this.game.getBoard().getBoardCells().length + BOARD_OFFSET_Y + 2;
+            int propmtY = this.game.getBoard().getBoardCells().length + 2;
             positionAtScreen(1, propmtY);
         } else {
             positionAtScreen(1, 1);

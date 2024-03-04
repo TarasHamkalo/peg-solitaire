@@ -1,10 +1,9 @@
 package pegsolitaire.game.ui;
 
 import lombok.NonNull;
-import pegsolitaire.game.core.Game;
-import pegsolitaire.game.core.board.BoardCell;
+import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.game.Game;
 
-// TODO: remove stop
 public interface ConsoleUI {
     void printBoard(@NonNull BoardCell[][] cells);
 

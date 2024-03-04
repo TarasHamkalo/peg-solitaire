@@ -1,9 +1,9 @@
-package pegsolitaire.game.core.board.pegs.impl;
+package pegsolitaire.game.core.pegs.impl;
 
 import lombok.*;
-import pegsolitaire.game.core.board.events.BoardEvent;
-import pegsolitaire.game.core.board.Color;
-import pegsolitaire.game.core.board.pegs.Peg;
+import pegsolitaire.game.core.events.BoardEvent;
+import pegsolitaire.game.core.Color;
+import pegsolitaire.game.core.pegs.Peg;
 
 
 @Builder

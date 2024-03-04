@@ -1,11 +1,11 @@
-package pegsolitaire.game.core.board.commands;
+package pegsolitaire.game.core.commands;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.experimental.SuperBuilder;
-import pegsolitaire.game.core.board.Board;
-import pegsolitaire.game.core.board.pegs.Peg;
+import pegsolitaire.game.core.board.impl.BoardImpl;
+import pegsolitaire.game.core.pegs.Peg;
 
 @Data
 @SuperBuilder
@@ -13,10 +13,10 @@ import pegsolitaire.game.core.board.pegs.Peg;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 // TODO: add events from pegs
 public abstract class BoardCommand {
-    @NonNull Board board;
+    @NonNull BoardImpl board;
     @NonFinal Peg peg;
-    @NonNull int[] initialPosition;
-    @NonNull int[] finalPosition;
+    int[] initialPosition;
+    int[] finalPosition;
 
     /**
      * @return True if and only if the board was modified

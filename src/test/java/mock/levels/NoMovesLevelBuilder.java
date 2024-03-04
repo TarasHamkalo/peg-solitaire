@@ -1,6 +1,6 @@
 package mock.levels;
 
-import pegsolitaire.game.core.board.BoardCell;
+import pegsolitaire.game.core.board.impl.BoardCell;
 import pegsolitaire.game.core.levels.LevelBuilder;
 
 public class NoMovesLevelBuilder extends LevelBuilder {

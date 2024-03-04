@@ -3,8 +3,8 @@ import lombok.experimental.FieldDefaults;
 import mock.levels.HasMovesLevelBuilder;
 import mock.levels.NoMovesLevelBuilder;
 import org.junit.jupiter.api.Test;
-import pegsolitaire.game.core.board.Board;
-import pegsolitaire.game.core.board.events.impl.BoardEventManagerImpl;
+import pegsolitaire.game.core.board.impl.BoardImpl;
+import pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +17,7 @@ public class BoardTest {
     public void whenBoardHasNoMovesHasAvailableMovesReturnsFalse() {
         var eventManager = new BoardEventManagerImpl();
         var cells = noMovesLevelBuilder.build();
-        var board = Board.builder()
+        var board = BoardImpl.builder()
             .eventManager(eventManager)
             .boardCells(cells)
             .build();
@@ -28,7 +28,7 @@ public class BoardTest {
     public void whenBoardHasMovesHasAvailableMovesReturnsTrue() {
         var eventManager = new BoardEventManagerImpl();
         var cells = hasMovesLevelBuilder.build();
-        var board = Board.builder()
+        var board = BoardImpl.builder()
             .eventManager(eventManager)
             .boardCells(cells)
             .build();
@@ -39,7 +39,7 @@ public class BoardTest {
     public void onBoardWith12MovesCountHasToBeTheSame() {
         var eventManager = new BoardEventManagerImpl();
         var cells = hasMovesLevelBuilder.build();
-        var board = Board.builder()
+        var board = BoardImpl.builder()
             .eventManager(eventManager)
             .boardCells(cells)
             .build();

@@ -1,14 +1,14 @@
-package pegsolitaire.game.core;
+package pegsolitaire.game.core.game.impl;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.reflections.Reflections;
 import pegsolitaire.game.core.board.Board;
-import pegsolitaire.game.core.board.BoardCell;
-import pegsolitaire.game.core.board.events.BoardEventManager;
+import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.board.impl.BoardImpl;
+import pegsolitaire.game.core.events.BoardEventManager;
+import pegsolitaire.game.core.game.Game;
 import pegsolitaire.game.core.levels.LevelBuilder;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,28 +16,30 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Game {
-    @NonNull BoardEventManager eventManager;
-    @NonNull LevelBuilder levelBuilder;
+public class GameImpl implements Game {
+    @NonNull
+    BoardEventManager eventManager;
+    @NonNull
+    LevelBuilder levelBuilder;
     Board board;
     int[] selectedPegPosition;
     boolean started;
 
-    public static List<Class<? extends LevelBuilder>> getLevelBuilders() {
-        var reflections = new Reflections("pegsolitaire.game.core.levels");
-        return new ArrayList<>(reflections.getSubTypesOf(LevelBuilder.class));
-    }
 
     public void start() {
         if (this.started) {
             stop();
         }
 
-        var cells = this.levelBuilder.build();
-        this.board = Board.builder()
-            .boardCells(cells)
-            .eventManager(this.eventManager)
-            .build();
+        var boardCells = this.levelBuilder.build();
+        if (this.board == null) {
+            this.board = BoardImpl.builder()
+                .boardCells(boardCells)
+                .eventManager(this.eventManager)
+                .build();
+        } else {
+            this.board.setBoardCells(boardCells);
+        }
 
         this.started = true;
     }
@@ -83,7 +85,7 @@ public class Game {
      * @return True if and only if peg on this position can be selected.
      */
     public boolean selectPeg(int x, int y) {
-        BoardCell boardCell = board.getBoardCellAt(x, y);
+        var boardCell = board.getBoardCellAt(x, y);
         if (boardCell != null &&
             boardCell.getState().equals(BoardCell.State.OCCUPIED)) {
             this.selectedPegPosition = new int[]{x, y};

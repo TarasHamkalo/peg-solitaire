@@ -1,10 +1,10 @@
-package pegsolitaire.game.core.board.events.impl;
+package pegsolitaire.game.core.events.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import pegsolitaire.game.core.board.commands.BoardCommand;
-import pegsolitaire.game.core.board.events.BoardEvent;
+import pegsolitaire.game.core.commands.BoardCommand;
+import pegsolitaire.game.core.events.BoardEvent;
 
 @Data
 @Builder

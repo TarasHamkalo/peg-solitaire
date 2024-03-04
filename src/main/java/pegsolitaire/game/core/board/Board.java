@@ -1,178 +1,27 @@
 package pegsolitaire.game.core.board;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import pegsolitaire.game.core.board.commands.BoardCommand;
-import pegsolitaire.game.core.board.commands.impl.MoveCommand;
-import pegsolitaire.game.core.board.commands.impl.PutCommand;
-import pegsolitaire.game.core.board.commands.impl.RemoveCommand;
-import pegsolitaire.game.core.board.commands.impl.UndoMarkerCommand;
-import pegsolitaire.game.core.board.events.BoardEventManager;
-import pegsolitaire.game.core.board.pegs.Peg;
+import pegsolitaire.game.core.board.impl.BoardCell;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.*;
+import java.util.List;
 
-// TODO: destroy cell
-@Data
-@Builder
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class Board {
-    public static final int MOVE_DISTANCE = 2;
+public interface Board {
+    boolean makeMove(int[] from, int[] to);
 
-    @NonNull
-    @Builder.Default
-    @ToString.Exclude
-    Stack<BoardCommand> history = new Stack<>();
+    boolean undoMove();
 
-    @NonNull
-    BoardEventManager eventManager;
+    List<int[]> getPossibleMoves(int x, int y);
 
-    @NonFinal
-    BoardCell[][] boardCells;
+    BoardCell getBoardCellAt(int x, int y);
 
-    public boolean makeMove(int[] from, int[] to) {
-        // mark start of move
-        execCommand(UndoMarkerCommand.builder()
-            .board(this)
-            .initialPosition(from)
-            .finalPosition(to)
-            .build()
-        );
+    long getPegsCount();
 
+    boolean hasAvailableMoves();
 
-        return execCommand(MoveCommand.builder()
-            .board(this)
-            .initialPosition(from)
-            .finalPosition(to)
-            .build()
-        );
-    }
+    boolean isSolved();
 
-    public boolean putPeg(Peg peg, int[] onto) {
-        return execCommand(PutCommand.builder()
-            .board(this)
-            .peg(peg)
-            .initialPosition(onto)
-            .finalPosition(onto)
-            .build()
-        );
-    }
+    BoardCell[][] getBoardCells();
 
-    public boolean removePeg(int[] from) {
-        return execCommand(RemoveCommand.builder()
-            .board(this)
-            .initialPosition(from)
-            .finalPosition(from)
-            .build()
-        );
-    }
+    void setBoardCells(BoardCell[][] boardCells);
 
-    public boolean undoMove() {
-        while (!history.isEmpty()) {
-            var command = history.pop();
-            if (command instanceof UndoMarkerCommand) {
-                break;
-            }
-
-            if (!command.undo()) {
-                // TODO: logging
-                history.clear();
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean destroyCell() {
-        // no peg on the cell or maybe remove the cell from it also
-        throw new IllegalStateException();
-    }
-
-    /**
-     * @return if coordinates are valid, then nullable BoardCell on this position
-     */
-    public BoardCell getBoardCellAt(int x, int y) {
-        if (x < 0 || y < 0 ||
-            x >= boardCells[0].length || y >= boardCells.length) {
-            return null;
-        }
-
-        return boardCells[y][x];
-    }
-
-    public List<int[]> getPossibleMoves(int x, int y) {
-        var fromCell = getBoardCellAt(x, y);
-        if (fromCell == null ||
-            !fromCell.getState().equals(BoardCell.State.OCCUPIED)) {
-            return Collections.emptyList();
-        }
-
-        List<int[]> moves = new ArrayList<>();
-        for (Direction direction : Direction.values()) {
-//        Arrays.stream(Direction.values()).parallel().forEach(direction -> {
-            int dx = x + direction.getX() * Board.MOVE_DISTANCE;
-            int dy = y + direction.getY() * Board.MOVE_DISTANCE;
-            int mx = (x + dx) / 2;
-            int my = (y + dy) / 2;
-            var boardCellOn = getBoardCellAt(dx, dy);
-            var boardCellMiddle = getBoardCellAt(mx, my);
-
-            if (boardCellOn == null || boardCellMiddle == null) {
-//                return;
-                continue;
-            }
-
-            if (boardCellMiddle.getState().equals(BoardCell.State.OCCUPIED) &&
-                boardCellOn.getState().equals(BoardCell.State.EMPTY)) {
-                moves.add(new int[]{dx, dy});
-            }
-        }
-
-        return moves;
-    }
-
-    public boolean isSolved() {
-        return getPegsCount() == 1;
-    }
-
-    public long getPegsCount() {
-        return Arrays.stream(this.boardCells)
-            .flatMap(Arrays::stream)
-            .parallel()
-            .filter(Objects::nonNull)
-            .filter(b -> b.getState().equals(BoardCell.State.OCCUPIED))
-            .count();
-    }
-
-    public boolean hasAvailableMoves() {
-        for (int i = 0; i < boardCells.length; i++) {
-            for (int j = 0; j < boardCells[0].length; j++) {
-                if (!getPossibleMoves(j, i).isEmpty()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean execCommand(@NonNull BoardCommand command) {
-        if (command.exec()) {
-            history.push(command);
-            return true;
-        }
-
-        return false;
-    }
-
-    public void clearHistory() {
-        this.history.clear();
-    }
-
+    void clearHistory();
 }

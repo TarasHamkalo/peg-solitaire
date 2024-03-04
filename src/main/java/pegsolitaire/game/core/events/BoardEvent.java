@@ -1,6 +1,6 @@
-package pegsolitaire.game.core.board.events;
+package pegsolitaire.game.core.events;
 
-import pegsolitaire.game.core.board.commands.BoardCommand;
+import pegsolitaire.game.core.commands.BoardCommand;
 
 public interface BoardEvent {
     BoardEvent.Type getEventType();

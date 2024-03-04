@@ -3,6 +3,8 @@ import pegsolitaire.game.ui.ConsoleUI;
 import pegsolitaire.game.ui.impl.ConsoleUIImpl;
 import pegsolitaire.game.ui.impl.PromptImpl;
 
+import java.io.Console;
+
 public class Main {
     @SneakyThrows
     public static void main(String[] args) {

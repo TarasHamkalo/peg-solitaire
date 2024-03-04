@@ -3,8 +3,8 @@ package pegsolitaire.game.core.levels;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import pegsolitaire.game.core.board.BoardCell;
-import pegsolitaire.game.core.board.events.BoardEvent;
+import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.events.BoardEvent;
 
 import java.util.List;
 

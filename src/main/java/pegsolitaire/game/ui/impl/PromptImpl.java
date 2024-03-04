@@ -1,16 +1,18 @@
 package pegsolitaire.game.ui.impl;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import pegsolitaire.game.core.Game;
-import pegsolitaire.game.core.board.events.BoardEvent;
-import pegsolitaire.game.core.board.events.BoardEventHandler;
-import pegsolitaire.game.core.board.events.BoardEventManager;
-import pegsolitaire.game.core.board.events.impl.BoardEventManagerImpl;
-import pegsolitaire.game.core.board.events.impl.BombEventHandler;
-import pegsolitaire.game.core.board.events.impl.LightningEventHandler;
+import lombok.experimental.NonFinal;
+import pegsolitaire.game.core.events.BoardEvent;
+import pegsolitaire.game.core.events.BoardEventHandler;
+import pegsolitaire.game.core.events.BoardEventManager;
+import pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
+import pegsolitaire.game.core.events.impl.BombEventHandler;
+import pegsolitaire.game.core.events.impl.LightningEventHandler;
+import pegsolitaire.game.core.game.Game;
+import pegsolitaire.game.core.game.GameUtility;
+import pegsolitaire.game.core.game.impl.GameImpl;
 import pegsolitaire.game.core.levels.LevelBuilder;
 import pegsolitaire.game.core.levels.impl.ClassicLevelBuilder;
 import pegsolitaire.game.ui.ConsoleUI;
@@ -19,8 +21,8 @@ import pegsolitaire.game.ui.Prompt;
 import java.util.*;
 import java.util.regex.Pattern;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PromptImpl implements Prompt {
     private static final Map<BoardEvent.Type, BoardEventHandler> eventToHandler = Map.ofEntries(
         Map.entry(BoardEvent.Type.BOMB, new BombEventHandler()),
@@ -33,18 +35,22 @@ public class PromptImpl implements Prompt {
     private static final Pattern LEVELS_CDM = Pattern.compile("levels(\s(?<args>[0-9]))?");
     private static final Pattern PEGS_CDM = Pattern.compile("pegs(\s(?<args>([0-9],?)+))?");
 
-    Game game;
     Scanner scanner;
     ConsoleUI consoleUI;
-    LevelBuilder selectedLevel;
     BoardEventManager eventManager;
     List<BoardEvent.Type> selectedPegEvents;
     List<Class<? extends LevelBuilder>> levelBuilders;
+
+    @NonFinal
+    Game game;
+    @NonFinal
+    LevelBuilder selectedLevel;
+    @NonFinal
     boolean running;
 
     public PromptImpl(ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;
-        this.levelBuilders = Game.getLevelBuilders();
+        this.levelBuilders = GameUtility.getLevelBuilders();
         this.selectedPegEvents = new ArrayList<>(
             List.of(BoardEvent.Type.TRIVIAL_MOVE, BoardEvent.Type.TRIVIAL_REMOVE)
         );
@@ -77,8 +83,13 @@ public class PromptImpl implements Prompt {
 
         var levelsMatcher = LEVELS_CDM.matcher(line);
         if (levelsMatcher.matches()) {
-            var level = levelsMatcher.group("args");
-            levelsCmd(level != null ? Integer.parseInt(level) : -1);
+            var levelNumber = levelsMatcher.group("args");
+            if (levelNumber == null) {
+                displayLevels();
+            } else {
+                selectLevel(Integer.parseInt(levelNumber));
+            }
+
             return;
         }
 
@@ -99,7 +110,8 @@ public class PromptImpl implements Prompt {
     }
 
     private void selectPegEvents(int[] pegNumbers) {
-        this.selectedPegEvents = new ArrayList<>(
+        this.selectedPegEvents.clear();
+        this.selectedPegEvents.addAll(
             List.of(BoardEvent.Type.TRIVIAL_MOVE, BoardEvent.Type.TRIVIAL_REMOVE)
         );
 
@@ -123,25 +135,30 @@ public class PromptImpl implements Prompt {
         }
     }
 
-    public void levelsCmd(int level) {
-        if (level == -1) {
-            System.out.println("\nChoose level builder to use:");
-            for (int i = 0; i < this.levelBuilders.size(); i++) {
-                System.out.printf("%4c%d. %s\n", ' ', i, this.levelBuilders.get(i).getSimpleName());
-            }
+    public void selectLevel(int levelNumber) {
+        this.selectedLevel = GameUtility
+            .getInstanceOfLevelBuilder(this.levelBuilders.get(levelNumber));
 
+        if (this.selectedLevel == null) {
+            this.selectedLevel = new ClassicLevelBuilder();
+            System.out.printf(
+                "\nWas not able to create instance of %s.\n", levelBuilders.get(0).getSimpleName()
+            );
+
+            System.out.print("The ClassicLevelBuilder was chosen.");
         } else {
-            try {
-                this.selectedLevel =
-                    levelBuilders.get(level).getDeclaredConstructor().newInstance();
-            } catch (Exception ignore) {
-                return;
-            }
-
             System.out.printf(
                 "\nThis is level built by %s\n", levelBuilders.get(0).getSimpleName()
             );
-            consoleUI.printBoard(this.selectedLevel.build());
+        }
+
+        consoleUI.printBoard(this.selectedLevel.build());
+    }
+
+    public void displayLevels() {
+        System.out.println("\nChoose level builder to use:");
+        for (int i = 0; i < this.levelBuilders.size(); i++) {
+            System.out.printf("%4c%d. %s\n", ' ', i, this.levelBuilders.get(i).getSimpleName());
         }
 
     }
@@ -157,7 +174,7 @@ public class PromptImpl implements Prompt {
         );
 
         if (this.game == null) {
-            this.game = Game.builder()
+            this.game = GameImpl.builder()
                 .eventManager(this.eventManager)
                 .levelBuilder(this.selectedLevel)
                 .build();
@@ -180,19 +197,19 @@ public class PromptImpl implements Prompt {
 
     public void help() {
         System.out.println("""
-        \nUsage info:
-            help: shows this information
-            start: starts the game
-            stop: stops the current game;
-            undo: undo previous move
-            exit: exits the program
-            pegs {1,2,3...}:
-                without parameters: displays peg types
-                with parameters: selects types
-            levels {n}:
-                without parameter: displays levels
-                with parameter: selects types
-        """);
+            \nUsage info:
+                help: shows this information
+                start: starts the game
+                stop: stops the current game;
+                undo: undo previous move
+                exit: exits the program
+                pegs {1,2,3...}:
+                    without parameters: displays peg types
+                    with parameters: selects types
+                levels {n}:
+                    without parameter: displays levels
+                    with parameter: selects types
+            """);
     }
 
     public void clearPrompt() {

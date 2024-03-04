@@ -1,4 +1,4 @@
-package pegsolitaire.game.core.board.events;
+package pegsolitaire.game.core.events;
 
 public interface BoardEventManager {
     void subscribe(BoardEvent.Type type, BoardEventHandler handler);

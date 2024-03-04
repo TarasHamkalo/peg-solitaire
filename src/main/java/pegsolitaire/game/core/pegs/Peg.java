@@ -1,7 +1,7 @@
-package pegsolitaire.game.core.board.pegs;
+package pegsolitaire.game.core.pegs;
 
-import pegsolitaire.game.core.board.Color;
-import pegsolitaire.game.core.board.events.BoardEvent;
+import pegsolitaire.game.core.Color;
+import pegsolitaire.game.core.events.BoardEvent;
 
 
 public interface Peg {

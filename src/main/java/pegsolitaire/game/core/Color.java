@@ -1,4 +1,4 @@
-package pegsolitaire.game.core.board;
+package pegsolitaire.game.core;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

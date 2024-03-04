@@ -1,7 +1,7 @@
 package pegsolitaire.game.core.levels.impl;
 
-import pegsolitaire.game.core.board.BoardCell;
-import pegsolitaire.game.core.board.pegs.impl.PegImpl;
+import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.pegs.impl.PegImpl;
 import pegsolitaire.game.core.levels.LevelBuilder;
 
 // TODO: no events added

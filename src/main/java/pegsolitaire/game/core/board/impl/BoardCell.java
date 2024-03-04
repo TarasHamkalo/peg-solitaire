@@ -1,8 +1,9 @@
-package pegsolitaire.game.core.board;
+package pegsolitaire.game.core.board.impl;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import pegsolitaire.game.core.board.pegs.Peg;
+import pegsolitaire.game.core.Color;
+import pegsolitaire.game.core.pegs.Peg;
 
 
 @Data
@@ -17,9 +18,7 @@ public class BoardCell {
     }
 
     @NonNull State state;
-
     Peg peg;
-
 
     public BoardCell() {
         this.state = State.EMPTY;

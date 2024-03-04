@@ -1,10 +1,10 @@
-package pegsolitaire.game.core.board.events.impl;
+package pegsolitaire.game.core.events.impl;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import pegsolitaire.game.core.board.events.BoardEvent;
-import pegsolitaire.game.core.board.events.BoardEventHandler;
-import pegsolitaire.game.core.board.events.BoardEventManager;
+import pegsolitaire.game.core.events.BoardEvent;
+import pegsolitaire.game.core.events.BoardEventHandler;
+import pegsolitaire.game.core.events.BoardEventManager;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ public class BoardEventManagerImpl implements BoardEventManager {
     public void publish(BoardEvent event) {
         this.eventToHandlers
             .getOrDefault(event.getEventType(), Collections.emptySet())
-            .forEach(handler -> handler.handle(event.getTriggerCommand()));
+            .forEach(handler -> handler.handle(event));
     }
 
     @Override

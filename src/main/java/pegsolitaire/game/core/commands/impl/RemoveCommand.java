@@ -1,15 +1,17 @@
-package pegsolitaire.game.core.board.commands.impl;
+package pegsolitaire.game.core.commands.impl;
 
 import lombok.experimental.SuperBuilder;
-import pegsolitaire.game.core.board.BoardCell;
-import pegsolitaire.game.core.board.commands.BoardCommand;
+import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.commands.BoardCommand;
 
 @SuperBuilder
 public class RemoveCommand extends BoardCommand {
     @Override
     public boolean exec() {
-        var pos =  this.getInitialPosition();
-        var removeFrom = this.getBoard().getBoardCellAt(pos[0], pos[1]);
+        var removeFrom = this.getBoard().getBoardCellAt(
+            this.getInitialPosition()[0], this.getInitialPosition()[1]
+        );
+
         if (isInvalid(removeFrom)) {
             return false;
         }
@@ -21,8 +23,10 @@ public class RemoveCommand extends BoardCommand {
 
     @Override
     public boolean undo() {
-        var pos =  this.getFinalPosition();
-        var putOnCell = this.getBoard().getBoardCellAt(pos[0], pos[1]);
+        var putOnCell = this.getBoard().getBoardCellAt(
+            this.getFinalPosition()[0], this.getFinalPosition()[1]
+        );
+
         putOnCell.setPeg(this.getPeg());
         this.setPeg(null);
         return true;
