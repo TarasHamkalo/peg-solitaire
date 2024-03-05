@@ -1,11 +1,17 @@
 package pegsolitaire.game.core.board;
 
-import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.commands.BoardCommand;
+import pegsolitaire.game.core.pegs.Peg;
 
 import java.util.List;
+import java.util.Stack;
 
 public interface Board {
     boolean makeMove(int[] from, int[] to);
+
+    boolean removePeg(int[] from);
+
+    boolean putPeg(Peg peg, int[] onto);
 
     boolean undoMove();
 
@@ -24,4 +30,6 @@ public interface Board {
     void setBoardCells(BoardCell[][] boardCells);
 
     void clearHistory();
+
+    Stack<BoardCommand> getHistory();
 }

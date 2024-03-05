@@ -1,7 +1,8 @@
 package pegsolitaire.game.core.commands.impl;
 
 import lombok.experimental.SuperBuilder;
-import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.board.BoardCell;
+import pegsolitaire.game.core.board.impl.BasicCell;
 import pegsolitaire.game.core.commands.BoardCommand;
 
 @SuperBuilder
@@ -32,6 +33,6 @@ public class PutCommand extends BoardCommand {
 
 
     private boolean isInvalid(BoardCell putOntoCell) {
-        return putOntoCell == null || !putOntoCell.getState().equals(BoardCell.State.EMPTY);
+        return putOntoCell == null || !putOntoCell.getState().equals(BasicCell.State.EMPTY);
     }
 }

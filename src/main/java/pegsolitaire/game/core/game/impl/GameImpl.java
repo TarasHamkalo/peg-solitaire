@@ -3,7 +3,7 @@ package pegsolitaire.game.core.game.impl;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import pegsolitaire.game.core.board.Board;
-import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.board.impl.BasicCell;
 import pegsolitaire.game.core.board.impl.BoardImpl;
 import pegsolitaire.game.core.events.BoardEventManager;
 import pegsolitaire.game.core.game.Game;
@@ -87,7 +87,7 @@ public class GameImpl implements Game {
     public boolean selectPeg(int x, int y) {
         var boardCell = board.getBoardCellAt(x, y);
         if (boardCell != null &&
-            boardCell.getState().equals(BoardCell.State.OCCUPIED)) {
+            boardCell.getState().equals(BasicCell.State.OCCUPIED)) {
             this.selectedPegPosition = new int[]{x, y};
             return true;
         }

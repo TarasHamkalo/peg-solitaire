@@ -2,7 +2,6 @@ package pegsolitaire.game.core.game;
 
 import org.reflections.Reflections;
 import pegsolitaire.game.core.levels.LevelBuilder;
-import pegsolitaire.game.core.levels.impl.ClassicLevelBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

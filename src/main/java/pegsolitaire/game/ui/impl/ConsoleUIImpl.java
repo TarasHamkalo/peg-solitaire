@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import pegsolitaire.game.core.board.impl.BoardCell;
 import pegsolitaire.game.core.Color;
+import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.game.Game;
 import pegsolitaire.game.ui.ConsoleUI;
 
@@ -168,7 +168,7 @@ public class ConsoleUIImpl implements ConsoleUI {
         }
     }
 
-    private void printCellAt(BoardCell cell, int x, int y) {
+    private void printCellAt(@NonNull BoardCell cell, int x, int y) {
         int[] logicalXY = logicalXYToScreen(this.x, this.y);
         positionAtScreen(logicalXY[0], logicalXY[1]);
         System.out.print(cell);
@@ -183,7 +183,7 @@ public class ConsoleUIImpl implements ConsoleUI {
         System.out.printf("\033[%d;%dH", y, x);
     }
 
-    private void printCursor(int x, int y, Color color) {
+    private void printCursor(int x, int y, @NonNull Color color) {
         int[] logicalXY = logicalXYToScreen(x, y);
         char[] brackets = {'[', ']'};
         var boardCell = this.game.getBoard().getBoardCellAt(x, y);

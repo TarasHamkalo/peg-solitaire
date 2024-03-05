@@ -1,30 +1,27 @@
 package pegsolitaire.game.core.board.impl;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import pegsolitaire.game.core.Color;
+import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.pegs.Peg;
 
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BoardCell {
-    @Getter
-    @AllArgsConstructor
-    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public enum State {
-        OCCUPIED(Color.BLACK_BG), EMPTY(Color.BRIGHT_BLACK_BG), DESTROYED(Color.RED_BG);
-        Color color;
-    }
+public class BasicCell implements BoardCell {
 
-    @NonNull State state;
+    @NonNull
+    State state;
     Peg peg;
 
-    public BoardCell() {
+    public BasicCell() {
         this.state = State.EMPTY;
     }
 
-    public BoardCell(Peg peg) {
+    public BasicCell(Peg peg) {
         this.peg = peg;
         this.state = State.OCCUPIED;
     }

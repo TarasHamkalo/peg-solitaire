@@ -1,7 +1,8 @@
 package pegsolitaire.game.core.commands.impl;
 
 import lombok.experimental.SuperBuilder;
-import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.board.BoardCell;
+import pegsolitaire.game.core.board.impl.BasicCell;
 import pegsolitaire.game.core.commands.BoardCommand;
 
 @SuperBuilder
@@ -34,6 +35,6 @@ public class RemoveCommand extends BoardCommand {
 
 
     private boolean isInvalid(BoardCell cell) {
-        return cell == null || !cell.getState().equals(BoardCell.State.OCCUPIED);
+        return cell == null || !cell.getState().equals(BasicCell.State.OCCUPIED);
     }
 }

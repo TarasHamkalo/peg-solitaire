@@ -1,7 +1,8 @@
 package pegsolitaire.game.ui;
 
 import lombok.NonNull;
-import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.board.BoardCell;
+import pegsolitaire.game.core.board.impl.BasicCell;
 import pegsolitaire.game.core.game.Game;
 
 public interface ConsoleUI {

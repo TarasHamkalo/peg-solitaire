@@ -1,17 +1,17 @@
 package mock.levels;
 
-import pegsolitaire.game.core.board.impl.BoardCell;
+import pegsolitaire.game.core.board.impl.BasicCell;
 import pegsolitaire.game.core.pegs.impl.PegImpl;
 import pegsolitaire.game.core.levels.LevelBuilder;
 
 public class HasMovesLevelBuilder extends LevelBuilder {
 
     @Override
-    public BoardCell[][] build() {
-        BoardCell[][] boardCells = new BoardCell[7][5];
+    public BasicCell[][] build() {
+        BasicCell[][] boardCells = new BasicCell[7][5];
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
-                boardCells[i][j] = new BoardCell();
+                boardCells[i][j] = new BasicCell();
             }
         }
 
@@ -30,7 +30,7 @@ public class HasMovesLevelBuilder extends LevelBuilder {
         }
 
         for (int i = 1; i < 4; i++) {
-            boardCells[3][i] = new BoardCell(new PegImpl());
+            boardCells[3][i] = new BasicCell(new PegImpl());
         }
 
         boardCells[2][2].setPeg(new PegImpl());

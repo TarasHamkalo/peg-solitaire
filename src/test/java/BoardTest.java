@@ -9,12 +9,12 @@ import pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
 import static org.junit.jupiter.api.Assertions.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class BoardTest {
+class BoardTest {
     HasMovesLevelBuilder hasMovesLevelBuilder = new HasMovesLevelBuilder();
     NoMovesLevelBuilder noMovesLevelBuilder = new NoMovesLevelBuilder();
 
     @Test
-    public void whenBoardHasNoMovesHasAvailableMovesReturnsFalse() {
+    void whenBoardHasNoMovesHasAvailableMovesReturnsFalse() {
         var eventManager = new BoardEventManagerImpl();
         var cells = noMovesLevelBuilder.build();
         var board = BoardImpl.builder()
@@ -25,7 +25,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenBoardHasMovesHasAvailableMovesReturnsTrue() {
+    void whenBoardHasMovesHasAvailableMovesReturnsTrue() {
         var eventManager = new BoardEventManagerImpl();
         var cells = hasMovesLevelBuilder.build();
         var board = BoardImpl.builder()
@@ -36,7 +36,7 @@ public class BoardTest {
     }
 
     @Test
-    public void onBoardWith12MovesCountHasToBeTheSame() {
+    void onBoardWith12MovesCountHasToBeTheSame() {
         var eventManager = new BoardEventManagerImpl();
         var cells = hasMovesLevelBuilder.build();
         var board = BoardImpl.builder()
@@ -53,4 +53,6 @@ public class BoardTest {
 
         assertEquals(12, movesCount);
     }
+
+//    void
 }
