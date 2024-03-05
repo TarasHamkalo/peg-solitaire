@@ -3,8 +3,8 @@ package pegsolitaire.game.core.game.impl;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import pegsolitaire.game.core.board.Board;
-import pegsolitaire.game.core.board.impl.BasicCell;
-import pegsolitaire.game.core.board.impl.BoardImpl;
+import pegsolitaire.game.core.board.BoardBuilder;
+import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.events.BoardEventManager;
 import pegsolitaire.game.core.game.Game;
 import pegsolitaire.game.core.levels.LevelBuilder;
@@ -21,10 +21,11 @@ public class GameImpl implements Game {
     BoardEventManager eventManager;
     @NonNull
     LevelBuilder levelBuilder;
+    @NonNull
+    BoardBuilder boardBuilder;
     Board board;
     int[] selectedPegPosition;
     boolean started;
-
 
     public void start() {
         if (this.started) {
@@ -33,9 +34,9 @@ public class GameImpl implements Game {
 
         var boardCells = this.levelBuilder.build();
         if (this.board == null) {
-            this.board = BoardImpl.builder()
+            this.board = boardBuilder
+                .eventManager(eventManager)
                 .boardCells(boardCells)
-                .eventManager(this.eventManager)
                 .build();
         } else {
             this.board.setBoardCells(boardCells);
@@ -46,7 +47,6 @@ public class GameImpl implements Game {
 
     public void stop() {
         if (this.board != null) {
-            this.board.clearHistory();
             this.board.setBoardCells(null);
         }
 
@@ -87,7 +87,7 @@ public class GameImpl implements Game {
     public boolean selectPeg(int x, int y) {
         var boardCell = board.getBoardCellAt(x, y);
         if (boardCell != null &&
-            boardCell.getState().equals(BasicCell.State.OCCUPIED)) {
+            boardCell.getState().equals(BoardCell.State.OCCUPIED)) {
             this.selectedPegPosition = new int[]{x, y};
             return true;
         }
