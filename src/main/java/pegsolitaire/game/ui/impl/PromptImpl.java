@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import pegsolitaire.game.core.board.impl.BoardImpl;
 import pegsolitaire.game.core.events.BoardEvent;
 import pegsolitaire.game.core.events.BoardEventHandler;
 import pegsolitaire.game.core.events.BoardEventManager;
@@ -175,9 +176,11 @@ public class PromptImpl implements Prompt {
 
         if (this.game == null) {
             this.game = GameImpl.builder()
+                .boardBuilder(BoardImpl.builder())
                 .eventManager(this.eventManager)
                 .levelBuilder(this.selectedLevel)
                 .build();
+
         } else {
             this.game.setLevelBuilder(this.selectedLevel);
         }

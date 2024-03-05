@@ -3,8 +3,9 @@ package pegsolitaire.game.core.board.impl;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import pegsolitaire.game.core.board.Board;
 import pegsolitaire.game.core.Direction;
+import pegsolitaire.game.core.board.Board;
+import pegsolitaire.game.core.board.BoardBuilder;
 import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.commands.BoardCommand;
 import pegsolitaire.game.core.commands.impl.MoveCommand;
@@ -23,13 +24,13 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BoardImpl implements Board {
     public static final int MOVE_DISTANCE = 2;
-
     @NonNull
     @Builder.Default
     @ToString.Exclude
     Stack<BoardCommand> history = new Stack<>();
     @NonNull
     BoardEventManager eventManager;
+    @NonNull
     @NonFinal
     BoardCell[][] boardCells;
 
@@ -176,4 +177,6 @@ public class BoardImpl implements Board {
         this.boardCells = boardCells;
     }
 
+    public static class BoardImplBuilder implements BoardBuilder {
+    }
 }
