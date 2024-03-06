@@ -69,6 +69,10 @@ public class GameImpl implements Game {
     }
 
     public boolean undoMove() {
+        if (!this.isStarted()) {
+            return false;
+        }
+
         this.selectedPegPosition = null;
         return this.board.undoMove();
     }
@@ -85,6 +89,10 @@ public class GameImpl implements Game {
      * @return True if and only if peg on this position can be selected.
      */
     public boolean selectPeg(int x, int y) {
+        if (!this.isStarted()) {
+            return false;
+        }
+
         var boardCell = board.getBoardCellAt(x, y);
         if (boardCell != null &&
             boardCell.getState().equals(BoardCell.State.OCCUPIED)) {

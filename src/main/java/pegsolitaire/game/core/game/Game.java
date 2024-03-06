@@ -6,7 +6,6 @@ import pegsolitaire.game.core.levels.LevelBuilder;
 import java.util.List;
 
 public interface Game {
-
     void start();
 
     boolean makeMove(int x, int y);
