@@ -2,17 +2,16 @@ package pegsolitaire.game.core.levels;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import pegsolitaire.game.core.board.BoardCell;
-import pegsolitaire.game.core.board.impl.BasicCell;
-import pegsolitaire.game.core.events.BoardEvent;
-
-import java.util.List;
+import pegsolitaire.game.core.pegs.PegFactory;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class LevelBuilder {
-    List<BoardEvent.Type> pegsEvents;
+    @NonNull
+    PegFactory pegFactory;
 
     public abstract BoardCell[][] build();
 }

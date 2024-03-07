@@ -23,17 +23,6 @@ public class PegImpl implements Peg {
     @Builder.Default
     BoardEvent.Type removeEventType =  BoardEvent.Type.TRIVIAL_REMOVE;
 
-    private PegImpl(@NonNull Peg src) {
-        this.color = src.getColor();
-        this.moveEventType = src.getMoveEvent();
-        this.removeEventType = src.getRemoveEvent();
-    }
-
-    @Override
-    public Peg clonePeg() {
-        return new PegImpl(this);
-    }
-
     @Override
     public void onMove(BoardEvent.Type type) {
         this.moveEventType = (type == null) ? BoardEvent.Type.TRIVIAL_MOVE : type;

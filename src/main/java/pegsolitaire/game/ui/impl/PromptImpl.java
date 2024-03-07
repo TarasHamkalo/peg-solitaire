@@ -117,8 +117,13 @@ public class PromptImpl implements Prompt {
         );
 
         for (int i : pegNumbers) {
-            if (i < BoardEvent.Type.values().length) {
-                this.selectedPegEvents.add(BoardEvent.Type.values()[i]);
+            if (i < 0 || i > BoardEvent.Type.values().length) {
+                continue;
+            }
+
+            var event = BoardEvent.Type.values()[i];
+            if (!this.selectedPegEvents.contains(event)) {
+                this.selectedPegEvents.add(event);
             }
         }
     }
@@ -137,19 +142,24 @@ public class PromptImpl implements Prompt {
     }
 
     public void selectLevel(int levelNumber) {
+        if (levelNumber < 0 || levelNumber >= this.levelBuilders.size()) {
+            System.out.print("\nInvalid Input.\nThe ClassicLevelBuilder was chosen.");
+            return;
+        }
+
         this.selectedLevel = GameUtility
             .getInstanceOfLevelBuilder(this.levelBuilders.get(levelNumber));
 
         if (this.selectedLevel == null) {
             this.selectedLevel = new ClassicLevelBuilder();
             System.out.printf(
-                "\nWas not able to create instance of %s.\n", levelBuilders.get(0).getSimpleName()
+                "\nWas not able to create instance of %s.\n", levelBuilders.get(levelNumber).getSimpleName()
             );
 
             System.out.print("The ClassicLevelBuilder was chosen.");
         } else {
             System.out.printf(
-                "\nThis is level built by %s\n", levelBuilders.get(0).getSimpleName()
+                "\nThis is level built by %s\n", levelBuilders.get(levelNumber).getSimpleName()
             );
         }
 
