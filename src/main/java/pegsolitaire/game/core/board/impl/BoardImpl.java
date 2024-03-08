@@ -8,32 +8,36 @@ import pegsolitaire.game.core.board.Board;
 import pegsolitaire.game.core.board.BoardBuilder;
 import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.commands.BoardCommand;
-import pegsolitaire.game.core.commands.impl.MoveCommand;
-import pegsolitaire.game.core.commands.impl.PutCommand;
-import pegsolitaire.game.core.commands.impl.RemoveCommand;
-import pegsolitaire.game.core.commands.impl.UndoMarkerCommand;
+import pegsolitaire.game.core.commands.impl.*;
+import pegsolitaire.game.core.events.BoardEvent;
 import pegsolitaire.game.core.events.BoardEventManager;
 import pegsolitaire.game.core.pegs.Peg;
 
 import java.util.*;
 
-// TODO: destroy cell
 @Data
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BoardImpl implements Board {
-    public static final int MOVE_DISTANCE = 2;
-    @NonNull
-    @Builder.Default
+
+    private static final int MOVE_DISTANCE = 2;
+
     @ToString.Exclude
     Stack<BoardCommand> history = new Stack<>();
+
+    @ToString.Exclude
+    Queue<BoardEvent> eventsQueue = new LinkedList<>();
+
     @NonNull
     BoardEventManager eventManager;
+
     @NonNull
     @NonFinal
     BoardCell[][] boardCells;
 
+
+    @Override
     public boolean makeMove(int[] from, int[] to) {
         // mark start of move
         execCommand(UndoMarkerCommand.builder()
@@ -52,7 +56,8 @@ public class BoardImpl implements Board {
         );
     }
 
-    public boolean putPeg(Peg peg, int[] onto) {
+    @Override
+    public boolean putPeg(@NonNull Peg peg, int[] onto) {
         return execCommand(PutCommand.builder()
             .board(this)
             .peg(peg)
@@ -62,6 +67,7 @@ public class BoardImpl implements Board {
         );
     }
 
+    @Override
     public boolean removePeg(int[] from) {
         return execCommand(RemoveCommand.builder()
             .board(this)
@@ -71,6 +77,18 @@ public class BoardImpl implements Board {
         );
     }
 
+    @Override
+    public boolean destroyCell(int[] on) {
+        return execCommand(DestroyCommand.builder()
+            .board(this)
+            .initialPosition(on)
+            .finalPosition(on)
+            .build()
+        );
+    }
+
+    @Override
+    @SneakyThrows
     public boolean undoMove() {
         while (!history.isEmpty()) {
             var command = history.pop();
@@ -88,14 +106,10 @@ public class BoardImpl implements Board {
         return true;
     }
 
-    public boolean destroyCell() {
-        // no peg on the cell or maybe remove the cell from it also
-        throw new IllegalStateException();
-    }
-
     /**
      * @return if coordinates are valid, then nullable BasicCell on this position
      */
+    @Override
     public BoardCell getBoardCellAt(int x, int y) {
         if (x < 0 || y < 0 ||
             x >= boardCells[0].length || y >= boardCells.length) {
@@ -105,6 +119,7 @@ public class BoardImpl implements Board {
         return boardCells[y][x];
     }
 
+    @Override
     public List<int[]> getPossibleMoves(int x, int y) {
         var fromCell = getBoardCellAt(x, y);
         if (fromCell == null ||
@@ -134,10 +149,12 @@ public class BoardImpl implements Board {
         return moves;
     }
 
+    @Override
     public boolean isSolved() {
         return getPegsCount() == 1;
     }
 
+    @Override
     public long getPegsCount() {
         return Arrays.stream(this.boardCells)
             .flatMap(Arrays::stream)
@@ -147,6 +164,7 @@ public class BoardImpl implements Board {
             .count();
     }
 
+    @Override
     public boolean hasAvailableMoves() {
         for (int i = 0; i < boardCells.length; i++) {
             for (int j = 0; j < boardCells[0].length; j++) {
@@ -159,22 +177,42 @@ public class BoardImpl implements Board {
         return false;
     }
 
+    @Override
+    public void offerEvent(@NonNull BoardEvent event) {
+        eventsQueue.offer(event);
+    }
+
     private boolean execCommand(@NonNull BoardCommand command) {
         if (command.exec()) {
             history.push(command);
+            if (!eventsQueue.isEmpty()) {
+                eventManager.publish(eventsQueue.poll());
+            }
+
             return true;
         }
 
         return false;
     }
 
-    public void clearHistory() {
-        this.history.clear();
+    @Override
+    public BoardCommand peekHistory() {
+        if (history.isEmpty()) {
+            return null;
+        }
+
+        return history.peek();
     }
 
+    @Override
+    public void clearHistory() {
+        history.clear();
+    }
+
+    @Override
     public void setBoardCells(BoardCell[][] boardCells) {
-        clearHistory();
         this.boardCells = boardCells;
+        clearHistory();
     }
 
     public static class BoardImplBuilder implements BoardBuilder {

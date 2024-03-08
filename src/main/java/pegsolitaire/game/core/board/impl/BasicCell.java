@@ -15,6 +15,7 @@ public class BasicCell implements BoardCell {
 
     @NonNull
     State state;
+
     Peg peg;
 
     public BasicCell() {
@@ -27,10 +28,6 @@ public class BasicCell implements BoardCell {
     }
 
     public void setPeg(Peg peg) {
-        if (State.DESTROYED.equals(state)) {
-            return;
-        }
-
         this.peg = peg;
         if (this.peg == null) {
             this.state = State.EMPTY;

@@ -1,17 +1,20 @@
 package pegsolitaire.game.core.board;
 
+import lombok.NonNull;
 import pegsolitaire.game.core.commands.BoardCommand;
+import pegsolitaire.game.core.events.BoardEvent;
 import pegsolitaire.game.core.pegs.Peg;
 
 import java.util.List;
-import java.util.Stack;
 
 public interface Board {
     boolean makeMove(int[] from, int[] to);
 
     boolean removePeg(int[] from);
 
-    boolean putPeg(Peg peg, int[] onto);
+    boolean putPeg(@NonNull Peg peg, int[] onto);
+
+    boolean destroyCell(int[] on);
 
     boolean undoMove();
 
@@ -27,9 +30,11 @@ public interface Board {
 
     BoardCell[][] getBoardCells();
 
-    void setBoardCells(BoardCell[][] boardCells);
+    void setBoardCells(@NonNull BoardCell[][] boardCells);
+
+    void offerEvent(@NonNull BoardEvent event);
 
     void clearHistory();
 
-    Stack<BoardCommand> getHistory();
+    BoardCommand peekHistory();
 }
