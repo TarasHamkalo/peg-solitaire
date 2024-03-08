@@ -2,7 +2,6 @@ package pegsolitaire.game.core.events.impl;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import pegsolitaire.game.core.Direction;
 import pegsolitaire.game.core.commands.BoardCommand;
 import pegsolitaire.game.core.commands.impl.RemoveCommand;
 import pegsolitaire.game.core.events.BoardEvent;
