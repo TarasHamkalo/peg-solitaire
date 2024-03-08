@@ -1,7 +1,9 @@
 package pegsolitaire.game.core.game;
 
+import lombok.NonNull;
 import org.reflections.Reflections;
 import pegsolitaire.game.core.levels.LevelBuilder;
+import pegsolitaire.game.core.pegs.PegFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +13,10 @@ public class GameUtility {
     }
 
     public static LevelBuilder getInstanceOfLevelBuilder(
-        Class<? extends LevelBuilder> levelBuilder) {
+            @NonNull Class<? extends LevelBuilder> levelBuilder, @NonNull PegFactory pegFactory) {
         try {
-            return levelBuilder.getDeclaredConstructor().newInstance();
+            var constructor = levelBuilder.getDeclaredConstructor(PegFactory.class);
+            return constructor.newInstance(pegFactory);
         } catch (ReflectiveOperationException ignore) {
             return null;
         }

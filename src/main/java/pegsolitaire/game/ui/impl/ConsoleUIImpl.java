@@ -15,18 +15,26 @@ import pegsolitaire.game.ui.ConsoleUI;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsoleUIImpl implements ConsoleUI {
+
     private static final Color MAIN_CURSOR = Color.BLUE;
+
     private static final Color POSSIBLE_MOVE_CURSOR = Color.GREEN;
+
     private static final Color SELECTED_CURSOR = Color.BRIGHT_MAGENTA;
 
     private static final int POSSIBLE_MOVE_CODE = 1;
+
     private static final int SELECTED_CURSOR_CODE = 2;
 
     @NonNull
     Game game;
+
     KeyboardListener keyboardListener;
+
     int[][] boardSelections;
+
     int x;
+
     int y;
 
     public ConsoleUIImpl() throws NativeHookException {

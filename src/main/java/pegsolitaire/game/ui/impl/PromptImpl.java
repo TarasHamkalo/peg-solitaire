@@ -1,6 +1,7 @@
 package pegsolitaire.game.ui.impl;
 
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -16,6 +17,7 @@ import pegsolitaire.game.core.game.GameUtility;
 import pegsolitaire.game.core.game.impl.GameImpl;
 import pegsolitaire.game.core.levels.LevelBuilder;
 import pegsolitaire.game.core.levels.impl.ClassicLevelBuilder;
+import pegsolitaire.game.core.pegs.PegFactory;
 import pegsolitaire.game.ui.ConsoleUI;
 import pegsolitaire.game.ui.Prompt;
 
@@ -33,33 +35,40 @@ public class PromptImpl implements Prompt {
     );
 
     private static final Pattern BASE_CMDS = Pattern.compile("help|start|stop|undo|exit");
+
     private static final Pattern LEVELS_CDM = Pattern.compile("levels(\s(?<args>[0-9]))?");
+
     private static final Pattern PEGS_CDM = Pattern.compile("pegs(\s(?<args>([0-9],?)+))?");
 
     Scanner scanner;
+
+    @NonNull
     ConsoleUI consoleUI;
+
     BoardEventManager eventManager;
-    List<BoardEvent.Type> selectedPegEvents;
+
+    @NonNull
+    PegFactory pegFactory;
+
     List<Class<? extends LevelBuilder>> levelBuilders;
 
     @NonFinal
     Game game;
+
     @NonFinal
     LevelBuilder selectedLevel;
+
     @NonFinal
     boolean running;
 
-    public PromptImpl(ConsoleUI consoleUI) {
-        this.consoleUI = consoleUI;
-        this.levelBuilders = GameUtility.getLevelBuilders();
-        this.selectedPegEvents = new ArrayList<>(
-            List.of(BoardEvent.Type.TRIVIAL_MOVE, BoardEvent.Type.TRIVIAL_REMOVE)
-        );
-
-        this.scanner = new Scanner(System.in);
-        this.selectedLevel = new ClassicLevelBuilder();
-        this.eventManager = new BoardEventManagerImpl();
+    public PromptImpl(@NonNull ConsoleUI consoleUI, @NonNull PegFactory pegFactory) {
         this.running = true;
+        this.consoleUI = consoleUI;
+        this.scanner = new Scanner(System.in);
+        this.levelBuilders = GameUtility.getLevelBuilders();
+        this.eventManager = new BoardEventManagerImpl();
+        this.selectedLevel = new ClassicLevelBuilder(pegFactory);
+        this.pegFactory = pegFactory;
     }
 
     @Override
@@ -76,12 +85,22 @@ public class PromptImpl implements Prompt {
     public void parseInput() {
         var line = scanner.nextLine().trim().toLowerCase(Locale.ENGLISH);
         clearPrompt();
+        if (!(execBasicCommand(line) || execLevelsCommand(line) || execPegsCommand(line))) {
+            System.out.printf("\nInvalid input %s.\n", line);
+        }
+    }
+
+    private boolean execBasicCommand(String line) throws ReflectiveOperationException {
         var baseMatcher = BASE_CMDS.matcher(line);
         if (baseMatcher.matches()) {
             this.getClass().getMethod(line).invoke(this);
-            return;
+            return true;
         }
 
+        return false;
+    }
+
+    private boolean execLevelsCommand(String line) {
         var levelsMatcher = LEVELS_CDM.matcher(line);
         if (levelsMatcher.matches()) {
             var levelNumber = levelsMatcher.group("args");
@@ -91,69 +110,71 @@ public class PromptImpl implements Prompt {
                 selectLevel(Integer.parseInt(levelNumber));
             }
 
-            return;
+            return true;
         }
+        return false;
+    }
 
+    private boolean execPegsCommand(String line) {
         var pegsMatcher = PEGS_CDM.matcher(line);
         if (pegsMatcher.matches()) {
             var args = pegsMatcher.group("args");
             if (args != null) {
-                var pegNumbers = Arrays.stream(args.split(",")).mapToInt(Integer::parseInt).toArray();
+                var pegNumbers = Arrays.stream(args.split(","))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
 
                 selectPegEvents(pegNumbers);
             } else {
                 displayPegEvents();
             }
 
-        } else {
-            System.out.printf("\nInvalid input %s.\n", line);
+            return true;
         }
+
+        return false;
     }
 
     private void selectPegEvents(int[] pegNumbers) {
-        this.selectedPegEvents.clear();
-        this.selectedPegEvents.addAll(
-            List.of(BoardEvent.Type.TRIVIAL_MOVE, BoardEvent.Type.TRIVIAL_REMOVE)
-        );
-
+        pegFactory.clearPegEvents();
         for (int i : pegNumbers) {
-            if (i < 0 || i > BoardEvent.Type.values().length) {
-                continue;
-            }
-
-            var event = BoardEvent.Type.values()[i];
-            if (!this.selectedPegEvents.contains(event)) {
-                this.selectedPegEvents.add(event);
+            if (i >= 0 && i < BoardEvent.Type.values().length) {
+                pegFactory.addIfNotPresent(BoardEvent.Type.values()[i]);
             }
         }
     }
 
     public void displayPegEvents() {
-        var events = BoardEvent.Type.values();
         System.out.println("\nIn use:");
-        for (int i = 0; i < selectedPegEvents.size(); i++) {
-            System.out.printf("%4d. %s\n", i, selectedPegEvents.get(i).toString());
+        for (int i = 0; i < pegFactory.getPegEvents().size(); i++) {
+            System.out.printf("%4d. %s\n", i, pegFactory.getPegEvents().get(i).toString());
         }
 
         System.out.println("Can be used:");
+
+        var events = BoardEvent.Type.values();
         for (int i = 0; i < events.length; i++) {
-            System.out.printf("%4d. %s\n", i, events[i].toString());
+            if (!(BoardEvent.Type.TRIVIAL_MOVE.equals(events[i]) ||
+                BoardEvent.Type.TRIVIAL_REMOVE.equals(events[i]))) {
+
+                System.out.printf("%4d. %s\n", i, events[i].toString());
+            }
         }
     }
 
     public void selectLevel(int levelNumber) {
-        if (levelNumber < 0 || levelNumber >= this.levelBuilders.size()) {
+        if (levelNumber < 0 || levelNumber >= levelBuilders.size()) {
             System.out.print("\nInvalid Input.\nThe ClassicLevelBuilder was chosen.");
             return;
         }
 
         this.selectedLevel = GameUtility
-            .getInstanceOfLevelBuilder(this.levelBuilders.get(levelNumber));
+            .getInstanceOfLevelBuilder(levelBuilders.get(levelNumber), pegFactory);
 
         if (this.selectedLevel == null) {
-            this.selectedLevel = new ClassicLevelBuilder();
-            System.out.printf(
-                "\nWas not able to create instance of %s.\n", levelBuilders.get(levelNumber).getSimpleName()
+            this.selectedLevel = new ClassicLevelBuilder(pegFactory);
+            System.out.printf("\nWas not able to create instance of %s.\n",
+                levelBuilders.get(levelNumber).getSimpleName()
             );
 
             System.out.print("The ClassicLevelBuilder was chosen.");
@@ -163,13 +184,13 @@ public class PromptImpl implements Prompt {
             );
         }
 
-        consoleUI.printBoard(this.selectedLevel.build());
+        consoleUI.printBoard(selectedLevel.build());
     }
 
     public void displayLevels() {
         System.out.println("\nChoose level builder to use:");
-        for (int i = 0; i < this.levelBuilders.size(); i++) {
-            System.out.printf("%4c%d. %s\n", ' ', i, this.levelBuilders.get(i).getSimpleName());
+        for (int i = 0; i < levelBuilders.size(); i++) {
+            System.out.printf("%4c%d. %s\n", ' ', i, levelBuilders.get(i).getSimpleName());
         }
 
     }
@@ -180,19 +201,19 @@ public class PromptImpl implements Prompt {
         }
 
         eventManager.clearAll();
-        selectedPegEvents.forEach(
+        pegFactory.getPegEvents().forEach(
             event -> eventManager.subscribe(event, eventToHandler.get(event))
         );
 
         if (this.game == null) {
             this.game = GameImpl.builder()
                 .boardBuilder(BoardImpl.builder())
-                .eventManager(this.eventManager)
-                .levelBuilder(this.selectedLevel)
+                .eventManager(eventManager)
+                .levelBuilder(selectedLevel)
                 .build();
 
         } else {
-            this.game.setLevelBuilder(this.selectedLevel);
+            this.game.setLevelBuilder(selectedLevel);
         }
 
         this.consoleUI.start(game);

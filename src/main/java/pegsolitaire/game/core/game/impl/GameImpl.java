@@ -17,14 +17,20 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GameImpl implements Game {
+
     @NonNull
     BoardEventManager eventManager;
+
     @NonNull
     LevelBuilder levelBuilder;
+
     @NonNull
     BoardBuilder boardBuilder;
+
     Board board;
+
     int[] selectedPegPosition;
+
     boolean started;
 
     public void start() {
