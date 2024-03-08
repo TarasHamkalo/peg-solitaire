@@ -15,7 +15,6 @@ public class BombEventHandler implements BoardEventHandler {
         }
 
         int[] currentPosition = command.getFinalPosition();
-
         for (Direction direction : Direction.values()) {
             int[] destroyPosition = new int[]{
                 currentPosition[0] + direction.getX(), currentPosition[1] + direction.getY()
