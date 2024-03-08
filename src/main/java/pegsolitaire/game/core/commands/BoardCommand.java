@@ -1,9 +1,6 @@
 package pegsolitaire.game.core.commands;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.experimental.SuperBuilder;
@@ -14,13 +11,17 @@ import pegsolitaire.game.core.pegs.Peg;
 @SuperBuilder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-// TODO: add events from pegs
 public abstract class BoardCommand {
+
     @NonNull
+    @ToString.Exclude
     Board board;
+
     @NonFinal
     Peg peg;
+
     int[] initialPosition;
+
     int[] finalPosition;
 
     /**
@@ -29,7 +30,7 @@ public abstract class BoardCommand {
     public abstract boolean exec();
 
     /**
-     * @return True state was restored
+     * @return True if state was restored
      */
     public abstract boolean undo();
 }

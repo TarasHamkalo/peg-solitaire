@@ -10,7 +10,9 @@ import java.util.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BoardEventManagerImpl implements BoardEventManager {
+
     Map<BoardEvent.Type, Set<BoardEventHandler>> eventToHandlers;
+
     public BoardEventManagerImpl() {
         this.eventToHandlers = new EnumMap<>(BoardEvent.Type.class);
     }

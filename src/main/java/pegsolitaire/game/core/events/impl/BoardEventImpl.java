@@ -12,7 +12,9 @@ import pegsolitaire.game.core.events.BoardEvent;
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class BoardEventImpl {
-    BoardEvent.Type type;
-    BoardCommand trigger;
+public class BoardEventImpl implements BoardEvent {
+
+    BoardEvent.Type eventType;
+
+    BoardCommand triggerCommand;
 }
