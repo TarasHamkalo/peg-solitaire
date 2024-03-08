@@ -4,9 +4,11 @@ import lombok.experimental.SuperBuilder;
 import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.board.impl.BasicCell;
 import pegsolitaire.game.core.commands.BoardCommand;
+import pegsolitaire.game.core.events.impl.BoardEventImpl;
 
 @SuperBuilder
 public class RemoveCommand extends BoardCommand {
+
     @Override
     public boolean exec() {
         var removeFrom = this.getBoard().getBoardCellAt(
@@ -19,6 +21,14 @@ public class RemoveCommand extends BoardCommand {
 
         this.setPeg(removeFrom.getPeg());
         removeFrom.setPeg(null);
+
+        this.getBoard().offerEvent(
+            BoardEventImpl.builder()
+                .eventType(this.getPeg().getRemoveEvent())
+                .triggerCommand(this)
+                .build()
+        );
+
         return true;
     }
 
