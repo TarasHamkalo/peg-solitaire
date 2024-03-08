@@ -16,6 +16,8 @@ import pegsolitaire.game.core.events.BoardEventManager;
 import pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
 import pegsolitaire.game.core.game.Game;
 import pegsolitaire.game.core.levels.LevelBuilder;
+import pegsolitaire.game.core.pegs.PegFactory;
+import pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
 
 import java.util.List;
 
@@ -25,8 +27,12 @@ import static org.mockito.Mockito.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class GameImplTest {
+
+    PegFactory pegFactory = new PegFactoryImpl();
+
     final BoardEventManager eventManager = new BoardEventManagerImpl();
-    final BoardCell[][] boardCells = new HasMovesLevelBuilder().build();
+
+    final BoardCell[][] boardCells = new HasMovesLevelBuilder(pegFactory).build();
 
     Game underTest;
 
@@ -45,13 +51,13 @@ class GameImplTest {
     void setUp() {
         this.boardBuilderSpy = BoardImpl.builder();
         this.mocksAutoClosable = MockitoAnnotations.openMocks(this);
-        when(this.levelBuilderMock.build()).thenReturn(this.boardCells);
-        doReturn(this.boardMock).when(this.boardBuilderSpy).build();
+        when(levelBuilderMock.build()).thenReturn(boardCells);
+        doReturn(boardMock).when(boardBuilderSpy).build();
 
         this.underTest = GameImpl.builder()
-            .levelBuilder(this.levelBuilderMock)
-            .boardBuilder(this.boardBuilderSpy)
-            .eventManager(this.eventManager)
+            .levelBuilder(levelBuilderMock)
+            .boardBuilder(boardBuilderSpy)
+            .eventManager(eventManager)
             .build();
 
         this.underTest.start();

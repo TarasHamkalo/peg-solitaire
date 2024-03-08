@@ -12,14 +12,22 @@ import org.junit.jupiter.params.provider.CsvSource;
 import pegsolitaire.game.core.board.Board;
 import pegsolitaire.game.core.board.BoardCell;
 import pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
+import pegsolitaire.game.core.pegs.PegFactory;
+import pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 class BoardImplTest {
-    HasMovesLevelBuilder hasMovesLevelBuilder = new HasMovesLevelBuilder();
-    NoMovesLevelBuilder noMovesLevelBuilder = new NoMovesLevelBuilder();
+
+    PegFactory pegFactory = new PegFactoryImpl();
+
+    HasMovesLevelBuilder hasMovesLevelBuilder = new HasMovesLevelBuilder(pegFactory);
+
+    NoMovesLevelBuilder noMovesLevelBuilder = new NoMovesLevelBuilder(pegFactory);
+
     BoardEventManagerImpl eventManager = new BoardEventManagerImpl();
+
     @NonFinal
     Board underTest;
 

@@ -1,9 +1,16 @@
 package mock.levels;
 
+import lombok.NonNull;
 import pegsolitaire.game.core.board.impl.BasicCell;
 import pegsolitaire.game.core.levels.LevelBuilder;
+import pegsolitaire.game.core.pegs.PegFactory;
 
 public class NoMovesLevelBuilder extends LevelBuilder {
+
+    public NoMovesLevelBuilder(@NonNull PegFactory pegFactory) {
+        super(pegFactory);
+    }
+
     @Override
     public BasicCell[][] build() {
         BasicCell[][] boardCells = new BasicCell[3][3];
