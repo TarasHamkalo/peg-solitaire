@@ -4,11 +4,11 @@ plugins {
     id 'pmd'
 }
 
-group = 'org.tarashamkalo'
+group = 'sk.tuke.gamestudio'
 version = '1.0'
 
 application {
-    mainClass = 'Main'
+    mainClass = 'sk.tuke.gamestudio.pegsolitaire.game.Main.java'
 }
 repositories {
     mavenCentral()
@@ -19,6 +19,8 @@ run {
 }
 
 dependencies {
+    implementation 'org.postgresql:postgresql:42.7.1'
+
     implementation 'com.github.kwhat:jnativehook:2.2.2'
     implementation 'org.reflections:reflections:0.10.2'
 
