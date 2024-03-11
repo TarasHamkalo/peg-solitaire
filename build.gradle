@@ -8,8 +8,11 @@ group = 'sk.tuke.gamestudio'
 version = '1.0'
 
 application {
-    mainClass = 'sk.tuke.gamestudio.pegsolitaire.game.Main.java'
+//    mainClass = 'sk.tuke.gamestudio.pegsolitaire.game.Main'
+
+    mainClass = 'Main'
 }
+
 repositories {
     mavenCentral()
 }

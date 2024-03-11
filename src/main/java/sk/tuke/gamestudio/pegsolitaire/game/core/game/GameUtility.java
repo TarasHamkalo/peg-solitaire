@@ -23,7 +23,7 @@ public class GameUtility {
     }
 
     public static List<Class<? extends LevelBuilder>> getLevelBuilders() {
-        var reflections = new Reflections("pegsolitaire.game.core.levels");
+        var reflections = new Reflections("sk.tuke.gamestudio.pegsolitaire.game.core.levels");
         return new ArrayList<>(
             reflections.getSubTypesOf(LevelBuilder.class)
         );

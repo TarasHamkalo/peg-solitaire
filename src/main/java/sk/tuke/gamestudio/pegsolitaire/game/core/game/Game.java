@@ -25,4 +25,6 @@ public interface Game {
     Board getBoard();
 
     void setLevelBuilder(LevelBuilder selectedLevel);
+
+    long getScore();
 }
