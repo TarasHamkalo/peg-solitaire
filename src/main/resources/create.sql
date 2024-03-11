@@ -4,13 +4,11 @@ DROP TABLE IF EXISTS Score;
 
 CREATE TABLE Comment
 (
-    id          BIGSERIAL    NOT NULL,
     player      VARCHAR(64)  NOT NULL,
     game        VARCHAR(64)  NOT NULL,
     comment     VARCHAR(150) NOT NULL,
     commentedOn TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP::timestamp,
-    PRIMARY KEY (id),
-    UNIQUE (player),
+    PRIMARY KEY (player, game),
     CONSTRAINT not_blank CHECK (
         length(trim(comment)) <> 0 AND
         length(trim(player)) <> 0 AND
@@ -20,13 +18,11 @@ CREATE TABLE Comment
 
 CREATE TABLE Rating
 (
-    id      BIGSERIAL   NOT NULL,
     player  VARCHAR(64) NOT NULL,
     game    VARCHAR(64) NOT NULL,
     value   INT         NOT NULL CHECK (value BETWEEN 0 AND 5),
     ratedOn TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP::timestamp,
-    PRIMARY KEY (id),
-    UNIQUE (player),
+    PRIMARY KEY (player, game),
     CONSTRAINT not_blank CHECK (
         length(trim(player)) <> 0 AND
         length(trim(game)) <> 0

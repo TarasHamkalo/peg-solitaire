@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -19,5 +20,11 @@ public class Score {
 
     int points;
 
-    Timestamp playedOn;
+    @Builder.Default
+    Timestamp playedOn = Timestamp.from(Instant.now());
+
+    @Override
+    public String toString() {
+        return String.format("%s scored {%d} on %s.", player, points, playedOn);
+    }
 }

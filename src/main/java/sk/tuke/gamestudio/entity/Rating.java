@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -19,5 +20,6 @@ public class Rating {
 
     int value;
 
-    Timestamp ratedOn;
+    @Builder.Default
+    Timestamp ratedOn = Timestamp.from(Instant.now());
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -17,7 +18,8 @@ public class Comment {
 
     String game;
 
-    String comment;
+    String text;
 
-    Timestamp commentedOn;
+    @Builder.Default
+    Timestamp commentedOn = Timestamp.from(Instant.now());
 }
