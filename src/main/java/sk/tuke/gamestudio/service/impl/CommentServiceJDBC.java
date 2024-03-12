@@ -22,7 +22,12 @@ public class CommentServiceJDBC implements CommentService {
 
     public static final String DELETE = "DELETE FROM comment";
 
-    public static final String INSERT = "INSERT INTO comment (game, player, comment, commentedOn) VALUES (?, ?, ?, ?)";
+    public static final String INSERT = """
+        INSERT INTO comment (game, player, comment, commentedOn)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT (game, player)
+        DO UPDATE SET comment=?;
+        """;
 
     @NonNull
     ConnectionPoolDataSource connectionPoolDataSource;
@@ -37,6 +42,7 @@ public class CommentServiceJDBC implements CommentService {
             preparedInsert.setString(2, comment.getPlayer());
             preparedInsert.setString(3, comment.getText());
             preparedInsert.setTimestamp(4, comment.getCommentedOn());
+            preparedInsert.setString(5, comment.getText());
             preparedInsert.executeUpdate();
         } catch (SQLException e) {
             throw new CommentException("Was not able to add comment", e);

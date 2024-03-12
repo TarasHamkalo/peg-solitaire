@@ -10,11 +10,11 @@ import lombok.experimental.FieldDefaults;
 import sk.tuke.gamestudio.pegsolitaire.game.core.Color;
 import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardCell;
 import sk.tuke.gamestudio.pegsolitaire.game.core.game.Game;
-import sk.tuke.gamestudio.pegsolitaire.game.ui.ConsoleUI;
+import sk.tuke.gamestudio.pegsolitaire.game.ui.BoardUI;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ConsoleUIImpl implements ConsoleUI {
+public class BoardUIImpl implements BoardUI {
 
     private static final Color MAIN_CURSOR = Color.BLUE;
 
@@ -37,7 +37,7 @@ public class ConsoleUIImpl implements ConsoleUI {
 
     int y;
 
-    public ConsoleUIImpl() throws NativeHookException {
+    public BoardUIImpl() throws NativeHookException {
         GlobalScreen.registerNativeHook();
     }
 

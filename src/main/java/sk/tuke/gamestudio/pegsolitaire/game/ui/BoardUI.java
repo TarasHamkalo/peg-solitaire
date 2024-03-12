@@ -4,7 +4,7 @@ import lombok.NonNull;
 import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardCell;
 import sk.tuke.gamestudio.pegsolitaire.game.core.game.Game;
 
-public interface ConsoleUI {
+public interface BoardUI {
     void printBoard(@NonNull BoardCell[][] cells);
 
     void drawPrompt();

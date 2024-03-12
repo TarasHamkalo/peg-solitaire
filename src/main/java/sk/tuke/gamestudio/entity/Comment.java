@@ -22,4 +22,9 @@ public class Comment {
 
     @Builder.Default
     Timestamp commentedOn = Timestamp.from(Instant.now());
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s", player, text);
+    }
 }
