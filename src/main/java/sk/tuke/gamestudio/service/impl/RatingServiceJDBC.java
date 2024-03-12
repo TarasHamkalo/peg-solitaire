@@ -16,7 +16,7 @@ import java.sql.SQLException;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RatingServiceJDBC implements RatingService {
 
-    public static final String SELECT_SPECIFIC = "SELECT value FROM rating";
+    public static final String SELECT_SPECIFIC = "SELECT value FROM rating WHERE game = ? AND player = ?";
 
     public static final String SELECT_AVG = "SELECT avg(value) from rating;";
 
@@ -71,6 +71,8 @@ public class RatingServiceJDBC implements RatingService {
             var preparedSelect = connection.prepareStatement(SELECT_SPECIFIC);
         ) {
 
+            preparedSelect.setString(1, game);
+            preparedSelect.setString(2, player);
             var resultSet = preparedSelect.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);

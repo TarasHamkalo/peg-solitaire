@@ -22,4 +22,9 @@ public class Rating {
 
     @Builder.Default
     Timestamp ratedOn = Timestamp.from(Instant.now());
+
+    @Override
+    public String toString() {
+        return String.format("%s rated %s with {%d}", player, game, value);
+    }
 }
