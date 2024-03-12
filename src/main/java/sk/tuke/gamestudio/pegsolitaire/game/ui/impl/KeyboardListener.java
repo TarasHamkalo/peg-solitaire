@@ -6,13 +6,13 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import sk.tuke.gamestudio.pegsolitaire.game.core.Direction;
-import sk.tuke.gamestudio.pegsolitaire.game.ui.ConsoleUI;
+import sk.tuke.gamestudio.pegsolitaire.game.ui.BoardUI;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KeyboardListener implements NativeKeyListener {
-    @NonNull ConsoleUI console;
+    @NonNull BoardUI console;
 
-    public KeyboardListener(@NonNull ConsoleUI console) {
+    public KeyboardListener(@NonNull BoardUI console) {
         this.console = console;
     }
 

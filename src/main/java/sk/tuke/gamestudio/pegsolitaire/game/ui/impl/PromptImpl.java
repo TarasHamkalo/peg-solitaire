@@ -1,6 +1,7 @@
 package sk.tuke.gamestudio.pegsolitaire.game.ui.impl;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +19,8 @@ import sk.tuke.gamestudio.pegsolitaire.game.core.game.impl.GameImpl;
 import sk.tuke.gamestudio.pegsolitaire.game.core.levels.LevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.game.core.levels.impl.ClassicLevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.game.core.pegs.PegFactory;
-import sk.tuke.gamestudio.pegsolitaire.game.ui.ConsoleUI;
+import sk.tuke.gamestudio.pegsolitaire.game.ui.BoardUI;
+import sk.tuke.gamestudio.pegsolitaire.game.ui.InputHandler;
 import sk.tuke.gamestudio.pegsolitaire.game.ui.Prompt;
 
 import java.util.*;
@@ -43,7 +45,7 @@ public class PromptImpl implements Prompt {
     Scanner scanner;
 
     @NonNull
-    ConsoleUI consoleUI;
+    BoardUI boardUI;
 
     BoardEventManager eventManager;
 
@@ -51,6 +53,8 @@ public class PromptImpl implements Prompt {
     PegFactory pegFactory;
 
     List<Class<? extends LevelBuilder>> levelBuilders;
+
+    InputHandler additionalInputHandler;
 
     @NonFinal
     Game game;
@@ -61,9 +65,12 @@ public class PromptImpl implements Prompt {
     @NonFinal
     boolean running;
 
-    public PromptImpl(@NonNull ConsoleUI consoleUI, @NonNull PegFactory pegFactory) {
+    @Builder
+    public PromptImpl(@NonNull BoardUI boardUI, @NonNull PegFactory pegFactory,
+                      InputHandler additionalInputHandler) {
+        this.additionalInputHandler = additionalInputHandler;
         this.running = true;
-        this.consoleUI = consoleUI;
+        this.boardUI = boardUI;
         this.scanner = new Scanner(System.in);
         this.levelBuilders = GameUtility.getLevelBuilders();
         this.eventManager = new BoardEventManagerImpl();
@@ -73,9 +80,9 @@ public class PromptImpl implements Prompt {
 
     @Override
     public void begin() {
-        consoleUI.clearScreen();
+        boardUI.clearScreen();
         while (running) {
-            consoleUI.drawPrompt();
+            boardUI.drawPrompt();
             parseInput();
         }
     }
@@ -85,8 +92,13 @@ public class PromptImpl implements Prompt {
     public void parseInput() {
         var line = scanner.nextLine().trim().toLowerCase(Locale.ENGLISH);
         clearPrompt();
-        if (!(execBasicCommand(line) || execLevelsCommand(line) || execPegsCommand(line))) {
-            System.out.printf("\nInvalid input %s.\n", line);
+        System.out.println();
+        if (execBasicCommand(line) || execLevelsCommand(line) || execPegsCommand(line)) {
+            return;
+        }
+
+        if (additionalInputHandler == null || !additionalInputHandler.handle(line)) {
+            System.out.println("Invalid input");
         }
     }
 
@@ -145,7 +157,7 @@ public class PromptImpl implements Prompt {
     }
 
     public void displayPegEvents() {
-        System.out.println("\nIn use:");
+        System.out.println("In use:");
         for (int i = 0; i < pegFactory.getPegEvents().size(); i++) {
             System.out.printf("%4d. %s\n", i, pegFactory.getPegEvents().get(i).toString());
         }
@@ -164,7 +176,7 @@ public class PromptImpl implements Prompt {
 
     public void selectLevel(int levelNumber) {
         if (levelNumber < 0 || levelNumber >= levelBuilders.size()) {
-            System.out.print("\nInvalid Input.\nThe ClassicLevelBuilder was chosen.");
+            System.out.print("Invalid Input.\nThe ClassicLevelBuilder was chosen.");
             return;
         }
 
@@ -173,22 +185,22 @@ public class PromptImpl implements Prompt {
 
         if (this.selectedLevel == null) {
             this.selectedLevel = new ClassicLevelBuilder(pegFactory);
-            System.out.printf("\nWas not able to create instance of %s.\n",
+            System.out.printf("Was not able to create instance of %s.\n",
                 levelBuilders.get(levelNumber).getSimpleName()
             );
 
             System.out.print("The ClassicLevelBuilder was chosen.");
         } else {
             System.out.printf(
-                "\nThis is level built by %s\n", levelBuilders.get(levelNumber).getSimpleName()
+                "This is level built by %s\n", levelBuilders.get(levelNumber).getSimpleName()
             );
         }
 
-        consoleUI.printBoard(selectedLevel.build());
+        boardUI.printBoard(selectedLevel.build());
     }
 
     public void displayLevels() {
-        System.out.println("\nChoose level builder to use:");
+        System.out.println("Choose level builder to use:");
         for (int i = 0; i < levelBuilders.size(); i++) {
             System.out.printf("%4c%d. %s\n", ' ', i, levelBuilders.get(i).getSimpleName());
         }
@@ -216,22 +228,22 @@ public class PromptImpl implements Prompt {
             this.game.setLevelBuilder(selectedLevel);
         }
 
-        this.consoleUI.start(game);
+        this.boardUI.start(game);
     }
 
     public void exit() {
         this.running = false;
-        this.consoleUI.exit();
+        this.boardUI.exit();
     }
 
     public void stop() {
-        this.consoleUI.stop();
+        this.boardUI.stop();
         clearPrompt();
     }
 
     public void help() {
         System.out.println("""
-            \nUsage info:
+            Usage info:
                 help: shows this information
                 start: starts the game
                 stop: stops the current game;
@@ -247,11 +259,12 @@ public class PromptImpl implements Prompt {
     }
 
     public void clearPrompt() {
-        consoleUI.positionPrompt();
+        boardUI.positionPrompt();
+        System.out.print("\033[0K");
         System.out.print("\033[0J");
     }
 
     public void undo() {
-        this.consoleUI.undo();
+        this.boardUI.undo();
     }
 }
