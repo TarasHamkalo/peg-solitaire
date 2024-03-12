@@ -7,10 +7,14 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
+import sk.tuke.gamestudio.entity.Score;
 import sk.tuke.gamestudio.pegsolitaire.game.core.Color;
 import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardCell;
 import sk.tuke.gamestudio.pegsolitaire.game.core.game.Game;
 import sk.tuke.gamestudio.pegsolitaire.game.ui.BoardUI;
+import sk.tuke.gamestudio.service.ScoreService;
+
+import java.util.ServiceConfigurationError;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -29,6 +33,8 @@ public class BoardUIImpl implements BoardUI {
     @NonNull
     Game game;
 
+    ScoreService scoreService;
+
     KeyboardListener keyboardListener;
 
     int[][] boardSelections;
@@ -37,8 +43,9 @@ public class BoardUIImpl implements BoardUI {
 
     int y;
 
-    public BoardUIImpl() throws NativeHookException {
+    public BoardUIImpl(ScoreService scoreService) throws NativeHookException {
         GlobalScreen.registerNativeHook();
+        this.scoreService = scoreService;
     }
 
     public void start(@NonNull Game game) {
@@ -86,9 +93,9 @@ public class BoardUIImpl implements BoardUI {
     public void adjustCursor(int x, int y) {
         var dx = this.x + x;
         var dy = this.y + y;
-        var nextCell = this.game.getBoard().getBoardCellAt(dx, dy);
+        var nextCell = game.getBoard().getBoardCellAt(dx, dy);
         if (nextCell != null) {
-            var currentCell = this.game.getBoard().getBoardCellAt(this.x, this.y);
+            var currentCell = game.getBoard().getBoardCellAt(this.x, this.y);
 
             saveCursor();
 
@@ -108,35 +115,38 @@ public class BoardUIImpl implements BoardUI {
             return;
         }
 
-        if (this.game.selectPeg(x, y)) {
-            this.boardSelections[y][x] = 2;
-            this.saveCursor();
+        if (game.selectPeg(x, y)) {
+            boardSelections[y][x] = 2;
+            saveCursor();
 
-            this.printCursor(x, y, SELECTED_CURSOR);
-            this.game.getPossibleMoves().forEach(pos -> {
-                this.boardSelections[pos[1]][pos[0]] = 1;
-                this.printCursor(pos[0], pos[1], POSSIBLE_MOVE_CURSOR);
+            printCursor(x, y, SELECTED_CURSOR);
+            game.getPossibleMoves().forEach(pos -> {
+                boardSelections[pos[1]][pos[0]] = 1;
+                printCursor(pos[0], pos[1], POSSIBLE_MOVE_CURSOR);
             });
 
-            this.restoreCursor();
+            restoreCursor();
         }
     }
 
     private boolean processMove() {
-        if (!this.game.isPegSelected()) {
+        if (!game.isPegSelected()) {
             return false;
         }
 
-        var boardCells = this.game.getBoard().getBoardCells();
-        var res = this.game.makeMove(x, y);
+        var res = game.makeMove(x, y);
+
+        var boardCells = game.getBoard().getBoardCells();
+        this.boardSelections = new int[boardCells.length][boardCells[0].length];
+
         saveCursor();
 
-        this.boardSelections = new int[boardCells.length][boardCells[0].length];
         positionAtScreen(1, 1);
         printBoard(boardCells);
-
-        if (!this.game.getBoard().hasAvailableMoves()) {
+        printScore();
+        if (!game.getBoard().hasAvailableMoves()) {
             printResult();
+            saveScore();
             restoreCursor();
             stop();
             return true;
@@ -144,6 +154,22 @@ public class BoardUIImpl implements BoardUI {
 
         restoreCursor();
         return res;
+    }
+
+    private void saveScore() {
+        scoreService.addScore(
+            Score.builder()
+                .game("pegsolitaire")
+                .player(System.getProperty("user.name"))
+                .points((int) game.getScore())
+                .build()
+        );
+    }
+
+    private void printScore() {
+        int[] position = logicalXYToScreen(0, game.getBoard().getBoardCells().length + 2);
+        positionAtScreen(position[0], position[1]);
+        System.out.printf("Score: %s%d%s\n", Color.MAGENTA, game.getScore(), Color.RESET);
     }
 
     @Override
@@ -157,6 +183,7 @@ public class BoardUIImpl implements BoardUI {
 
             positionAtScreen(1, 1);
             printBoard(boardCells);
+            printScore();
             printCursor(this.x, this.y, MAIN_CURSOR);
 
             restoreCursor();
@@ -185,10 +212,6 @@ public class BoardUIImpl implements BoardUI {
         } else if (this.boardSelections[y][x] == SELECTED_CURSOR_CODE) {
             printCursor(x, y, SELECTED_CURSOR);
         }
-    }
-
-    private static void positionAtScreen(int x, int y) {
-        System.out.printf("\033[%d;%dH", y, x);
     }
 
     private void printCursor(int x, int y, @NonNull Color color) {
@@ -234,12 +257,16 @@ public class BoardUIImpl implements BoardUI {
 
     @Override
     public void positionPrompt() {
-        if (this.game != null && this.game.isStarted()) {
-            int propmtY = this.game.getBoard().getBoardCells().length + 2;
+        if (game != null && game.isStarted()) {
+            int propmtY = game.getBoard().getBoardCells().length + 5;
             positionAtScreen(1, propmtY);
         } else {
             positionAtScreen(1, 1);
         }
+    }
+
+    private void positionAtScreen(int x, int y) {
+        System.out.printf("\033[%d;%dH", y, x);
     }
 
     private void restoreCursor() {

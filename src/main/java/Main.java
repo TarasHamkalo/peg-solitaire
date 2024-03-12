@@ -22,7 +22,7 @@ public class Main {
         );
 
 
-        var boardUI = new BoardUIImpl();
+        var boardUI = new BoardUIImpl(scoreService);
         var prompt = PromptImpl.builder()
             .boardUI(boardUI)
             .pegFactory(new PegFactoryImpl())
