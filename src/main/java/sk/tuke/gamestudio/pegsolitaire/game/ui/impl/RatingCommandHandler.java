@@ -73,7 +73,7 @@ public class RatingCommandHandler extends InputHandler {
             Rating.builder()
                 .game("pegsolitaire")
                 .player(System.getProperty("user.name"))
-                .value(Math.round(fValue))
+                .stars(Math.round(fValue))
                 .build()
         );
 
