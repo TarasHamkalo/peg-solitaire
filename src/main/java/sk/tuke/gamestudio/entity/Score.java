@@ -1,9 +1,6 @@
 package sk.tuke.gamestudio.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
@@ -11,6 +8,7 @@ import java.time.Instant;
 
 @Data
 @Builder
+@EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Score {
@@ -21,6 +19,7 @@ public class Score {
     int points;
 
     @Builder.Default
+    @EqualsAndHashCode.Exclude
     Timestamp playedOn = Timestamp.from(Instant.now());
 
     @Override

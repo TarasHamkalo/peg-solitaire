@@ -24,7 +24,10 @@ public class CommentServiceJDBC implements CommentService {
 
     public static final String INSERT = """
         MERGE INTO comment c
-        USING (SELECT ? game, ? player, ? text, CAST(? as timestamp) commentedOn) AS newData
+        USING (SELECT CAST(? as varchar)   as game,
+                      CAST(? as varchar)   as player,
+                      CAST(? as varchar)      text,
+                      CAST(? AS timestamp) as commentedOn) AS newData
         ON (c.game = newData.game AND c.player = newData.player)
         WHEN MATCHED THEN
             UPDATE
@@ -48,7 +51,6 @@ public class CommentServiceJDBC implements CommentService {
             preparedInsert.setString(2, comment.getPlayer());
             preparedInsert.setString(3, comment.getText());
             preparedInsert.setTimestamp(4, comment.getCommentedOn());
-            System.out.println(preparedInsert.toString());
             preparedInsert.executeUpdate();
         } catch (SQLException e) {
             throw new CommentException("Was not able to add comment", e);

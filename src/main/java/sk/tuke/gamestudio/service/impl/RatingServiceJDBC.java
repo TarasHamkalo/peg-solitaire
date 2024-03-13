@@ -16,25 +16,27 @@ import java.sql.SQLException;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RatingServiceJDBC implements RatingService {
 
-    public static final String SELECT_SPECIFIC = "SELECT value FROM rating WHERE game = ? AND player = ?";
+    public static final String SELECT_SPECIFIC = "SELECT stars FROM rating WHERE game = ? AND player = ?";
 
-    public static final String SELECT_AVG = "SELECT avg(value) from rating;";
+    public static final String SELECT_AVG = "SELECT avg(stars) from rating;";
 
     public static final String DELETE = "DELETE FROM rating";
 
     public static final String INSERT_UPDATE = """
-       MERGE INTO rating r
-       USING (SELECT ? game, ? player, ? value, CAST(? AS timestamp) ratedOn) AS newData
-       ON (r.game = newData.game AND r.player = newData.player)
-       WHEN MATCHED THEN
+        MERGE INTO rating r
+        USING (SELECT CAST(? as varchar)   as game,
+                      CAST(? as varchar)   as player,
+                      CAST(? as int)      stars,
+                      CAST(? AS timestamp) as ratedOn) AS newData
+        ON (r.game = newData.game AND r.player = newData.player)
+        WHEN MATCHED THEN
             UPDATE
-            SET value = newData.value,
+            SET stars   = newData.stars,
                 ratedOn = newData.ratedOn
-       WHEN NOT MATCHED THEN
-            INSERT (game, player, value, ratedOn)
-            VALUES (newData.game, newData.player, newData.value, newData.ratedOn);
-       """;
-
+        WHEN NOT MATCHED THEN
+            INSERT (game, player, stars, ratedOn)
+            VALUES (newData.game, newData.player, newData.stars, newData.ratedOn);
+        """;
 
     @NonNull
     ConnectionPoolDataSource connectionPoolDataSource;
@@ -47,10 +49,11 @@ public class RatingServiceJDBC implements RatingService {
         ) {
             preparedInsert.setString(1, rating.getGame());
             preparedInsert.setString(2, rating.getPlayer());
-            preparedInsert.setDouble(3, rating.getValue());
+            preparedInsert.setInt(3, rating.getStars());
             preparedInsert.setTimestamp(4, rating.getRatedOn());
+            preparedInsert.executeUpdate();
         } catch (SQLException e) {
-            throw new CommentException("Was not able to add comment", e);
+            throw new RatingException("Was not able to add rating", e);
         }
 
     }

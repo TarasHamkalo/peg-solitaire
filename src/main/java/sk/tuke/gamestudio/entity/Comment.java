@@ -1,9 +1,6 @@
 package sk.tuke.gamestudio.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
@@ -21,6 +18,7 @@ public class Comment {
     String text;
 
     @Builder.Default
+    @EqualsAndHashCode.Exclude
     Timestamp commentedOn = Timestamp.from(Instant.now());
 
     @Override
