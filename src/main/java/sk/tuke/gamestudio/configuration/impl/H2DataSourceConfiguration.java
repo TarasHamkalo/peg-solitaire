@@ -1,10 +1,9 @@
 package sk.tuke.gamestudio.configuration.impl;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
-import org.postgresql.ds.PGConnectionPoolDataSource;
+import org.h2.jdbcx.JdbcDataSource;
 import sk.tuke.gamestudio.configuration.DataSourceConfiguration;
 
 import javax.sql.ConnectionPoolDataSource;
@@ -12,15 +11,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PostgresDataSourceConfiguration implements DataSourceConfiguration {
+public class H2DataSourceConfiguration implements DataSourceConfiguration {
 
-    ConnectionPoolDataSource postgresDataSource;
+    ConnectionPoolDataSource h2DataSource;
 
     @Override
     public ConnectionPoolDataSource getDataSource() {
-        return this.postgresDataSource;
+        return h2DataSource;
     }
 
     @Override
@@ -30,20 +28,20 @@ public class PostgresDataSourceConfiguration implements DataSourceConfiguration 
             return null;
         }
 
-        var postgresDataSource = new PGConnectionPoolDataSource();
+        var h2DataSource = new JdbcDataSource();
         try (var reader = new InputStreamReader(url.openStream())) {
             var properties = new Properties();
             properties.load(reader);
 
-            postgresDataSource.setURL(properties.getProperty("postgres.url"));
-            postgresDataSource.setUser(properties.getProperty("postgres.password"));
-            postgresDataSource.setPassword(properties.getProperty("postgres.password"));
+            h2DataSource.setURL(properties.getProperty("h2.url"));
+            h2DataSource.setUser(properties.getProperty("h2.user"));
+            h2DataSource.setPassword(properties.getProperty("h2.password"));
         } catch (IOException ignore) {
             ignore.printStackTrace();
             return null;
         }
 
-        this.postgresDataSource = postgresDataSource;
-        return postgresDataSource;
+        this.h2DataSource = h2DataSource;
+        return h2DataSource;
     }
 }

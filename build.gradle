@@ -23,6 +23,9 @@ run {
 
 dependencies {
     implementation 'org.postgresql:postgresql:42.7.1'
+    implementation 'com.h2database:h2:2.2.224'
+
+    implementation 'org.mybatis:mybatis:3.5.15'
 
     implementation 'com.github.kwhat:jnativehook:2.2.2'
     implementation 'org.reflections:reflections:0.10.2'
