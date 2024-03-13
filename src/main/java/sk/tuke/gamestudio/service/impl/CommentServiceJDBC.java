@@ -18,15 +18,21 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentServiceJDBC implements CommentService {
 
-    public static final String SELECT = "SELECT game, player, comment, commentedON FROM comment ORDER BY commentedOn ASC LIMIT 10";
+    public static final String SELECT = "SELECT game, player, text, commentedON FROM comment ORDER BY commentedOn ASC LIMIT 10";
 
     public static final String DELETE = "DELETE FROM comment";
 
     public static final String INSERT = """
-        INSERT INTO comment (game, player, comment, commentedOn)
-        VALUES (?, ?, ?, ?)
-        ON CONFLICT (game, player)
-        DO UPDATE SET comment=?;
+        MERGE INTO comment c
+        USING (SELECT ? game, ? player, ? text, CAST(? as timestamp) commentedOn) AS newData
+        ON (c.game = newData.game AND c.player = newData.player)
+        WHEN MATCHED THEN
+            UPDATE
+            SET text        = newData.text,
+                commentedOn = newData.commentedOn
+        WHEN NOT MATCHED THEN
+            INSERT (game, player, text, commentedOn)
+            VALUES (newData.game, newData.player, newData.text, newData.commentedOn);
         """;
 
     @NonNull
@@ -42,7 +48,7 @@ public class CommentServiceJDBC implements CommentService {
             preparedInsert.setString(2, comment.getPlayer());
             preparedInsert.setString(3, comment.getText());
             preparedInsert.setTimestamp(4, comment.getCommentedOn());
-            preparedInsert.setString(5, comment.getText());
+            System.out.println(preparedInsert.toString());
             preparedInsert.executeUpdate();
         } catch (SQLException e) {
             throw new CommentException("Was not able to add comment", e);

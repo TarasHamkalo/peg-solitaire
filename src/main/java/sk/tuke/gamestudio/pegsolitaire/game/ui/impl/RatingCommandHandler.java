@@ -76,5 +76,7 @@ public class RatingCommandHandler extends InputHandler {
                 .value(Math.round(fValue))
                 .build()
         );
+
+        System.out.println("Rating was added.");
     }
 }

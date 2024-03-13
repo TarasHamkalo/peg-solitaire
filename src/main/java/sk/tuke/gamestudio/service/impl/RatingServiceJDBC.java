@@ -23,11 +23,17 @@ public class RatingServiceJDBC implements RatingService {
     public static final String DELETE = "DELETE FROM rating";
 
     public static final String INSERT_UPDATE = """
-        INSERT INTO rating (game, player, value, ratedon)
-        VALUES (?, ?, ?, ?)
-        ON CONFLICT (game, player)
-        DO UPDATE SET value=?;
-        """;
+       MERGE INTO rating r
+       USING (SELECT ? game, ? player, ? value, CAST(? AS timestamp) ratedOn) AS newData
+       ON (r.game = newData.game AND r.player = newData.player)
+       WHEN MATCHED THEN
+            UPDATE
+            SET value = newData.value,
+                ratedOn = newData.ratedOn
+       WHEN NOT MATCHED THEN
+            INSERT (game, player, value, ratedOn)
+            VALUES (newData.game, newData.player, newData.value, newData.ratedOn);
+       """;
 
 
     @NonNull
@@ -43,7 +49,6 @@ public class RatingServiceJDBC implements RatingService {
             preparedInsert.setString(2, rating.getPlayer());
             preparedInsert.setDouble(3, rating.getValue());
             preparedInsert.setTimestamp(4, rating.getRatedOn());
-            preparedInsert.setDouble(5, rating.getValue());
         } catch (SQLException e) {
             throw new CommentException("Was not able to add comment", e);
         }
