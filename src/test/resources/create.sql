@@ -9,7 +9,7 @@ CREATE TABLE Comment
     text        VARCHAR(150) NOT NULL,
     commentedOn TIMESTAMP    NOT NULL DEFAULT CAST(CURRENT_TIMESTAMP as timestamp),
     PRIMARY KEY (player, game),
-    CONSTRAINT not_blank CHECK (
+    CONSTRAINT not_blank1 CHECK (
                 length(trim(text)) <> 0 AND
                 length(trim(player)) <> 0 AND
                 length(trim(game)) <> 0
@@ -23,7 +23,7 @@ CREATE TABLE Rating
     stars   INT         NOT NULL CHECK (stars BETWEEN 0 AND 5),
     ratedOn TIMESTAMP   NOT NULL DEFAULT CAST(CURRENT_TIMESTAMP as timestamp),
     PRIMARY KEY (player, game),
-    CONSTRAINT not_blank CHECK (
+    CONSTRAINT not_blank2 CHECK (
                 length(trim(player)) <> 0 AND
                 length(trim(game)) <> 0
         )
@@ -31,14 +31,14 @@ CREATE TABLE Rating
 
 CREATE TABLE Score
 (
-    id       BIGSERIAL   NOT NULL,
+    id       BIGINT      NOT NULL AUTO_INCREMENT,
     player   VARCHAR(64) NOT NULL,
     game     VARCHAR(64) NOT NULL,
     points   INT         NOT NULL CHECK (points > 0),
     playedOn TIMESTAMP   NOT NULL DEFAULT CAST(CURRENT_TIMESTAMP as timestamp),
 
     PRIMARY KEY (id),
-    CONSTRAINT not_blank CHECK (
+    CONSTRAINT not_blank3 CHECK (
                 length(trim(player)) <> 0 AND
                 length(trim(game)) <> 0
         )
