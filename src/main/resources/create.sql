@@ -31,13 +31,12 @@ CREATE TABLE Rating
 
 CREATE TABLE Score
 (
-    id       BIGSERIAL   NOT NULL,
     player   VARCHAR(64) NOT NULL,
     game     VARCHAR(64) NOT NULL,
     points   INT         NOT NULL CHECK (points > 0),
     playedOn TIMESTAMP   NOT NULL DEFAULT CAST(CURRENT_TIMESTAMP as timestamp),
 
-    PRIMARY KEY (id),
+    PRIMARY KEY (game, player),
     CONSTRAINT not_blank CHECK (
                 length(trim(player)) <> 0 AND
                 length(trim(game)) <> 0
