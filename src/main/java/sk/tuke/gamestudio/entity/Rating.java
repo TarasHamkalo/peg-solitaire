@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Builder
@@ -19,8 +20,9 @@ public class Rating {
     int stars;
 
     @Builder.Default
-    @EqualsAndHashCode.Exclude
-    Timestamp ratedOn = Timestamp.from(Instant.now());
+    Date ratedOn = Date.from(Instant.now());
+//    @EqualsAndHashCode.Exclude
+//    Timestamp ratedOn = Timestamp.from(Instant.now());
 
     @Override
     public String toString() {

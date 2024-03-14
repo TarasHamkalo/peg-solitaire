@@ -11,6 +11,7 @@ import sk.tuke.gamestudio.service.RatingService;
 
 import javax.sql.ConnectionPoolDataSource;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -50,7 +51,7 @@ public class RatingServiceJDBC implements RatingService {
             preparedInsert.setString(1, rating.getGame());
             preparedInsert.setString(2, rating.getPlayer());
             preparedInsert.setInt(3, rating.getStars());
-            preparedInsert.setTimestamp(4, rating.getRatedOn());
+            preparedInsert.setTimestamp(4, new Timestamp(rating.getRatedOn().getTime()));
             preparedInsert.executeUpdate();
         } catch (SQLException e) {
             throw new RatingException("Was not able to add rating", e);

@@ -3,11 +3,12 @@ package sk.tuke.gamestudio.entity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Builder
+@EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment {
@@ -18,8 +19,7 @@ public class Comment {
     String text;
 
     @Builder.Default
-    @EqualsAndHashCode.Exclude
-    Timestamp commentedOn = Timestamp.from(Instant.now());
+    Date commentedOn = Date.from(Instant.now());
 
     @Override
     public String toString() {

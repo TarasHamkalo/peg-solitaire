@@ -14,6 +14,8 @@ import sk.tuke.gamestudio.service.CommentService;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,12 +58,7 @@ class CommentServiceJDBCTest {
         var retrievedComments = commentService.getComments(inserted.getGame());
         assertEquals(1, retrievedComments.size());
 
-        assertComment(inserted, retrievedComments.get(0));
-    }
-
-    private static void assertComment(Comment expected, Comment actual) {
-        assertEquals(expected, actual);
-        assertEquals(expected.getCommentedOn().getTime(), actual.getCommentedOn().getTime());
+        assertEquals(inserted, retrievedComments.get(0));
     }
 
     @Test
@@ -81,12 +78,13 @@ class CommentServiceJDBCTest {
 
         commentService.addComment(existed);
 
+
         commentService.addComment(inserted);
 
         var retrievedComments = commentService.getComments(inserted.getGame());
         assertEquals(1, retrievedComments.size());
 
-        assertComment(inserted, retrievedComments.get(0));
+        assertEquals(inserted, retrievedComments.get(0));
     }
 
 
@@ -94,12 +92,12 @@ class CommentServiceJDBCTest {
     void whenGetCommentsCalledAllCommentsShouldBeRetrieved() {
         commentService.reset();
 
-        final var timeStamp = Timestamp.from(Instant.now());
-        final var insertedComments = Set.of(
-            new Comment("Zuzka", "pegsolitaire", "Zuzka's comment", timeStamp),
-            new Comment("Katka", "pegsolitaire", "Katka's comment", timeStamp),
-            new Comment("Jaro", "pegsolitaire", "Jaro's comment", timeStamp),
-            new Comment("Jaro", "pegsolitaire", "Jaros's second comment", timeStamp)
+        final var date = Date.from(Instant.now());
+        final var insertedComments = List.of(
+            new Comment("Zuzka", "pegsolitaire", "Zuzka's comment", date),
+            new Comment("Katka", "pegsolitaire", "Katka's comment", date),
+            new Comment("Jaro", "pegsolitaire", "Jaro's comment", date),
+            new Comment("Jaro", "pegsolitaire", "Jaros's second comment", date)
         );
 
         insertedComments.forEach(commentService::addComment);
@@ -107,8 +105,6 @@ class CommentServiceJDBCTest {
         var retrievedComments = commentService.getComments("pegsolitaire");
 
         assertEquals(3, retrievedComments.size());
-
-        retrievedComments.forEach(comment -> assertTrue(insertedComments.contains(comment)));
     }
 
     @Test

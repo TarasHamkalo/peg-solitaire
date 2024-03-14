@@ -25,11 +25,6 @@ class RatingServiceJDBCTest {
 
     RatingService ratingService;
 
-    private static void assertRating(Rating expected, Rating actual) {
-        assertEquals(expected, actual);
-        assertEquals(expected.getRatedOn().getTime(), actual.getRatedOn().getTime());
-    }
-
     @BeforeAll
     @SneakyThrows
     void setUp() {
@@ -119,6 +114,7 @@ class RatingServiceJDBCTest {
     @Test
     void afterResetIsCalledAvgRatingShouldBe0() {
         ratingService.reset();
+
         assertEquals(0, ratingService.getAverageRating("pegsolitaire"));
     }
 }

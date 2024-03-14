@@ -10,6 +10,7 @@ import sk.tuke.gamestudio.service.CommentService;
 
 import javax.sql.ConnectionPoolDataSource;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentServiceJDBC implements CommentService {
 
-    public static final String SELECT = "SELECT game, player, text, commentedON FROM comment ORDER BY commentedOn ASC LIMIT 10";
+    public static final String SELECT = "SELECT game, player, text, commentedOn FROM comment ORDER BY commentedOn ASC LIMIT 10";
 
     public static final String DELETE = "DELETE FROM comment";
 
@@ -50,7 +51,7 @@ public class CommentServiceJDBC implements CommentService {
             preparedInsert.setString(1, comment.getGame());
             preparedInsert.setString(2, comment.getPlayer());
             preparedInsert.setString(3, comment.getText());
-            preparedInsert.setTimestamp(4, comment.getCommentedOn());
+            preparedInsert.setTimestamp(4, new Timestamp(comment.getCommentedOn().getTime()));
             preparedInsert.executeUpdate();
         } catch (SQLException e) {
             throw new CommentException("Was not able to add comment", e);
