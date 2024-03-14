@@ -12,8 +12,8 @@ import sk.tuke.gamestudio.entity.Score;
 import sk.tuke.gamestudio.service.ScoreService;
 
 import java.io.InputStreamReader;
-import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,11 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ScoreServiceJDBCTest {
 
     ScoreService scoreService;
-
-    private static void assertScore(Score expected, Score actual) {
-        assertEquals(expected, actual);
-        assertEquals(expected.getPlayedOn().getTime(), actual.getPlayedOn().getTime());
-    }
 
     @BeforeAll
     @SneakyThrows
@@ -64,28 +59,28 @@ class ScoreServiceJDBCTest {
         // then
         var retrieved = scoreService.getTopScores("pegsolitaire");
         assertEquals(1, retrieved.size());
-        assertScore(expected, retrieved.get(0));
+        assertEquals(expected, retrieved.get(0));
     }
 
     @Test
     void getTopScores() {
         scoreService.reset();
-        final var timeStamp = Timestamp.from(Instant.now());
+        final var date = Date.from(Instant.now());
 
         final var scoreInserted = List.of(
-            new Score("pegsolitaire", "Zuzka", 180, timeStamp),
-            new Score("pegsolitaire", "Katka", 150, timeStamp),
-            new Score("pegsolitaire", "Jaro", 120, timeStamp),
-            new Score("pegsolitaire", "Jaro", 100, timeStamp)
+            new Score("pegsolitaire", "Zuzka", 180, date),
+            new Score("pegsolitaire", "Katka", 150, date),
+            new Score("pegsolitaire", "Jaro", 120, date),
+            new Score("pegsolitaire", "Jaro", 100, date)
         );
 
         scoreInserted.forEach(scoreService::addScore);
 
         var scoresRetrieved = scoreService.getTopScores("pegsolitaire");
 
-        assertEquals(4, scoresRetrieved.size());
+        assertEquals(3, scoresRetrieved.size());
         for (int i = 0; i < scoreInserted.size(); i++) {
-            assertScore(scoreInserted.get(0), scoresRetrieved.get(0));
+            assertEquals(scoreInserted.get(0), scoresRetrieved.get(0));
         }
     }
 

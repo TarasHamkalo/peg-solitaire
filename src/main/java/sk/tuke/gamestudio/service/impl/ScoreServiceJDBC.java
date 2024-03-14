@@ -9,7 +9,9 @@ import sk.tuke.gamestudio.exception.ScoreException;
 import sk.tuke.gamestudio.service.ScoreService;
 
 import javax.sql.ConnectionPoolDataSource;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,21 @@ import java.util.List;
 public class ScoreServiceJDBC implements ScoreService {
     public static final String SELECT = "SELECT game, player, points, playedOn FROM score WHERE game = ? ORDER BY points DESC LIMIT 10";
     public static final String DELETE = "DELETE FROM score";
-    public static final String INSERT = "INSERT INTO score (game, player, points, playedOn) VALUES (?, ?, ?, ?)";
+    public static final String INSERT = """
+        MERGE INTO score s
+        USING (SELECT   CAST(? AS varchar) game,
+                        CAST(? AS varchar) player,
+                        CAST(? AS int) points,
+                        CAST(? AS timestamp) playedOn) as newData
+        ON (s.game = newData.game AND s.player = newData.player)
+        WHEN MATCHED THEN
+            UPDATE
+            SET points = newData.points, playedOn = newData.playedOn
+        WHEN NOT MATCHED THEN
+            INSERT (player, game, points, playedOn)
+            VALUES (newData.player, newData.game, newData.points, newData.playedOn);
+        """;
+    //"INSERT INTO score (game, player, points, playedOn) VALUES (?, ?, ?, ?)";
 
     @NonNull
     ConnectionPoolDataSource connectionPoolDataSource;
@@ -26,12 +42,12 @@ public class ScoreServiceJDBC implements ScoreService {
     @Override
     public void addScore(Score score) {
         try (var connection = connectionPoolDataSource.getPooledConnection().getConnection();
-             var statement = connection.prepareStatement(INSERT)) {
-            statement.setString(1, score.getGame());
-            statement.setString(2, score.getPlayer());
-            statement.setInt(3, score.getPoints());
-            statement.setTimestamp(4, new Timestamp(score.getPlayedOn().getTime()));
-            statement.executeUpdate();
+             var preparedInsert = connection.prepareStatement(INSERT)) {
+            preparedInsert.setString(1, score.getGame());
+            preparedInsert.setString(2, score.getPlayer());
+            preparedInsert.setInt(3, score.getPoints());
+            preparedInsert.setTimestamp(4, new Timestamp(score.getPlayedOn().getTime()));
+            preparedInsert.executeUpdate();
         } catch (SQLException e) {
             throw new ScoreException("Problem inserting score", e);
         }

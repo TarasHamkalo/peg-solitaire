@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Builder
@@ -19,8 +20,8 @@ public class Score {
     int points;
 
     @Builder.Default
-    @EqualsAndHashCode.Exclude
-    Timestamp playedOn = Timestamp.from(Instant.now());
+    Date playedOn = Date.from(Instant.now());
+//    @EqualsAndHashCode.Exclude
 
     @Override
     public String toString() {
