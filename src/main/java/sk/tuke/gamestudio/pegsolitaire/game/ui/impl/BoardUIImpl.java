@@ -63,6 +63,7 @@ public class BoardUIImpl implements BoardUI {
         hideCursor();
         clearScreen();
         printBoard(boardCells);
+        printScore();
         printCursor(x, y, MAIN_CURSOR);
     }
 
@@ -157,13 +158,15 @@ public class BoardUIImpl implements BoardUI {
     }
 
     private void saveScore() {
-        scoreService.addScore(
-            Score.builder()
-                .game("pegsolitaire")
-                .player(System.getProperty("user.name"))
-                .points((int) game.getScore())
-                .build()
-        );
+        if (game.getScore() > 0) {
+            scoreService.addScore(
+                Score.builder()
+                    .game("pegsolitaire")
+                    .player(System.getProperty("user.name"))
+                    .points((int) game.getScore())
+                    .build()
+            );
+        }
     }
 
     private void printScore() {

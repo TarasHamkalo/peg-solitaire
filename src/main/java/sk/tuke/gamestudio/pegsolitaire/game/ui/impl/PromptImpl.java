@@ -255,6 +255,16 @@ public class PromptImpl implements Prompt {
                 levels {n}:
                     without parameter: displays levels
                     with parameter: selects types
+                score top:
+                    shows top 10 scores if present
+                rating rate n:
+                    rates pegsolitaire with n stars
+                rating get <player>: show rating from given player
+                rating avg: shows avg rating of pegsolitaire
+                comment add <text>: creates comment with given text
+                comment list: shows comment 
+                (score|rating|comment) reset: resets given entity
+                    
             """);
     }
 
