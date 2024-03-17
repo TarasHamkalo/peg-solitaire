@@ -20,7 +20,7 @@ CREATE TABLE Rating
 (
     player  VARCHAR(64) NOT NULL,
     game    VARCHAR(64) NOT NULL,
-    stars   INT         NOT NULL CHECK (stars BETWEEN 0 AND 5),
+    stars   INT         NOT NULL CHECK (stars BETWEEN 1 AND 5),
     ratedOn TIMESTAMP   NOT NULL DEFAULT CAST(CURRENT_TIMESTAMP as timestamp),
     PRIMARY KEY (player, game),
     CONSTRAINT not_blank2 CHECK (

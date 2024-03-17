@@ -179,6 +179,7 @@ public class BoardUIImpl implements BoardUI {
     private void printScore() {
         int[] position = logicalXYToScreen(0, game.getBoard().getBoardCells().length + 2);
         positionAtScreen(position[0], position[1]);
+        System.out.print("\033[0K");
         System.out.printf("Score: %s%d%s\n", Color.MAGENTA, game.getScore(), Color.RESET);
     }
 
