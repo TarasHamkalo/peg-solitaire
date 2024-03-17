@@ -8,6 +8,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import sk.tuke.gamestudio.entity.Score;
+import sk.tuke.gamestudio.exception.ScoreException;
 import sk.tuke.gamestudio.pegsolitaire.game.core.Color;
 import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardCell;
 import sk.tuke.gamestudio.pegsolitaire.game.core.game.Game;
@@ -158,7 +159,7 @@ public class BoardUIImpl implements BoardUI {
     }
 
     private void saveScore() {
-        if (game.getScore() > 0) {
+        try {
             scoreService.addScore(
                 Score.builder()
                     .game("pegsolitaire")
@@ -166,6 +167,12 @@ public class BoardUIImpl implements BoardUI {
                     .points((int) game.getScore())
                     .build()
             );
+
+        } catch (ScoreException scoreException) {
+            positionPrompt();
+            System.out.println("\n" + scoreException.getMessage());
+            System.out.println("Try to reset scores");
+            positionPrompt();
         }
     }
 
