@@ -23,6 +23,10 @@ public class CommentServiceJDBC implements CommentService {
 
     public static final String DELETE = "DELETE FROM comment";
 
+    public static final String INSERT =
+        "INSERT INTO COMMENT (game, player, text, commentedon) VALUES (?, ?, ?, ?)";
+
+    /*
     public static final String INSERT = """
         MERGE INTO comment c
         USING (SELECT CAST(? as varchar)   as game,
@@ -38,6 +42,7 @@ public class CommentServiceJDBC implements CommentService {
             INSERT (game, player, text, commentedOn)
             VALUES (newData.game, newData.player, newData.text, newData.commentedOn);
         """;
+    */
 
     @NonNull
     ConnectionPoolDataSource connectionPoolDataSource;

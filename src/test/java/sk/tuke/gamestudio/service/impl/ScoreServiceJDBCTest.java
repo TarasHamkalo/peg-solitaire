@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import sk.tuke.gamestudio.configuration.impl.H2DataSourceConfiguration;
 import sk.tuke.gamestudio.entity.Score;
+import sk.tuke.gamestudio.exception.ScoreException;
 import sk.tuke.gamestudio.service.ScoreService;
 
 import java.io.InputStreamReader;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -63,15 +65,39 @@ class ScoreServiceJDBCTest {
     }
 
     @Test
-    void getTopScores() {
+    void whenScoreWithGivenPlayerExistsAddShouldThrowScoreException() {
+        scoreService.reset();
+
+        final var existed = Score.builder()
+            .player("Taras")
+            .game("pegsolitaire")
+            .points(100)
+            .build();
+
+        final var inserted = Score.builder()
+            .player("Taras")
+            .game("pegsolitaire")
+            .points(120)
+            .build();
+
+        scoreService.addScore(existed);
+
+        assertThrows(ScoreException.class, () -> scoreService.addScore(inserted));
+
+        var retrieved = scoreService.getTopScores("pegsolitaire");
+        assertEquals(1, retrieved.size());
+        assertEquals(existed, retrieved.get(0));
+    }
+
+    @Test
+    void whenTopScoresCalledScoresShouldBeRetrievedSortedByScore() {
         scoreService.reset();
         final var date = Date.from(Instant.now());
 
         final var scoreInserted = List.of(
             new Score("pegsolitaire", "Zuzka", 180, date),
             new Score("pegsolitaire", "Katka", 150, date),
-            new Score("pegsolitaire", "Jaro", 120, date),
-            new Score("pegsolitaire", "Jaro", 100, date)
+            new Score("pegsolitaire", "Jaro", 120, date)
         );
 
         scoreInserted.forEach(scoreService::addScore);

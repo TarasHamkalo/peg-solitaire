@@ -19,7 +19,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ScoreServiceJDBC implements ScoreService {
     public static final String SELECT = "SELECT game, player, points, playedOn FROM score WHERE game = ? ORDER BY points DESC LIMIT 10";
+
     public static final String DELETE = "DELETE FROM score";
+
+    public static final String INSERT =
+        "INSERT INTO score (game, player, points, playedOn) VALUES (?, ?, ?, ?)";
+
+    /*
     public static final String INSERT = """
         MERGE INTO score s
         USING (SELECT   CAST(? AS varchar) game,
@@ -34,7 +40,7 @@ public class ScoreServiceJDBC implements ScoreService {
             INSERT (player, game, points, playedOn)
             VALUES (newData.player, newData.game, newData.points, newData.playedOn);
         """;
-    //"INSERT INTO score (game, player, points, playedOn) VALUES (?, ?, ?, ?)";
+    */
 
     @NonNull
     ConnectionPoolDataSource connectionPoolDataSource;

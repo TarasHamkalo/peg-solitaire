@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import sk.tuke.gamestudio.configuration.impl.H2DataSourceConfiguration;
 import sk.tuke.gamestudio.entity.Comment;
+import sk.tuke.gamestudio.exception.CommentException;
 import sk.tuke.gamestudio.service.CommentService;
 
 import java.io.InputStreamReader;
@@ -45,7 +46,7 @@ class CommentServiceJDBCTest {
     }
 
     @Test
-    void whenCommentWithGivenPlayerDoesNotExistsShouldBeInserted() {
+    void whenCommentWithGivenPlayerDoesNotExistShouldBeInserted() {
         commentService.reset();
         final var inserted = Comment.builder()
             .game("pegsolitaire")
@@ -62,7 +63,7 @@ class CommentServiceJDBCTest {
     }
 
     @Test
-    void whenRatingGivenPlayerExistsRatingShouldBeUpdated() {
+    void whenCommentWithGivenPlayerExistsAddShouldThrowException() {
         commentService.reset();
         final var existed = Comment.builder()
             .game("pegsolitaire")
@@ -78,15 +79,13 @@ class CommentServiceJDBCTest {
 
         commentService.addComment(existed);
 
-
-        commentService.addComment(inserted);
+        assertThrows(CommentException.class, () -> commentService.addComment(inserted));
 
         var retrievedComments = commentService.getComments(inserted.getGame());
         assertEquals(1, retrievedComments.size());
 
-        assertEquals(inserted, retrievedComments.get(0));
+        assertEquals(existed, retrievedComments.get(0));
     }
-
 
     @Test
     void whenGetCommentsCalledAllCommentsShouldBeRetrieved() {
@@ -96,8 +95,7 @@ class CommentServiceJDBCTest {
         final var insertedComments = List.of(
             new Comment("Zuzka", "pegsolitaire", "Zuzka's comment", date),
             new Comment("Katka", "pegsolitaire", "Katka's comment", date),
-            new Comment("Jaro", "pegsolitaire", "Jaro's comment", date),
-            new Comment("Jaro", "pegsolitaire", "Jaros's second comment", date)
+            new Comment("Jaro", "pegsolitaire", "Jaro's comment", date)
         );
 
         insertedComments.forEach(commentService::addComment);
