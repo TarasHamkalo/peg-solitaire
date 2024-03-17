@@ -1,3 +1,5 @@
+package sk.tuke.gamestudio.pegsolitaire.game;
+
 import lombok.SneakyThrows;
 import sk.tuke.gamestudio.configuration.impl.PostgresDataSourceConfiguration;
 import sk.tuke.gamestudio.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
