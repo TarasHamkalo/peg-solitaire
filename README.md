@@ -1,1 +1,1 @@
-https://tukesk-my.sharepoint.com/:v:/g/personal/taras_hamkalo_student_tuke_sk/EQ7Gi-ygG19NlYLgkCC7EwYBJJ0u2AkF41rEDjNXI7_h8A?e=cZbYVF
+https://tukesk-my.sharepoint.com/:v:/g/personal/taras_hamkalo_student_tuke_sk/EYQoYBkkqiJEh-BiE-QgZ6gBiyVe1s4P9QRTyFNsFkfBvA?e=JEdSm9
