@@ -2,8 +2,10 @@ package sk.tuke.gamestudio.pegsolitaire.game.ui.impl;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import sk.tuke.gamestudio.entity.Rating;
 import sk.tuke.gamestudio.exception.RatingException;
 import sk.tuke.gamestudio.pegsolitaire.game.ui.InputHandler;
@@ -11,7 +13,7 @@ import sk.tuke.gamestudio.service.RatingService;
 
 import java.util.regex.Pattern;
 
-@RequiredArgsConstructor
+@Component
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RatingCommandHandler extends InputHandler {
@@ -20,7 +22,13 @@ public class RatingCommandHandler extends InputHandler {
         "^rating\\s(?<cmd>rate|get|avg|reset)\\s?(?<val>\\d+)?(?<name>\\w+)?$"
     );
 
+    @NonNull
     RatingService ratingService;
+
+    @Autowired
+    public RatingCommandHandler(@NonNull RatingService ratingService) {
+        this.ratingService = ratingService;
+    }
 
     @Override
     public boolean handle(String line) {
@@ -34,10 +42,11 @@ public class RatingCommandHandler extends InputHandler {
                     case "rate" -> rate(matcher.group("val"));
                 }
 
-                return true;
             } catch (RatingException e) {
                 System.out.println(e.getMessage());
             }
+
+            return true;
         }
 
         return handleNext(line);
@@ -64,10 +73,10 @@ public class RatingCommandHandler extends InputHandler {
         }
 
         float fValue = Float.parseFloat(value);
-        if (fValue < 0 || fValue > 5) {
-            System.out.println("The rating has to be between 0 and 5");
-            return;
-        }
+//        if (fValue < 0 || fValue > 5) {
+//            System.out.println("The rating has to be between 0 and 5");
+//            return;
+//        }
 
         ratingService.setRating(
             Rating.builder()
