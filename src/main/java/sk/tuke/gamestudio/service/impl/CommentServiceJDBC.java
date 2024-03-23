@@ -1,30 +1,31 @@
 package sk.tuke.gamestudio.service.impl;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import sk.tuke.gamestudio.entity.Comment;
 import sk.tuke.gamestudio.exception.CommentException;
 import sk.tuke.gamestudio.service.CommentService;
 
-import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Repository
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentServiceJDBC implements CommentService {
 
-    public static final String SELECT = "SELECT game, player, text, commentedOn FROM comment ORDER BY commentedOn ASC LIMIT 10";
+    public static final String SELECT = "SELECT game, player, text, commented_on FROM comment ORDER BY commented_on ASC LIMIT 10";
 
     public static final String DELETE = "DELETE FROM comment";
 
     public static final String INSERT =
-        "INSERT INTO COMMENT (game, player, text, commentedon) VALUES (?, ?, ?, ?)";
+        "INSERT INTO comment (game, player, text, commented_on) VALUES (?, ?, ?, ?)";
 
     /*
     public static final String INSERT = """
@@ -45,12 +46,17 @@ public class CommentServiceJDBC implements CommentService {
     */
 
     @NonNull
-    ConnectionPoolDataSource connectionPoolDataSource;
+    DataSource dataSource;
+
+    @Autowired
+    public CommentServiceJDBC(@NonNull DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void addComment(@NonNull Comment comment) throws CommentException {
         try (
-            var connection = connectionPoolDataSource.getPooledConnection().getConnection();
+            var connection = dataSource.getConnection();
             var preparedInsert = connection.prepareStatement(INSERT);
         ) {
             preparedInsert.setString(1, comment.getGame());
@@ -66,7 +72,7 @@ public class CommentServiceJDBC implements CommentService {
     @Override
     public List<Comment> getComments(String game) throws CommentException {
         try (
-            var connection = connectionPoolDataSource.getPooledConnection().getConnection();
+            var connection = dataSource.getConnection();
             var preparedSelect = connection.prepareStatement(SELECT);
         ) {
             var resultSet = preparedSelect.executeQuery();
@@ -91,7 +97,7 @@ public class CommentServiceJDBC implements CommentService {
     @Override
     public void reset() throws CommentException {
         try (
-            var connection = connectionPoolDataSource.getPooledConnection().getConnection();
+            var connection = dataSource.getConnection();
             var preparedDelete = connection.prepareStatement(DELETE);
         ) {
             preparedDelete.executeUpdate();

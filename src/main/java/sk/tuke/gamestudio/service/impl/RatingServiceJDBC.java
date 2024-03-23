@@ -1,20 +1,20 @@
 package sk.tuke.gamestudio.service.impl;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import sk.tuke.gamestudio.entity.Rating;
-import sk.tuke.gamestudio.exception.CommentException;
 import sk.tuke.gamestudio.exception.RatingException;
 import sk.tuke.gamestudio.service.RatingService;
 
-import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Repository
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RatingServiceJDBC implements RatingService {
 
     public static final String SELECT_SPECIFIC = "SELECT stars FROM rating WHERE game = ? AND player = ?";
@@ -28,24 +28,29 @@ public class RatingServiceJDBC implements RatingService {
         USING (SELECT CAST(? as varchar)   as game,
                       CAST(? as varchar)   as player,
                       CAST(? as int)      stars,
-                      CAST(? AS timestamp) as ratedOn) AS newData
+                      CAST(? AS timestamp) as rated_on) AS newData
         ON (r.game = newData.game AND r.player = newData.player)
         WHEN MATCHED THEN
             UPDATE
             SET stars   = newData.stars,
-                ratedOn = newData.ratedOn
+                rated_on = newData.rated_on
         WHEN NOT MATCHED THEN
-            INSERT (game, player, stars, ratedOn)
-            VALUES (newData.game, newData.player, newData.stars, newData.ratedOn);
+            INSERT (game, player, stars, rated_on)
+            VALUES (newData.game, newData.player, newData.stars, newData.rated_on);
         """;
 
     @NonNull
-    ConnectionPoolDataSource connectionPoolDataSource;
+    DataSource dataSource;
+
+    @Autowired
+    public RatingServiceJDBC(@NonNull DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void setRating(Rating rating) throws RatingException {
         try (
-            var connection = connectionPoolDataSource.getPooledConnection().getConnection();
+            var connection = dataSource.getConnection();
             var preparedInsert = connection.prepareStatement(INSERT_UPDATE);
         ) {
             preparedInsert.setString(1, rating.getGame());
@@ -62,7 +67,7 @@ public class RatingServiceJDBC implements RatingService {
     @Override
     public int getAverageRating(String game) throws RatingException {
         try (
-            var connection = connectionPoolDataSource.getPooledConnection().getConnection();
+            var connection = dataSource.getConnection();
             var preparedSelect = connection.prepareStatement(SELECT_AVG);
         ) {
             var resultSet = preparedSelect.executeQuery();
@@ -76,13 +81,14 @@ public class RatingServiceJDBC implements RatingService {
     @Override
     public int getRating(String game, String player) throws RatingException {
         try (
-            var connection = connectionPoolDataSource.getPooledConnection().getConnection();
+            var connection = dataSource.getConnection();
             var preparedSelect = connection.prepareStatement(SELECT_SPECIFIC);
         ) {
-
             preparedSelect.setString(1, game);
             preparedSelect.setString(2, player);
+
             var resultSet = preparedSelect.executeQuery();
+
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
@@ -93,7 +99,7 @@ public class RatingServiceJDBC implements RatingService {
     @Override
     public void reset() throws RatingException {
         try (
-            var connection = connectionPoolDataSource.getPooledConnection().getConnection();
+            var connection = dataSource.getConnection();
             var preparedDelete = connection.prepareStatement(DELETE);
         ) {
             preparedDelete.executeUpdate();
