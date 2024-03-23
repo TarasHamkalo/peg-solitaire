@@ -1,27 +1,51 @@
 package sk.tuke.gamestudio.entity;
 
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 
 @Data
+@Entity
 @Builder
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Score {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @NonNull
+    @NotBlank
+    @Column(
+        nullable = false,
+        length = 64
+    )
     String game;
 
+    @Nonnull
+    @NotBlank
+    @NonNull
+    @NotBlank
+    @Column(
+        nullable = false,
+        length = 64
+    )
     String player;
 
+    @Positive
     int points;
 
     @Builder.Default
+    @Column(nullable = false)
     Date playedOn = Date.from(Instant.now());
-//    @EqualsAndHashCode.Exclude
 
     @Override
     public String toString() {
