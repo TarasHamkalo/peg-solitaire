@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 
@@ -16,8 +17,9 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Score {
+public class Score implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -30,8 +32,6 @@ public class Score {
     )
     String game;
 
-    @Nonnull
-    @NotBlank
     @NonNull
     @NotBlank
     @Column(
@@ -40,8 +40,9 @@ public class Score {
     )
     String player;
 
+    @NonNull
     @Positive
-    int points;
+    Integer points;
 
     @Builder.Default
     @Column(nullable = false)

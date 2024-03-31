@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 
@@ -13,9 +13,10 @@ import java.util.Date;
 @Builder
 @EqualsAndHashCode
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Comment {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

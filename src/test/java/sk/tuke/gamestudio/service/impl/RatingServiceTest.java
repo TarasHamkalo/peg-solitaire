@@ -5,8 +5,12 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.h2.tools.RunScript;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import sk.tuke.gamestudio.configuration.impl.H2DataSourceConfiguration;
 import sk.tuke.gamestudio.entity.Rating;
 import sk.tuke.gamestudio.service.RatingService;
@@ -18,30 +22,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@SpringBootTest
+@ActiveProfiles("test")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class RatingServiceJDBCTest {
+class RatingServiceTest {
 
+    @Autowired
     RatingService ratingService;
-
-    @BeforeAll
-    @SneakyThrows
-    void setUp() {
-        var h2DataSourceConfiguration = new H2DataSourceConfiguration();
-        h2DataSourceConfiguration.configureNewFromResource("test.properties");
-
-        var connection = h2DataSourceConfiguration.getDataSource()
-            .getPooledConnection()
-            .getConnection();
-
-        var createSqlReader = new InputStreamReader(
-            ClassLoader.getSystemResourceAsStream("create.sql")
-        );
-
-        RunScript.execute(connection, createSqlReader);
-        this.ratingService = new RatingServiceJDBC(h2DataSourceConfiguration.getDataSource());
-    }
 
     @Test
     void whenRatingWithGivenPlayerDoesNotExistsShouldBeInserted() {
@@ -87,10 +75,10 @@ class RatingServiceJDBCTest {
         final var timeStamp = Timestamp.from(Instant.now());
 
         final var ratings = List.of(
-            new Rating("Zuzka", "pegsolitaire", 5, timeStamp),
-            new Rating("Katka", "pegsolitaire", 3, timeStamp),
-            new Rating("Jaro", "pegsolitaire", 2, timeStamp),
-            new Rating("Jaro", "pegsolitaire", 4, timeStamp)
+            new Rating(1L, "Zuzka", "pegsolitaire", 5, timeStamp),
+            new Rating(2L, "Katka", "pegsolitaire", 3, timeStamp),
+            new Rating(3L, "Jaro", "pegsolitaire", 2, timeStamp),
+            new Rating(4L, "Jaro", "pegsolitaire", 4, timeStamp)
         );
 
         ratings.forEach(ratingService::setRating);
@@ -103,7 +91,7 @@ class RatingServiceJDBCTest {
         ratingService.reset();
 
         final var timeStamp = Timestamp.from(Instant.now());
-        final var inserted = new Rating("Zuzka", "pegsolitaire", 5, timeStamp);
+        final var inserted = new Rating(1L, "Zuzka", "pegsolitaire", 5, timeStamp);
 
         ratingService.setRating(inserted);
 
