@@ -49,9 +49,9 @@ class CommentServiceTest {
 
         final var date = Date.from(Instant.now());
         final var insertedComments = List.of(
-            new Comment(1L, "Zuzka", "pegsolitaire", "Zuzka's comment", date),
-            new Comment(2L, "Katka", "pegsolitaire", "Katka's comment", date),
-            new Comment(3L, "Jaro", "pegsolitaire", "Jaro's comment", date)
+            new Comment("Zuzka", "pegsolitaire", "Zuzka's comment"),
+            new Comment("Katka", "pegsolitaire", "Katka's comment"),
+            new Comment("Jaro", "pegsolitaire", "Jaro's comment")
         );
 
         insertedComments.forEach(commentService::addComment);

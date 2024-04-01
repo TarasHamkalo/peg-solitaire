@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.service.impl;
+package sk.tuke.gamestudio.service.impl.jpa;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -57,12 +57,20 @@ public class RatingServiceJPA implements RatingService {
 
     @Override
     public int getAverageRating(String game) throws RatingException {
-        double rating = entityManager.createQuery(
+        var query = entityManager.createQuery(
             "SELECT AVG(stars) FROM Rating r WHERE r.game = :game", Double.class
-            )
-            .setParameter("game", game)
-            .getSingleResult();
-        return (int) rating;
+        );
+
+        query.setParameter("game", game);
+
+        try {
+            Double result = query.getSingleResult();
+
+            return result == null ? 0 : result.intValue();
+        } catch (PersistenceException e) {
+            throw new RatingException("Was not able to get avg rating", e);
+        }
+
     }
 
     @Override
@@ -72,8 +80,8 @@ public class RatingServiceJPA implements RatingService {
         var from = criteria.from(Rating.class);
 
         var selectStarsQuery = entityManager.createQuery(criteria.select(from.get("stars")).where(
-                builder.equal(from.get("player"), player),
-                builder.equal(from.get("game"), game)
+            builder.equal(from.get("player"), player),
+            builder.equal(from.get("game"), game)
         ));
 
         try {

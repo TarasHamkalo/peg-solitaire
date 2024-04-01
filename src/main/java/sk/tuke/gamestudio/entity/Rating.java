@@ -17,6 +17,7 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Rating implements Serializable {
     @Id
@@ -41,7 +42,11 @@ public class Rating implements Serializable {
 
     @Min(1)
     @Max(5)
-    int stars;
+    @NonNull
+    @Column(
+        nullable = false
+    )
+    Integer stars;
 
     @Builder.Default
     @Column(nullable = false)
