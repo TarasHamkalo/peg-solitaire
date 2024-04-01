@@ -31,7 +31,6 @@ public class BoardUIImpl implements BoardUI {
 
     private static final int SELECTED_CURSOR_CODE = 2;
 
-    @NonNull
     Game game;
 
     ScoreService scoreService;

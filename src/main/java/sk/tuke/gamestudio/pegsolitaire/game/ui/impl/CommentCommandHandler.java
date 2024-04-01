@@ -42,7 +42,6 @@ public class CommentCommandHandler extends InputHandler {
                 }
 
             } catch (CommentException e) {
-                e.printStackTrace();
                 System.out.println(e.getMessage());
             }
 
@@ -70,6 +69,6 @@ public class CommentCommandHandler extends InputHandler {
     }
 
     private void listPegsolitaireComments() {
-        commentService.getComments("pegsoliatire").forEach(System.out::println);
+        commentService.getComments("pegsolitaire").forEach(System.out::println);
     }
 }

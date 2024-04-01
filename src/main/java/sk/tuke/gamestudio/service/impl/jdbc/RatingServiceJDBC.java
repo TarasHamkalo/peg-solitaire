@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.service.impl;
+package sk.tuke.gamestudio.service.impl.jdbc;
 
 import lombok.AccessLevel;
 import lombok.NonNull;

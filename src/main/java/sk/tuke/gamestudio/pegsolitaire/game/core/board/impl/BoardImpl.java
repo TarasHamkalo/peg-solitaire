@@ -97,7 +97,6 @@ public class BoardImpl implements Board {
             }
 
             if (!command.undo()) {
-                // TODO: logging
                 history.clear();
                 return false;
             }

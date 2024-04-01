@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.service.impl;
+package sk.tuke.gamestudio.service.impl.jdbc;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -20,7 +20,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentServiceJDBC implements CommentService {
 
-    public static final String SELECT = "SELECT game, player, text, commented_on FROM comment ORDER BY commented_on ASC LIMIT 10";
+    public static final String SELECT = """
+        SELECT game, player, text, commented_on
+        FROM comment
+        WHERE game = ?
+        ORDER BY commented_on LIMIT 10
+    """;
 
     public static final String DELETE = "DELETE FROM comment";
 
@@ -75,7 +80,10 @@ public class CommentServiceJDBC implements CommentService {
             var connection = dataSource.getConnection();
             var preparedSelect = connection.prepareStatement(SELECT);
         ) {
+            preparedSelect.setString(1, game);
+
             var resultSet = preparedSelect.executeQuery();
+
             List<Comment> comments = new ArrayList<>();
             while (resultSet.next()) {
                 comments.add(

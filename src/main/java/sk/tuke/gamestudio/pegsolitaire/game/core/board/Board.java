@@ -30,7 +30,7 @@ public interface Board {
 
     BoardCell[][] getBoardCells();
 
-    void setBoardCells(@NonNull BoardCell[][] boardCells);
+    void setBoardCells(BoardCell[][] boardCells);
 
     void offerEvent(@NonNull BoardEvent event);
 

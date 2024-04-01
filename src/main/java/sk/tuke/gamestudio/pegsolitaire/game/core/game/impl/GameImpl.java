@@ -93,7 +93,6 @@ public class GameImpl implements Game {
 
     public boolean makeMove(int x, int y) {
         if (selectedPegPosition == null) {
-            // TODO: log
             return false;
         }
 

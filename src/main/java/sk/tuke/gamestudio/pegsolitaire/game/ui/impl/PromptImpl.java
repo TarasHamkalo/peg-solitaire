@@ -32,8 +32,8 @@ public class PromptImpl implements Prompt {
     private static final Map<BoardEvent.Type, BoardEventHandler> eventToHandler = Map.ofEntries(
         Map.entry(BoardEvent.Type.BOMB, new BombEventHandler()),
         Map.entry(BoardEvent.Type.LIGHTNING, new LightningEventHandler()),
-        Map.entry(BoardEvent.Type.TRIVIAL_MOVE, (command) -> {}),
-        Map.entry(BoardEvent.Type.TRIVIAL_REMOVE, (command) -> {})
+        Map.entry(BoardEvent.Type.TRIVIAL_MOVE, command -> {}),
+        Map.entry(BoardEvent.Type.TRIVIAL_REMOVE, command -> {})
     );
 
     private static final Pattern BASE_CMDS = Pattern.compile("help|start|stop|undo|exit");
