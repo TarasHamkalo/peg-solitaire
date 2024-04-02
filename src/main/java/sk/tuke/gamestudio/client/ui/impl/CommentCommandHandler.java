@@ -5,15 +5,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import sk.tuke.gamestudio.client.ui.InputHandler;
 import sk.tuke.gamestudio.commons.entity.Comment;
 import sk.tuke.gamestudio.commons.exception.CommentException;
-import sk.tuke.gamestudio.client.ui.InputHandler;
 import sk.tuke.gamestudio.commons.service.CommentService;
 
 import java.util.regex.Pattern;
 
-@Component
+//@Component
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentCommandHandler extends InputHandler {

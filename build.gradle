@@ -17,6 +17,7 @@ repositories {
 
 run {
     standardInput = System.in
+    args('--spring.profiles.active=prod')
 }
 
 dependencies {

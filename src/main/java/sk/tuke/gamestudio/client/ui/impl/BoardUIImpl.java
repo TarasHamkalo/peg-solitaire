@@ -9,9 +9,9 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import sk.tuke.gamestudio.commons.entity.Score;
 import sk.tuke.gamestudio.commons.exception.ScoreException;
-import sk.tuke.gamestudio.server.pegsolitaire.game.core.Color;
-import sk.tuke.gamestudio.server.pegsolitaire.game.core.board.BoardCell;
-import sk.tuke.gamestudio.server.pegsolitaire.game.core.game.Game;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.Color;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.BoardCell;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.game.Game;
 import sk.tuke.gamestudio.client.ui.BoardUI;
 import sk.tuke.gamestudio.commons.service.ScoreService;
 

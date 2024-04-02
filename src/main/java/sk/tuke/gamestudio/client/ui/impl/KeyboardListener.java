@@ -5,7 +5,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
-import sk.tuke.gamestudio.server.pegsolitaire.game.core.Direction;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.Direction;
 import sk.tuke.gamestudio.client.ui.BoardUI;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
