@@ -1,8 +1,9 @@
 package sk.tuke.gamestudio.pegsolitaire.game.core.board.impl;
 
 import org.junit.jupiter.api.Test;
-import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardCell;
-import sk.tuke.gamestudio.pegsolitaire.game.core.pegs.impl.PegImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.BoardCell;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.impl.BasicCell;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.impl.PegImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -9,11 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import sk.tuke.gamestudio.pegsolitaire.game.core.board.Board;
-import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardCell;
-import sk.tuke.gamestudio.pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
-import sk.tuke.gamestudio.pegsolitaire.game.core.pegs.PegFactory;
-import sk.tuke.gamestudio.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.Board;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.BoardCell;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.impl.BoardImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.PegFactory;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 

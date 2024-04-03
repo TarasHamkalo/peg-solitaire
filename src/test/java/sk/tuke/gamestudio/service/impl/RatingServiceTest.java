@@ -7,18 +7,22 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sk.tuke.gamestudio.entity.Rating;
-import sk.tuke.gamestudio.service.RatingService;
+import sk.tuke.gamestudio.commons.entity.Rating;
+import sk.tuke.gamestudio.commons.service.RatingService;
+import sk.tuke.gamestudio.server.SpringServer;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 @ActiveProfiles("test")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(
+    classes = SpringServer.class,
+    webEnvironment = SpringBootTest.WebEnvironment.NONE
+)
 class RatingServiceTest {
 
     @Autowired

@@ -1,32 +1,29 @@
 package sk.tuke.gamestudio.service.impl;
 
 import lombok.AccessLevel;
-import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.h2.tools.RunScript;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sk.tuke.gamestudio.configuration.impl.H2DataSourceConfiguration;
-import sk.tuke.gamestudio.entity.Score;
-import sk.tuke.gamestudio.exception.ScoreException;
-import sk.tuke.gamestudio.service.ScoreService;
+import sk.tuke.gamestudio.commons.entity.Score;
+import sk.tuke.gamestudio.commons.service.ScoreService;
+import sk.tuke.gamestudio.server.SpringServer;
 
-import java.io.InputStreamReader;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
 @ActiveProfiles("test")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(
+    classes = SpringServer.class,
+    webEnvironment = SpringBootTest.WebEnvironment.NONE
+)
 class ScoreServiceTest {
 
     @Autowired

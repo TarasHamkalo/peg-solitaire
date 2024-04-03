@@ -9,15 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardBuilder;
-import sk.tuke.gamestudio.pegsolitaire.game.core.board.BoardCell;
-import sk.tuke.gamestudio.pegsolitaire.game.core.board.impl.BoardImpl;
-import sk.tuke.gamestudio.pegsolitaire.game.core.events.BoardEventManager;
-import sk.tuke.gamestudio.pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
-import sk.tuke.gamestudio.pegsolitaire.game.core.game.Game;
-import sk.tuke.gamestudio.pegsolitaire.game.core.levels.LevelBuilder;
-import sk.tuke.gamestudio.pegsolitaire.game.core.pegs.PegFactory;
-import sk.tuke.gamestudio.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.BoardBuilder;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.BoardCell;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.impl.BoardImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.events.BoardEventManager;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.events.impl.BoardEventManagerImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.game.Game;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.game.impl.GameImpl;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.levels.LevelBuilder;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.PegFactory;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
 
 import java.util.List;
 
@@ -130,7 +131,7 @@ class GameImplTest {
         BoardCell occupiedCell = mock(BoardCell.class);
         when(occupiedCell.getState()).thenReturn(BoardCell.State.OCCUPIED);
 
-        when(boardMock.getBoardCellAt(eq(from[0]), eq(from[1]))).thenReturn(occupiedCell);
+        when(boardMock.getBoardCellAt(from[0], from[1])).thenReturn(occupiedCell);
         when(boardMock.makeMove(any(), any())).thenReturn(true);
 
         underTest.selectPeg(from[0], from[1]);

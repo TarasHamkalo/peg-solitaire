@@ -7,8 +7,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sk.tuke.gamestudio.entity.Comment;
-import sk.tuke.gamestudio.service.CommentService;
+import sk.tuke.gamestudio.commons.entity.Comment;
+import sk.tuke.gamestudio.commons.service.CommentService;
+import sk.tuke.gamestudio.server.SpringServer;
 
 import java.time.Instant;
 import java.util.Date;
@@ -17,10 +18,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 @ActiveProfiles("test")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(
+    classes = SpringServer.class,
+    webEnvironment = SpringBootTest.WebEnvironment.NONE
+)
 class CommentServiceTest {
 
     @Autowired
@@ -47,7 +51,6 @@ class CommentServiceTest {
     void whenGetCommentsCalledAllCommentsShouldBeRetrieved() {
         commentService.reset();
 
-        final var date = Date.from(Instant.now());
         final var insertedComments = List.of(
             new Comment("Zuzka", "pegsolitaire", "Zuzka's comment"),
             new Comment("Katka", "pegsolitaire", "Katka's comment"),
