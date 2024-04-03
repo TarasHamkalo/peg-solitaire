@@ -13,7 +13,7 @@ import sk.tuke.gamestudio.commons.service.ScoreService;
 import java.util.regex.Pattern;
 
 @Component
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ScoreCommandHandler extends InputHandler {
 

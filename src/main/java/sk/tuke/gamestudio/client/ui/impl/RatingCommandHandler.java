@@ -13,8 +13,8 @@ import sk.tuke.gamestudio.commons.service.RatingService;
 
 import java.util.regex.Pattern;
 
-//@Component
-@EqualsAndHashCode(callSuper = true)
+@Component
+@EqualsAndHashCode(callSuper = false)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RatingCommandHandler extends InputHandler {
 
