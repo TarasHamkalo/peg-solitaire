@@ -3,6 +3,7 @@ package sk.tuke.gamestudio.commons.service.impl.jpa;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ScoreServiceJPA implements ScoreService {
     public void addScore(Score score) throws ScoreException {
         try {
             entityManager.persist(score);
-        } catch (PersistenceException e) {
+        } catch (ConstraintViolationException | PersistenceException e) {
             throw new ScoreException("Was not able to add score", e);
         }
     }
@@ -45,7 +46,7 @@ public class ScoreServiceJPA implements ScoreService {
                 .getResultList();
 
             return result == null ? Collections.emptyList() : result;
-        } catch (PersistenceException e) {
+        } catch (ConstraintViolationException | PersistenceException e) {
             throw new ScoreException("Was not able to get scores", e);
         }
     }
@@ -54,7 +55,7 @@ public class ScoreServiceJPA implements ScoreService {
     public void reset() throws ScoreException {
         try {
             entityManager.createQuery("DELETE FROM Score").executeUpdate();
-        } catch (PersistenceException e) {
+        } catch (ConstraintViolationException | PersistenceException e) {
             throw new ScoreException("Was not able to delete scores", e);
         }
     }

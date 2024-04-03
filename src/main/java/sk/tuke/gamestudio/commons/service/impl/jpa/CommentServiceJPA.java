@@ -3,6 +3,7 @@ package sk.tuke.gamestudio.commons.service.impl.jpa;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class CommentServiceJPA implements CommentService {
     public void addComment(Comment comment) throws CommentException {
         try {
             entityManager.persist(comment);
-        } catch (PersistenceException e) {
+        } catch (ConstraintViolationException | PersistenceException e) {
             throw new CommentException("Was not able to add comment", e);
         }
     }
@@ -45,7 +46,7 @@ public class CommentServiceJPA implements CommentService {
                 .getResultList();
 
             return result == null ? Collections.emptyList() : result;
-        } catch (PersistenceException e) {
+        } catch (ConstraintViolationException | PersistenceException e) {
             throw new CommentException("Was not able to get comments", e);
         }
     }
@@ -54,7 +55,7 @@ public class CommentServiceJPA implements CommentService {
     public void reset() throws CommentException {
         try {
             entityManager.createQuery("DELETE FROM Comment").executeUpdate();
-        } catch (PersistenceException e) {
+        } catch (ConstraintViolationException | PersistenceException e) {
             throw new CommentException("Was not able to delete comments", e);
         }
     }

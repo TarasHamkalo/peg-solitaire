@@ -5,6 +5,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class RatingServiceJPA implements RatingService {
 
         try {
             updateOrPersistRating(rating, findQuery);
-        } catch (PersistenceException e) {
+        } catch (ConstraintViolationException | PersistenceException e) {
             throw new RatingException("Was not able to set rating", e);
         }
     }
@@ -67,8 +68,8 @@ public class RatingServiceJPA implements RatingService {
             Double result = query.getSingleResult();
 
             return result == null ? 0 : result.intValue();
-        } catch (PersistenceException e) {
-            throw new RatingException("Was not able to get avg rating", e);
+        } catch (ConstraintViolationException | PersistenceException e) {
+            throw new RatingException("Was not able to set rating", e);
         }
 
     }
@@ -86,8 +87,8 @@ public class RatingServiceJPA implements RatingService {
 
         try {
             return selectStarsQuery.getSingleResult();
-        } catch (PersistenceException e) {
-            throw new RatingException("Was not able to retrieve rating", e);
+        } catch (ConstraintViolationException | PersistenceException e) {
+            throw new RatingException("Was not able to get rating", e);
         }
     }
 
@@ -95,8 +96,8 @@ public class RatingServiceJPA implements RatingService {
     public void reset() throws RatingException {
         try {
             entityManager.createQuery("DELETE FROM Rating r").executeUpdate();
-        } catch (PersistenceException e) {
-            throw new RatingException("Was not able to delete ratings", e);
+        } catch (ConstraintViolationException | PersistenceException e) {
+            throw new RatingException("Was not able to reset rating", e);
         }
     }
 }
