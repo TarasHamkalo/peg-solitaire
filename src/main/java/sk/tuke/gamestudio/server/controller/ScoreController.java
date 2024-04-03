@@ -22,7 +22,7 @@ public class ScoreController {
     }
 
     @GetMapping("/{game}")
-    public List<Score> getAllScores(@PathVariable String game) {
+    public List<Score> getTopScores(@PathVariable String game) {
         return scoreService.getTopScores(game);
     }
 
