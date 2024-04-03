@@ -1,10 +1,8 @@
 package sk.tuke.gamestudio.client;
 
-import com.zaxxer.hikari.pool.HikariPool;
 import lombok.SneakyThrows;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -12,17 +10,16 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
+import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
+import sk.tuke.gamestudio.client.service.rest.ScoresServiceRestClient;
 import sk.tuke.gamestudio.client.ui.BoardUI;
 import sk.tuke.gamestudio.client.ui.InputHandler;
 import sk.tuke.gamestudio.client.ui.Prompt;
 import sk.tuke.gamestudio.client.ui.impl.BoardUIImpl;
 import sk.tuke.gamestudio.client.ui.impl.PromptImpl;
 import sk.tuke.gamestudio.commons.service.ScoreService;
-import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
-import sk.tuke.gamestudio.commons.service.impl.rest.client.ScoresServiceRestClient;
 
 @SpringBootApplication(
     exclude = {
@@ -32,13 +29,6 @@ import sk.tuke.gamestudio.commons.service.impl.rest.client.ScoresServiceRestClie
     }
 )
 @EntityScan("sk.tuke.gamestudio.commons.entity")
-@ComponentScan(
-    basePackages = {
-        "sk.tuke.gamestudio.client.ui",
-        "sk.tuke.gamestudio.commons.entity",
-        "sk.tuke.gamestudio.commons.service.impl.rest",
-    }
-)
 public class SpringClient {
     public static void main(String[] args) {
         new SpringApplicationBuilder(SpringClient.class).web(WebApplicationType.NONE).run(args);
@@ -52,9 +42,9 @@ public class SpringClient {
 
     @Bean
     @Profile("prod")
-    public Prompt prompt(BoardUI boardUI, InputHandler scoreCommandHandler) {
+    public Prompt prompt(BoardUI boardUI, InputHandler serviceInputHandlers) {
         return PromptImpl.builder()
-            .additionalInputHandler(scoreCommandHandler)
+            .additionalInputHandler(serviceInputHandlers)
             .pegFactory(new PegFactoryImpl())
             .boardUI(boardUI)
             .build();
@@ -63,15 +53,15 @@ public class SpringClient {
     @Bean
     @SneakyThrows
     @Profile("prod")
-    public BoardUI boardUI(ScoreService scoreService) {
-        return new BoardUIImpl(scoreService);
+    public BoardUI boardUI() {
+        return new BoardUIImpl(scoreService());
     }
 
-//    @Bean
-//    @Profile("prod")
-//    public InputHandler serviceInputHandlers(InputHandler commentCommandHandler, InputHandler... other) {
-//        return InputHandler.link(commentCommandHandler, other);
-//    }
+    @Bean
+    @Profile("prod")
+    public InputHandler serviceInputHandlers(InputHandler commentCommandHandler, InputHandler... other) {
+        return InputHandler.link(commentCommandHandler, other);
+    }
 
     @Bean
     @Profile("prod")
@@ -82,10 +72,5 @@ public class SpringClient {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
-    }
-
-    @Bean
-    public HikariPool hikariPool() {
-        return null;
     }
 }
