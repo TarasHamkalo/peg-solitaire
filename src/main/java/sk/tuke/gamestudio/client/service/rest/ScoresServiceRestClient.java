@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.commons.service.impl.rest.client;
+package sk.tuke.gamestudio.client.service.rest;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import sk.tuke.gamestudio.commons.entity.Score;
 import sk.tuke.gamestudio.commons.exception.ScoreException;
@@ -27,17 +28,27 @@ public class ScoresServiceRestClient implements ScoreService {
 
     @Override
     public void addScore(Score score) throws ScoreException {
-        restTemplate.postForEntity(url + "/scores", score, Score.class);
+        try {
+            restTemplate.postForEntity(url + "/scores", score, Score.class);
+        } catch (RestClientException e) {
+            throw new ScoreException("Was not able to add score", e);
+        }
     }
 
     @Override
     public List<Score> getTopScores(String game) throws ScoreException {
-        var scores = restTemplate.getForEntity(url + "/scores/" + game, Score[].class).getBody();
-        if (scores == null) {
-            return Collections.emptyList();
-        }
+        try {
+            var scores = restTemplate.getForEntity(url + "/scores/" + game, Score[].class).getBody();
 
-        return Arrays.asList(scores);
+            if (scores == null) {
+                return Collections.emptyList();
+            }
+
+            return Arrays.asList(scores);
+
+        } catch (RestClientException e) {
+            throw new ScoreException("Was not able to add score", e);
+        }
     }
 
     @Override
