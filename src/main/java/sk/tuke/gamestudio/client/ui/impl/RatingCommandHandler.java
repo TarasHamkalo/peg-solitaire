@@ -73,11 +73,6 @@ public class RatingCommandHandler extends InputHandler {
         }
 
         float fValue = Float.parseFloat(value);
-//        if (fValue < 0 || fValue > 5) {
-//            System.out.println("The rating has to be between 0 and 5");
-//            return;
-//        }
-
         ratingService.setRating(
             Rating.builder()
                 .game("pegsolitaire")

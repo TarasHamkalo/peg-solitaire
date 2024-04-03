@@ -11,8 +11,6 @@ import sk.tuke.gamestudio.commons.entity.Score;
 import sk.tuke.gamestudio.commons.service.ScoreService;
 import sk.tuke.gamestudio.server.SpringServer;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,7 +50,6 @@ class ScoreServiceTest {
     @Test
     void whenTopScoresCalledScoresShouldBeRetrievedSortedByScore() {
         scoreService.reset();
-        final var date = Date.from(Instant.now());
 
         final var scoreInserted = List.of(
             new Score("pegsolitaire", "Zuzka", 180),//, date),

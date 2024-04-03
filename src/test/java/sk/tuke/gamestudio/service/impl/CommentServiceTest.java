@@ -11,8 +11,6 @@ import sk.tuke.gamestudio.commons.entity.Comment;
 import sk.tuke.gamestudio.commons.service.CommentService;
 import sk.tuke.gamestudio.server.SpringServer;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
