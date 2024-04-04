@@ -7,11 +7,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import sk.tuke.gamestudio.commons.entity.Rating;
 import sk.tuke.gamestudio.commons.service.RatingService;
-import sk.tuke.gamestudio.server.SpringServer;
 
 import java.util.List;
 
