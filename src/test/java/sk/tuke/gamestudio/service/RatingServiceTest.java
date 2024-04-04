@@ -1,10 +1,12 @@
-package sk.tuke.gamestudio.service.impl;
+package sk.tuke.gamestudio.service;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sk.tuke.gamestudio.commons.entity.Rating;
@@ -16,14 +18,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ActiveProfiles("test")
+@EnableAutoConfiguration
+@EntityScan("sk.tuke.gamestudio.commons.entity")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(
-    classes = SpringServer.class,
-    webEnvironment = SpringBootTest.WebEnvironment.NONE
-)
-class RatingServiceTest {
+public abstract class RatingServiceTest {
 
     @Autowired
     RatingService ratingService;
