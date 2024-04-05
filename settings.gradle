@@ -1,2 +1,11 @@
 rootProject.name = 'gamestudio-7800'
 
+[
+    'client',
+    'server:app',
+    'server:service-rest-api',
+    'data',
+    'core'
+].forEach {
+    include it
+}
