@@ -1,27 +1,31 @@
-package sk.tuke.gamestudio.server.controller;
+package sk.tuke.gamestudio.server.rest.controller;
 
+import com.github.dozermapper.core.Mapper;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sk.tuke.gamestudio.commons.entity.Rating;
-import sk.tuke.gamestudio.commons.service.RatingService;
+import sk.tuke.gamestudio.data.entity.Rating;
+import sk.tuke.gamestudio.data.service.RatingService;
 
 @RestController
 @RequestMapping("/api/ratings")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RatingController {
 
+    Mapper mapper;
+
     RatingService ratingService;
 
     @Autowired
-    public RatingController(RatingService ratingService) {
+    public RatingController(RatingService ratingService, Mapper mapper) {
         this.ratingService = ratingService;
+        this.mapper = mapper;
     }
 
     @PostMapping
     public void setRating(@RequestBody Rating rating) {
-        ratingService.setRating(rating);
+        ratingService.setRating(mapper.map(rating, Rating.class));
     }
 
     @GetMapping("/{game}/{player}")

@@ -5,9 +5,9 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import sk.tuke.gamestudio.commons.exception.CommentException;
-import sk.tuke.gamestudio.commons.exception.RatingException;
-import sk.tuke.gamestudio.commons.exception.ScoreException;
+import sk.tuke.gamestudio.data.exception.CommentException;
+import sk.tuke.gamestudio.data.exception.RatingException;
+import sk.tuke.gamestudio.data.exception.ScoreException;
 
 import java.net.URI;
 
