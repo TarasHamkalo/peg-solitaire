@@ -262,9 +262,7 @@ public class PromptImpl implements Prompt {
                 rating get <player>: show rating from given player
                 rating avg: shows avg rating of pegsolitaire
                 comment add <text>: creates comment with given text
-                comment list: shows comment 
-                (score|rating|comment) reset: resets given entity
-                    
+                comment list: shows comment
             """);
     }
 

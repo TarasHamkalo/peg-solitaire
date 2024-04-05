@@ -6,10 +6,10 @@ import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sk.tuke.gamestudio.client.service.CommentService;
+import sk.tuke.gamestudio.client.service.exception.ServiceException;
 import sk.tuke.gamestudio.client.ui.InputHandler;
-import sk.tuke.gamestudio.commons.entity.Comment;
-import sk.tuke.gamestudio.commons.exception.CommentException;
-import sk.tuke.gamestudio.commons.service.CommentService;
+import sk.tuke.gamestudio.server.api.rest.dto.CommentDto;
 
 import java.util.regex.Pattern;
 
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class CommentCommandHandler extends InputHandler {
 
     private static final Pattern COMMENT_CMD = Pattern.compile(
-        "^comment\\s(?<cmd>add|list|reset)\\s?(?<text>(?:[\\w.,!\n]\\s?){1,150})?$"
+        "^comment\\s(?<cmd>add|list)\\s?(?<text>(?:[\\w.,!\n]\\s?){1,150})?$"
     );
 
     @NonNull
@@ -38,10 +38,10 @@ public class CommentCommandHandler extends InputHandler {
                 switch (matcher.group("cmd")) {
                     case "add" -> addPegsolitaireComment(matcher.group("text"));
                     case "list" -> listPegsolitaireComments();
-                    case "reset" -> commentService.reset();
+//                    case "reset" -> commentService.reset();
                 }
 
-            } catch (CommentException e) {
+            } catch (ServiceException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -58,7 +58,7 @@ public class CommentCommandHandler extends InputHandler {
         }
 
         commentService.addComment(
-            Comment.builder()
+            CommentDto.builder()
                 .game("pegsolitaire")
                 .player(System.getProperty("user.name"))
                 .text(text)

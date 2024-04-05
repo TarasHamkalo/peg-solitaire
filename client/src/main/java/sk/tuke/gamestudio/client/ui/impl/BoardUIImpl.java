@@ -7,15 +7,18 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import sk.tuke.gamestudio.commons.entity.Score;
-import sk.tuke.gamestudio.commons.exception.ScoreException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import sk.tuke.gamestudio.client.service.ScoreService;
+import sk.tuke.gamestudio.client.service.exception.ServiceException;
+import sk.tuke.gamestudio.client.ui.BoardUI;
 import sk.tuke.gamestudio.pegsolitaire.core.Color;
 import sk.tuke.gamestudio.pegsolitaire.core.board.BoardCell;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
-import sk.tuke.gamestudio.client.ui.BoardUI;
-import sk.tuke.gamestudio.commons.service.ScoreService;
+import sk.tuke.gamestudio.server.api.rest.dto.ScoreDto;
 
 @Data
+@Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BoardUIImpl implements BoardUI {
 
@@ -41,6 +44,7 @@ public class BoardUIImpl implements BoardUI {
 
     int y;
 
+    @Autowired
     public BoardUIImpl(ScoreService scoreService) throws NativeHookException {
         GlobalScreen.registerNativeHook();
         this.scoreService = scoreService;
@@ -158,16 +162,16 @@ public class BoardUIImpl implements BoardUI {
     private void saveScore() {
         try {
             scoreService.addScore(
-                Score.builder()
+                ScoreDto.builder()
                     .game("pegsolitaire")
                     .player(System.getProperty("user.name"))
                     .points((int) game.getScore())
                     .build()
             );
 
-        } catch (ScoreException scoreException) {
+        } catch (ServiceException serviceException) {
             positionPrompt();
-            System.out.println("\n" + scoreException.getMessage());
+            System.out.println("\n" + serviceException.getMessage());
             System.out.println("Try to reset scores");
             positionPrompt();
         }

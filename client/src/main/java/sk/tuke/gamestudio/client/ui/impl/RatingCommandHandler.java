@@ -6,10 +6,10 @@ import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sk.tuke.gamestudio.commons.entity.Rating;
-import sk.tuke.gamestudio.commons.exception.RatingException;
+import sk.tuke.gamestudio.client.service.RatingService;
+import sk.tuke.gamestudio.client.service.exception.ServiceException;
 import sk.tuke.gamestudio.client.ui.InputHandler;
-import sk.tuke.gamestudio.commons.service.RatingService;
+import sk.tuke.gamestudio.server.api.rest.dto.RatingDto;
 
 import java.util.regex.Pattern;
 
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class RatingCommandHandler extends InputHandler {
 
     private static final Pattern RATING_CMD = Pattern.compile(
-        "^rating\\s(?<cmd>rate|get|avg|reset)\\s?(?<val>\\d+)?(?<name>\\w+)?$"
+        "^rating\\s(?<cmd>rate|get|avg)\\s?(?<val>\\d+)?(?<name>\\w+)?$"
     );
 
     @NonNull
@@ -37,12 +37,11 @@ public class RatingCommandHandler extends InputHandler {
             try {
                 switch (matcher.group("cmd")) {
                     case "avg" -> printPegsolitaireRating();
-                    case "reset" -> ratingService.reset();
                     case "get" -> printRatingByPlayerName(matcher.group("name"));
                     case "rate" -> rate(matcher.group("val"));
                 }
 
-            } catch (RatingException e) {
+            } catch (ServiceException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -74,7 +73,7 @@ public class RatingCommandHandler extends InputHandler {
 
         float fValue = Float.parseFloat(value);
         ratingService.setRating(
-            Rating.builder()
+            RatingDto.builder()
                 .game("pegsolitaire")
                 .player(System.getProperty("user.name"))
                 .stars(Math.round(fValue))

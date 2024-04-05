@@ -10,7 +10,9 @@ import sk.tuke.gamestudio.client.ui.BoardUI;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KeyboardListener implements NativeKeyListener {
-    @NonNull BoardUI console;
+
+    @NonNull
+    BoardUI console;
 
     public KeyboardListener(@NonNull BoardUI console) {
         this.console = console;
