@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import sk.tuke.gamestudio.commons.entity.Rating;
-import sk.tuke.gamestudio.commons.exception.RatingException;
-import sk.tuke.gamestudio.commons.service.RatingService;
+import sk.tuke.gamestudio.client.service.RatingService;
+import sk.tuke.gamestudio.client.service.exception.ServiceException;
+import sk.tuke.gamestudio.server.api.rest.dto.RatingDto;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -22,18 +22,20 @@ public class RatingServiceRestClient implements RatingService {
     RestTemplate restTemplate;
 
     @Override
-    public void setRating(Rating rating) throws RatingException {
+    public void setRating(RatingDto rating) throws ServiceException {
         try {
-            restTemplate.postForObject(url + "/ratings", rating, Rating.class);
+            restTemplate.postForObject(url + "/ratings", rating, RatingDto.class);
         } catch (RestClientException e) {
-            throw new RatingException("Was not able to add rating", e);
+            throw new ServiceException("Was not able to add rating", e);
         }
     }
 
     @Override
-    public int getAverageRating(String game) throws RatingException {
+    public int getAverageRating(String game) throws ServiceException {
         try {
-            Integer avgRating = restTemplate.getForObject(url + "/ratings/" + game, Integer.class);
+            Integer avgRating = restTemplate.getForObject(
+                url + "/ratings/" + game, Integer.class
+            );
 
             if (avgRating == null) {
                 return 0;
@@ -42,12 +44,12 @@ public class RatingServiceRestClient implements RatingService {
             return avgRating;
 
         } catch (RestClientException e) {
-            throw new RatingException("Was not able to get avg rating", e);
+            throw new ServiceException("Was not able to get avg rating", e);
         }
     }
 
     @Override
-    public int getRating(String game, String player) throws RatingException {
+    public int getRating(String game, String player) throws ServiceException {
         try {
             Integer rating = restTemplate.getForObject(
                 url + "/ratings/" + game + "/" + player, Integer.class
@@ -59,12 +61,8 @@ public class RatingServiceRestClient implements RatingService {
 
             return rating;
         } catch (RestClientException e) {
-            throw new RatingException("Was not able to get rating", e);
+            throw new ServiceException("Was not able to get rating", e);
         }
     }
 
-    @Override
-    public void reset() throws RatingException {
-        throw new RatingException("Unauthorized to remove ratings remotely");
-    }
 }

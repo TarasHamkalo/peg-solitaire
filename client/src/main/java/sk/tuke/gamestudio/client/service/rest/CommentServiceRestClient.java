@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import sk.tuke.gamestudio.commons.entity.Comment;
-import sk.tuke.gamestudio.commons.exception.CommentException;
-import sk.tuke.gamestudio.commons.service.CommentService;
+import sk.tuke.gamestudio.client.service.CommentService;
+import sk.tuke.gamestudio.client.service.exception.ServiceException;
+import sk.tuke.gamestudio.server.api.rest.dto.CommentDto;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,31 +26,26 @@ public class CommentServiceRestClient implements CommentService {
     RestTemplate restTemplate;
 
     @Override
-    public void addComment(Comment comment) throws CommentException {
+    public void addComment(CommentDto comment) throws ServiceException {
         try {
-            restTemplate.postForObject(url + "/comments", comment, Comment.class);
-
+            restTemplate.postForObject(url + "/comments", comment, CommentDto.class);
         } catch (RestClientException e) {
-            throw new CommentException("Was not able to add comment", e);
+            throw new ServiceException("Was not able to add comment", e);
         }
     }
 
     @Override
-    public List<Comment> getComments(String game) throws CommentException {
+    public List<CommentDto> getComments(String game) throws ServiceException {
         try {
-            var comments = restTemplate.getForObject(url + "/comments/" + game, Comment[].class);
+            var comments = restTemplate.getForObject(url + "/comments/" + game, CommentDto[].class);
             if (comments == null) {
                 return Collections.emptyList();
             }
 
             return Arrays.asList(comments);
         } catch (RestClientException e) {
-            throw new CommentException("Was not able to get comments", e);
+            throw new ServiceException("Was not able to get comments", e);
         }
     }
 
-    @Override
-    public void reset() throws CommentException {
-        throw new CommentException("Unauthorized to remove comments remotely");
-    }
 }
