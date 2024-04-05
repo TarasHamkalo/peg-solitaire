@@ -49,7 +49,10 @@ public class RatingServiceRestClient implements RatingService {
     @Override
     public int getRating(String game, String player) throws RatingException {
         try {
-            Integer rating = restTemplate.getForObject(url + "/ratings/" + game, Integer.class);
+            Integer rating = restTemplate.getForObject(
+                url + "/ratings/" + game + "/" + player, Integer.class
+            );
+
             if (rating == null) {
                 return 0;
             }
