@@ -38,7 +38,8 @@ public class ScoresServiceRestClient implements ScoreService {
     @Override
     public List<Score> getTopScores(String game) throws ScoreException {
         try {
-            var scores = restTemplate.getForEntity(url + "/scores/" + game, Score[].class).getBody();
+            var scores =
+                restTemplate.getForEntity(url + "/scores/" + game, Score[].class).getBody();
 
             if (scores == null) {
                 return Collections.emptyList();

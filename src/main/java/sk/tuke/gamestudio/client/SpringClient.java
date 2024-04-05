@@ -12,7 +12,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
-import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.impl.PegFactoryImpl;
+import sk.tuke.gamestudio.pegsolitaire.core.pegs.impl.PegFactoryImpl;
 import sk.tuke.gamestudio.client.service.rest.ScoresServiceRestClient;
 import sk.tuke.gamestudio.client.ui.BoardUI;
 import sk.tuke.gamestudio.client.ui.InputHandler;

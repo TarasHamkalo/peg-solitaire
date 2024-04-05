@@ -1,9 +1,9 @@
 package mock.levels;
 
 import lombok.NonNull;
-import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.impl.BasicCell;
-import sk.tuke.gamestudio.client.pegsolitaire.game.core.levels.LevelBuilder;
-import sk.tuke.gamestudio.client.pegsolitaire.game.core.pegs.PegFactory;
+import sk.tuke.gamestudio.pegsolitaire.core.board.impl.BasicCell;
+import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
+import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
 
 public class NoMovesLevelBuilder extends LevelBuilder {
 

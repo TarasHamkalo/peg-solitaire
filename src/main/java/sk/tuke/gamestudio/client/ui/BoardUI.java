@@ -1,8 +1,8 @@
 package sk.tuke.gamestudio.client.ui;
 
 import lombok.NonNull;
-import sk.tuke.gamestudio.client.pegsolitaire.game.core.board.BoardCell;
-import sk.tuke.gamestudio.client.pegsolitaire.game.core.game.Game;
+import sk.tuke.gamestudio.pegsolitaire.core.board.BoardCell;
+import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
 
 public interface BoardUI {
     void printBoard(@NonNull BoardCell[][] cells);
