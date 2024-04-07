@@ -1,0 +1,18 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClass = 'sk.tuke.gamestudio.server.SpringServer'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.1'
+
+    implementation 'com.github.dozermapper:dozer-spring-boot-starter:7.0.0'
+
+    implementation 'org.postgresql:postgresql:42.7.3'
+
+    implementation project(':data')
+    implementation project(':server:service-rest-api')
+}
