@@ -39,9 +39,11 @@ public class ScoreServiceJpa implements ScoreService {
     @Override
     public List<Score> getTopScores(String game) throws ScoreException {
         try {
-            var result = entityManager
-                .createQuery("SELECT s FROM Score s WHERE s.game = :game", Score.class)
-                .setParameter("game", game)
+            var query = entityManager.createQuery(
+                "SELECT s FROM Score s WHERE s.game = :game ORDER BY s.points DESC", Score.class
+            );
+
+            var result = query.setParameter("game", game)
                 .setMaxResults(10)
                 .getResultList();
 
