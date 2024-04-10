@@ -1,0 +1,34 @@
+@import url("bootstrap.css");
+
+.board {
+    display: flex;
+    flex-direction: column;
+    background-color: lightsalmon;
+    flex-shrink: 1;
+    flex-grow: 1;
+    border-radius: var(--bs-border-radius) !important;
+    padding: calc(var(--bs-border-radius) / 2);
+    margin-bottom: 10px;
+}
+
+.board-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin: 0;
+}
+
+.board-cell {
+    border: 1px solid #ca0303;
+    display: flex;
+    /*font-size: 5px;*/
+    aspect-ratio: 1;
+    /*flex-grow: 1;*/
+    /*flex-shrink: 1;*/
+    align-items: center;
+    justify-content: center;
+    object-fit: contain;
+    padding: 5px;
+}

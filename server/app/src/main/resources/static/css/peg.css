@@ -1,0 +1,82 @@
+.peg {
+    cursor: pointer;
+    display: flex;
+
+    width: 80%;
+    height: 80%;
+
+    background: radial-gradient(circle, #ca2424,  #f04d4d 50%, #f09b9b 75%, #000000 75%);
+    border-radius: 50%;
+    box-shadow:
+            2px 2px 5px 1px #000000;
+    /*inset 0px 0px 5px 5px rgba(192, 41, 66, 0.85),*/
+    /*inset 0px 0px 50px 50px rgb(0, 0, 0),*/
+    /*inset 5px 5px 15px 15px #7bf447,*/
+    /*inset 0px 0px 5px 5px #f44769;*/
+    /*!*!* in order: x offset, y offset, blur size, spread size, color *!*/
+    /*!*!* blur size and spread size are optional (they default to 0) *! *!*/
+
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    aspect-ratio: 1;
+}
+
+.peg::before {
+    display: block;
+    position: relative;
+    border-radius: 50%;
+    content: ' ';
+    height: 15%;
+    width: 30%;
+    background-color: rgba(255, 255, 255, 0.45);
+    transform: rotate(-45deg);
+    left: 10%;
+    top: 17%;
+    aspect-ratio: 2;
+}
+
+.peg::after {
+    display: block;
+    position: relative;
+    border-radius: 50%;
+    content: ' ';
+    height: 4%;
+    width: 14%;
+    background-color: rgba(255, 255, 255, 0.6);
+    transform: rotate(-45deg);
+    left: -15%;
+    top: 22%;
+    aspect-ratio: 5;
+}
+
+@keyframes in {
+    from {
+        scale: 1;
+    }
+
+    to {
+        scale: 1.2;
+    }
+}
+
+@keyframes out {
+    from {
+        scale: 1.2;
+    }
+
+    to {
+        scale: 1;
+    }
+}
+
+.selected {
+    box-shadow: inset 0 0 5px 1px #ffffff,
+    inset 20px 20px 30px 5px #f04d4d,
+    0 0 0 5px rgba(172, 11, 252, 0.2);
+
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    aspect-ratio: 1;
+}
