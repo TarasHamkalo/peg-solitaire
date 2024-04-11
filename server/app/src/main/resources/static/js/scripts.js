@@ -66,24 +66,6 @@ function resizeCells() {
 window.addEventListener('DOMContentLoaded', event => resizeCells());
 window.addEventListener('resize', resizeCells);
 
-let firstPeg = null;
-function toggleSelection(element) {
-    console.log(element);
-    if (element.classList.contains('selected')) {
-        element.classList.remove('selected');
-        return;
-    }
-
-    if (firstPeg != null) {
-        firstPeg.classList.remove('selected');
-        firstPeg = null;
-        // if move possible then not select
-    } else {
-        firstPeg = element;
-        element.classList.add('selected');
-    }
-}
-
 $(".peg").mouseenter(function () {
     $(".peg:hover").css("animation-name", "in");
 })
