@@ -12,7 +12,6 @@
                 <div th:each="row, i: ${boardCells}">
                     <div class="board-row">
                         <div th:each="cell, j: ${row}">
-
                             <div th:if="${cell != null}" th:data-x="${j.index}" th:data-y="${i.index}" class="board-cell" >
                                 <div th:class="${cell.isEmpty() ? '' : 'peg'}"></div>
                             </div>

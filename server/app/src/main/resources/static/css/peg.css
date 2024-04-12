@@ -2,8 +2,11 @@
     cursor: pointer;
     display: flex;
 
-    width: 80%;
-    height: 80%;
+    z-index: 1;
+    position: absolute;
+
+    width: 70%;
+    height: 70%;
 
     background: radial-gradient(circle, #ca2424,  #f04d4d 50%, #f09b9b 75%, #000000 75%);
     border-radius: 50%;
@@ -64,15 +67,4 @@
     to {
         scale: 1;
     }
-}
-
-.selected {
-    box-shadow: inset 0 0 5px 1px #ffffff,
-    inset 20px 20px 30px 5px #f04d4d,
-    0 0 0 5px rgba(172, 11, 252, 0.2);
-
-    animation-duration: 0.5s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    aspect-ratio: 1;
 }
