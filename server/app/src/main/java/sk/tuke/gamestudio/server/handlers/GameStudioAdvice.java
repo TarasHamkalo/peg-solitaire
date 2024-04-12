@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.server.exception.handlers;
+package sk.tuke.gamestudio.server.handlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
