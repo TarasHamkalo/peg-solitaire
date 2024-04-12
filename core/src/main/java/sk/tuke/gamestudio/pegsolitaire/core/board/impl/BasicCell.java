@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import sk.tuke.gamestudio.pegsolitaire.core.board.Board;
 import sk.tuke.gamestudio.pegsolitaire.core.board.BoardCell;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.Peg;
 import sk.tuke.gamestudio.pegsolitaire.core.Color;
@@ -34,6 +35,11 @@ public class BasicCell implements BoardCell {
         } else {
             this.state = State.OCCUPIED;
         }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return State.EMPTY.equals(state);
     }
 
     @Override

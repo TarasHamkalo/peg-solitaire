@@ -16,6 +16,8 @@ public interface BoardCell {
 
     void setPeg(Peg peg);
 
+    boolean isEmpty();
+
     @Getter
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
