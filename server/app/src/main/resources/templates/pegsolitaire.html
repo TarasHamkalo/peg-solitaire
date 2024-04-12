@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html data-bs-theme="light"
+      lang="en"
+      layout:decorate="~{layout/layout.html}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<div class="container-fluid d-flex flex-column" layout:fragment="content">
+    <div class=" d-flex gap-5 flex-column">
+        <div class="container-fluid d-flex p-5 flex-column align-items-center" id="pegsolitaire-container">
+            <div class="board">
+                <div th:each="row, i: ${boardCells}">
+                    <div class="board-row">
+                        <div th:each="cell, j: ${row}">
+
+                            <div th:if="${cell != null}" th:data-x="${j.index}" th:data-y="${i.index}" class="board-cell" >
+                                <div th:class="${cell.isEmpty() ? '' : 'peg'}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>
+
+
+<!--<div class="board-row">-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--</div>-->
+
+<!--<div class="board-row">-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--</div>-->
+<!--<div class="board-row">-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--</div>-->
+
+<!--<div class="board-row">-->
+<!--    <div class="board-cell"><div class="peg"></div></div>-->
+<!--</div>-->
+

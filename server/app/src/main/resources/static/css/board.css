@@ -1,9 +1,6 @@
-@import url("bootstrap.css");
-
 .board {
     display: flex;
     flex-direction: column;
-    background-color: lightsalmon;
     flex-shrink: 1;
     flex-grow: 1;
     border-radius: var(--bs-border-radius) !important;
@@ -21,14 +18,35 @@
 }
 
 .board-cell {
-    border: 1px solid #ca0303;
+    background-color: lightsalmon;
+    border: 1px solid #000000;
     display: flex;
-    /*font-size: 5px;*/
     aspect-ratio: 1;
-    /*flex-grow: 1;*/
-    /*flex-shrink: 1;*/
     align-items: center;
     justify-content: center;
     object-fit: contain;
     padding: 5px;
+}
+
+.possible-move {
+}
+
+.possible-move::after {
+    content: '';
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+    animation:  possible-move-animation 1.5s infinite alternate;
+    animation-timing-function: cubic-bezier(.34,-0.1,.85,1.02);
+    border: 2px solid rgba(0, 0, 255, 0.25);
+    box-sizing: border-box;
+    border-radius: 50%;
+    background-color: rgba(0, 255, 255, 0.5);
+}
+
+@keyframes possible-move-animation {
+    from { scale: 0.5; }
+    to { scale: 1; }
 }

@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.server.controller.rest;
+package sk.tuke.gamestudio.server.controller.rest.data;
 
 import com.github.dozermapper.core.Mapper;
 import lombok.AccessLevel;
