@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost/pegsolitaire/api/game";
+const apiUrl = "http://localhost/pegsolitaire";
 const movesUrl = new URL(apiUrl + "/moves");
 const selectUrl = new URL(apiUrl + "/select?x=0&y=0");
 const moveUrl = new URL(apiUrl + "/move?x=0&y=0");

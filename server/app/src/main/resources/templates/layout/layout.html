@@ -15,12 +15,13 @@
 
         <div th:replace="~{fragments/fragments::navbar}"></div>
 
-        <main layout:fragment="content"></main>
+        <main th:remove="tag" layout:fragment="content"></main>
 
     </div>
 </div>
 
 <footer th:replace="~{fragments/fragments::footer}"></footer>
-<span th:replace="~{fragments/fragments::scripts}"></span>
+<span th:replace="~{fragments/fragments::page-scripts}"></span>
+<span th:remove="tag" layout:fragment="additional-scripts"></span>
 </body>
 </html>

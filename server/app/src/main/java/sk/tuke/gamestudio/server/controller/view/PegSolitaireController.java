@@ -3,21 +3,17 @@ package sk.tuke.gamestudio.server.controller.view;
 import com.google.gson.JsonObject;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
-import sk.tuke.gamestudio.pegsolitaire.core.board.impl.BoardImpl;
-import sk.tuke.gamestudio.pegsolitaire.core.events.impl.BoardEventManagerImpl;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
-import sk.tuke.gamestudio.pegsolitaire.core.game.impl.GameImpl;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
-import sk.tuke.gamestudio.pegsolitaire.core.levels.impl.DiamondLevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
-import sk.tuke.gamestudio.pegsolitaire.core.pegs.impl.PegFactoryImpl;
 import sk.tuke.gamestudio.server.exception.PegSolitaireException;
 
 import java.util.List;
@@ -30,30 +26,45 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PegSolitaireController {
 
+    @Autowired
     Game game;
 
-    PegFactory pegFactory = new PegFactoryImpl();
+    @Autowired
+    PegFactory pegFactory;
 
-    LevelBuilder levelBuilder = new DiamondLevelBuilder(pegFactory);
+    @Autowired
+    LevelBuilder levelBuilder;
 
-    public PegSolitaireController() {
-        this.game = GameImpl.builder()
-            .eventManager(new BoardEventManagerImpl())
-            .boardBuilder(BoardImpl.builder())
-            .levelBuilder(levelBuilder)
-            .build();
-    }
-
-    @GetMapping("/new")
-    public String play(Model model) {
+    @ResponseStatus(HttpStatus.SEE_OTHER)
+    @PostMapping(value = "/new")
+    public String createNewGame() {
         game.stop();
         game.start();
-        model.addAttribute("boardCells",  game.getBoard().getBoardCells());
-        return "pegsolitaire";
+        return "redirect:game";
+    }
+
+    @GetMapping("/game")
+    public String game(Model model) {
+        if (game.isStarted()) {
+            model.addAttribute("boardCells", game.getBoard().getBoardCells());
+            return "pegsolitaire";
+        } else {
+            throw new PegSolitaireException(BAD_REQUEST, "Game was not started");
+        }
+    }
+
+    @ResponseStatus(HttpStatus.SEE_OTHER)
+    @PostMapping("/play")
+    public String play() {
+        if (game.isStarted()) {
+            return "redirect:game";
+        } else {
+            return "forward:new";
+        }
     }
 
     @ResponseBody
-    @GetMapping("/api/game/moves")
+    @GetMapping("moves")
     public List<int[]> getPossibleMoves() {
         if (game.isStarted()) {
             return game.getPossibleMoves();
@@ -63,7 +74,7 @@ public class PegSolitaireController {
     }
 
     @ResponseBody
-    @PostMapping("/api/game/select")
+    @PostMapping("select")
     public void selectPeg(@RequestParam("x") int x, @RequestParam("y") int y) {
         if (!game.isStarted() || !game.selectPeg(x, y)) {
             throw new PegSolitaireException(BAD_REQUEST);
@@ -71,7 +82,7 @@ public class PegSolitaireController {
     }
 
     @ResponseBody
-    @PostMapping("/api/game/move")
+    @PostMapping("move")
     public void makeMove(@RequestParam("x") int x, @RequestParam("y") int y) {
         if (!game.isStarted() || !game.makeMove(x, y)) {
             throw new PegSolitaireException(BAD_REQUEST);
@@ -79,22 +90,19 @@ public class PegSolitaireController {
     }
 
     @ResponseBody
-    @GetMapping("api/game/state")
-    public ResponseEntity<String> getGameState() {
+    @GetMapping(value = "state", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getGameState() {
         if (game.isStarted()) {
             var jsonObject = new JsonObject();
             jsonObject.addProperty("won", game.getBoard().isSolved());
             jsonObject.addProperty("hasMoves", game.getBoard().hasAvailableMoves());
             jsonObject.addProperty("score", game.getScore());
 
-            return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(jsonObject.toString());
+            return jsonObject.toString();
         }
 
         throw new PegSolitaireException(BAD_REQUEST);
     }
-
 
 
 }
