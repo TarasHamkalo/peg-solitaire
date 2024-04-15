@@ -38,7 +38,6 @@ public class PegSolitaireController {
     @ResponseStatus(HttpStatus.SEE_OTHER)
     @PostMapping(value = "/new")
     public String createNewGame() {
-        game.stop();
         game.start();
         return "redirect:game";
     }

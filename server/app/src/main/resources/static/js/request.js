@@ -4,25 +4,20 @@ const selectUrl = new URL(apiUrl + "/select?x=0&y=0");
 const moveUrl = new URL(apiUrl + "/move?x=0&y=0");
 const stateUrl = new URL(apiUrl + "/state");
 
-let selectedPeg = null;
 const selection = document.createElement("div");
 selection.classList.add("selection");
 
-function requestSelect(element) {
-    if (selectedPeg === element) {
-        return;
-    }
-
-    if (selectedPeg != null) {
-        selectedPeg.parentNode.removeChild(selection);
+function requestSelect(toSelect) {
+    let selected = document.querySelector(".selection");
+    if (selected != null) {
+        selected.parentNode.removeChild(selected);
     }
 
     $.ajax({
         url: selectUrl,
         type: "POST",
         success: function () {
-            selectedPeg = element;
-            selectedPeg.parentNode.appendChild(selection)
+            toSelect.appendChild(selection)
             requestMoves();
         }
     })
@@ -38,12 +33,12 @@ function requestState() {
     })
 }
 
-function requestMove(element) {
+function requestMove(boardCell) {
     $.ajax({
         url: moveUrl,
         type: "POST",
         success: function () {
-            renderMove(element);
+            renderMove(boardCell);
             requestState();
         }
     })

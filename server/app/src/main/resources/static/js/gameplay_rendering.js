@@ -1,21 +1,23 @@
-function renderMove(target) {
-    const pegX = Number(selectedPeg.parentNode.getAttribute("data-x"));
-    const pegY = Number(selectedPeg.parentNode.getAttribute("data-y"));
+function renderMove(targetBoardCell) {
+    const selectedBoardCell = document.querySelector(".selection").parentNode;
+    const peg = selectedBoardCell.querySelector(".peg")
 
-    const mx = (pegX +  Number(target.getAttribute("data-x"))) / 2;
-    const my = (pegY +  Number(target.getAttribute("data-y"))) / 2;
+    const pegX = Number(selectedBoardCell.getAttribute("data-x"));
+    const pegY = Number(selectedBoardCell.getAttribute("data-y"));
 
+    const mx = (pegX +  Number(targetBoardCell.getAttribute("data-x"))) / 2;
+    const my = (pegY +  Number(targetBoardCell.getAttribute("data-y"))) / 2;
+
+    console.log(pegX, pegY, mx, my)
     const mCell = document.querySelector(`[data-x="${mx}"][data-y="${my}"]`);
 
-    selectedPeg.parentNode.removeChild(selection);
-
-    selectedPeg.parentNode.removeChild(selectedPeg);
+    selectedBoardCell.removeChild(selection);
+    selectedBoardCell.removeChild(peg);
 
     mCell.removeChild(mCell.querySelector(".peg"));
 
-    target.appendChild(selectedPeg);
+    targetBoardCell.appendChild(peg);
 
-    selectedPeg = null;
     renderMoves([])
 }
 
@@ -41,15 +43,19 @@ pegs.click(function (event) {
     selectUrl.searchParams.set("x", x);
     selectUrl.searchParams.set("y", y);
 
-    requestSelect(this);
+    requestSelect(this.parentNode);
 })
 
 $(".board-cell").click(function () {
-    const x = this.getAttribute("data-x");
-    const y = this.getAttribute("data-y")
-    moveUrl.searchParams.set("x", x);
-    moveUrl.searchParams.set("y", y);
+    const selected = document.querySelector(".selection");
+    if (selected != null && selected.parentNode !== this) {
+        const x = this.getAttribute("data-x");
+        const y = this.getAttribute("data-y")
+        moveUrl.searchParams.set("x", x);
+        moveUrl.searchParams.set("y", y);
 
-    requestMove(this);
+        console.log(this)
+        requestMove(this);
+    }
 })
 
