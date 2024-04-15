@@ -104,4 +104,13 @@ public class PegSolitaireController {
     }
 
 
+    @GetMapping("/undo")
+    public String undoMove() {
+        if (game.isStarted() && game.undoMove()) {
+            return "redirect:game";
+        }
+
+        throw new PegSolitaireException(BAD_REQUEST);
+    }
+
 }

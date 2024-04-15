@@ -1,3 +1,6 @@
+const selection = document.createElement("div");
+selection.classList.add("selection");
+
 function renderMove(targetBoardCell) {
     const selectedBoardCell = document.querySelector(".selection").parentNode;
     const peg = selectedBoardCell.querySelector(".peg")
@@ -34,28 +37,3 @@ function renderMoves(moves) {
 
     targets.forEach(target => target.classList.toggle("possible-move"));
 }
-
-pegs.click(function (event) {
-    event.stopPropagation();
-
-    const x = this.parentNode.getAttribute("data-x");
-    const y = this.parentNode.getAttribute("data-y")
-    selectUrl.searchParams.set("x", x);
-    selectUrl.searchParams.set("y", y);
-
-    requestSelect(this.parentNode);
-})
-
-$(".board-cell").click(function () {
-    const selected = document.querySelector(".selection");
-    if (selected != null && selected.parentNode !== this) {
-        const x = this.getAttribute("data-x");
-        const y = this.getAttribute("data-y")
-        moveUrl.searchParams.set("x", x);
-        moveUrl.searchParams.set("y", y);
-
-        console.log(this)
-        requestMove(this);
-    }
-})
-

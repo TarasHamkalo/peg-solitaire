@@ -4,9 +4,6 @@ const selectUrl = new URL(apiUrl + "/select?x=0&y=0");
 const moveUrl = new URL(apiUrl + "/move?x=0&y=0");
 const stateUrl = new URL(apiUrl + "/state");
 
-const selection = document.createElement("div");
-selection.classList.add("selection");
-
 function requestSelect(toSelect) {
     let selected = document.querySelector(".selection");
     if (selected != null) {

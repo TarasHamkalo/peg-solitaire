@@ -88,7 +88,6 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    @SneakyThrows
     public boolean undoMove() {
         while (!history.isEmpty()) {
             var command = history.pop();
