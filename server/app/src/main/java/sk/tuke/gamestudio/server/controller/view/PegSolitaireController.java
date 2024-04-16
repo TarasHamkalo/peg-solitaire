@@ -3,6 +3,7 @@ package sk.tuke.gamestudio.server.controller.view;
 import com.google.gson.JsonObject;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.collections.map.MultiValueMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -12,13 +13,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
+import sk.tuke.gamestudio.pegsolitaire.core.game.GameUtility;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
 import sk.tuke.gamestudio.server.exception.PegSolitaireException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.MediaType.*;
 
 @Controller
 @Scope(WebApplicationContext.SCOPE_SESSION)
@@ -33,7 +38,7 @@ public class PegSolitaireController {
     PegFactory pegFactory;
 
     @Autowired
-    LevelBuilder levelBuilder;
+    List<Class<? extends LevelBuilder>> levelBuilders;
 
     @ResponseStatus(HttpStatus.SEE_OTHER)
     @PostMapping(value = "/new")
@@ -46,6 +51,7 @@ public class PegSolitaireController {
     public String game(Model model) {
         if (game.isStarted()) {
             model.addAttribute("boardCells", game.getBoard().getBoardCells());
+//            Class.forName(
             return "pegsolitaire";
         } else {
             throw new PegSolitaireException(BAD_REQUEST, "Game was not started");
@@ -54,7 +60,7 @@ public class PegSolitaireController {
 
     @ResponseStatus(HttpStatus.SEE_OTHER)
     @PostMapping("/play")
-    public String play() {
+    public String play(Model model) {
         if (game.isStarted()) {
             return "redirect:game";
         } else {
@@ -89,7 +95,7 @@ public class PegSolitaireController {
     }
 
     @ResponseBody
-    @GetMapping(value = "state", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "state", produces = APPLICATION_JSON_VALUE)
     public String getGameState() {
         if (game.isStarted()) {
             var jsonObject = new JsonObject();
@@ -111,6 +117,17 @@ public class PegSolitaireController {
         }
 
         throw new PegSolitaireException(BAD_REQUEST);
+    }
+
+
+    @PostMapping(value = "/setup")
+    public String postForm(@RequestParam String string) {
+//        var optional = Optional.ofNullable(
+//            GameUtility.getInstanceOfLevelBuilder(levelBuilders.get(intLevel), pegFactory)
+//        );
+//
+//        optional.ifPresent(game::setLevelBuilder);
+        return "redirect:play";
     }
 
 }

@@ -2,18 +2,30 @@
 <html data-bs-theme="light"
       lang="en"
       layout:decorate="~{layout/layout.html}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
 
 <div class="container-fluid d-flex flex-column" layout:fragment="content">
 
-    <div class="d-flex mt-auto flex-column align-items-center justify-content-center">
+    <div class="d-flex mt-auto flex-column border-bottom align-items-center justify-content-center">
         <h3>Welcome to Peg Solitaire</h3>
-        <div class="border"></div>
-        <form method="POST" action="/pegsolitaire/play">
-            <input type="submit" class="btn btn-primary" value="Play">
-        </form>
     </div>
 
+    <!--    <form id="play" action="/pegsolitaire/play" method="POST">-->
+<!--    <form th:action="@{/}"  id="play" method="POST">-->
+<!--        &lt;!&ndash;        <div class="container p-5 my-3 flex-wrap d-flex align-items-center justify-content-center">&ndash;&gt;-->
+<!--        <label class="form-label" for="level">Pick level</label>-->
+<!--        <select class="form-select" id="level" name="level">-->
+<!--            <option th:each="level, it: ${levels}"-->
+<!--                    th:value="${it.current.canonicalName}"-->
+<!--                    th:text="${-->
+<!--                        it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))-->
+<!--                    }">-->
+<!--            </option>-->
+<!--        </select>-->
+
+<!--        <input class="btn btn-primary" form="play" type="submit" value="Play">-->
+<!--    </form>-->
 
     <div th:replace="~{fragments/fragments::score(${scores})}"></div>
 </div>

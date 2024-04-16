@@ -14,11 +14,14 @@ import sk.tuke.gamestudio.pegsolitaire.core.board.impl.BoardImpl;
 import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEventManager;
 import sk.tuke.gamestudio.pegsolitaire.core.events.impl.BoardEventManagerImpl;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
+import sk.tuke.gamestudio.pegsolitaire.core.game.GameUtility;
 import sk.tuke.gamestudio.pegsolitaire.core.game.impl.GameImpl;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.impl.ClassicLevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.impl.PegFactoryImpl;
+
+import java.util.List;
 
 @Configuration
 @SpringBootApplication
@@ -53,6 +56,11 @@ public class SpringServer {
     @SessionScope
     public LevelBuilder levelBuilder() {
         return new ClassicLevelBuilder(pegFactory());
+    }
+
+    @Bean
+    public List<Class<? extends LevelBuilder>> levelBuilders() {
+        return GameUtility.getLevelBuilders();
     }
 
     @Bean
