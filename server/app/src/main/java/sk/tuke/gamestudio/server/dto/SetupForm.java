@@ -5,10 +5,12 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SetupForm {
     Integer level;
-    String pegs;
+    List<String> selectedEvents;
 }

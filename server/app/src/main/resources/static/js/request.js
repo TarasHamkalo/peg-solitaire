@@ -26,6 +26,10 @@ function requestState() {
         type: "GET",
         success: function (data) {
             console.log(data)
+            if (data.reload) {
+                console.log("reloading")
+                location.reload();
+            }
         }
     })
 }

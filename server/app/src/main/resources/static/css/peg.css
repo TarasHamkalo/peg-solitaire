@@ -8,17 +8,20 @@
     width: 70%;
     height: 70%;
 
-    background: radial-gradient(circle, #ca2424,  #f04d4d 50%, #f09b9b 75%, #000000 75%);
+    background: radial-gradient(circle, #ca2424, #f04d4d 50%, #f09b9b 75%, #000000 75%);
     border-radius: 50%;
-    box-shadow:
-            2px 2px 5px 1px #000000;
+    box-shadow: 2px 2px 5px 1px #000000;
     /*!*!* in order: x offset, y offset, blur size, spread size, color *!*/
     /*!*!* blur size and spread size are optional (they default to 0) *! *!*/
 
-    animation-duration: 0.5s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    aspect-ratio: 1;
+    /*, opacity 0.3s ease-in-out*/
+    transition: transform 0.5s ease-in-out;
+    transition-delay: 50ms; /* Delay before the animation starts */
+
+    /*animation-duration: 0.5s;*/
+    /*animation-iteration-count: 1;*/
+    /*animation-fill-mode: forwards;*/
+    /*aspect-ratio: 1;*/
 }
 
 .peg::before {
@@ -49,22 +52,73 @@
     aspect-ratio: 5;
 }
 
-@keyframes in {
-    from {
-        scale: 1;
-    }
-
-    to {
-        scale: 1.2;
-    }
+.lightning {
+    background: rgb(135,49,242) !important;
+    background: radial-gradient(circle, rgba(135,49,242,1) 15%, rgba(49,178,242,1) 63%, rgba(249,160,0,0.9267605633802817) 100%) !important;
 }
 
-@keyframes out {
-    from {
-        scale: 1.2;
-    }
 
-    to {
-        scale: 1;
-    }
+.bomb {
+    background: rgb(245,103,30);
+    background: radial-gradient(circle, rgba(245,103,30,1) 26%, rgba(245,152,30,0.8563685636856369) 60%, rgba(249,184,0,0.8401084010840109) 94%);
 }
+/*.bolt {*/
+/*    z-index: 5;*/
+/*    position: absolute;*/
+/*    border: 4px solid rgba(0, 0, 0, 0);*/
+
+/*    border-bottom: 20px solid #0077ff;*/
+/*    transform: rotateZ(-160deg) rotate(30deg);*/
+/*    padding: 2px;*/
+/*    width: 0;*/
+/*    height: 0;*/
+/*    margin: 0;*/
+/*    overflow: visible;*/
+/*    border-top: 0 solid;*/
+/*    border-radius: 0;*/
+/*    transform-origin: 80% 46% 0;*/
+
+/*    !*top: 26%;*!*/
+/*    !*left: 35%;*!*/
+/*}*/
+
+/*.bolt:after {*/
+/*    !*!*transform: *!*/
+/*    z-index: 5;*/
+/*    position: absolute;*/
+/*    content: "";*/
+/*    top: -11px;*/
+/*    left: -7px;*/
+/*    border: 5px solid rgba(0, 0, 0, 0);*/
+/*    border-bottom: 25px solid #0048ff;*/
+/*    transform: rotateZ(4deg) scale(90%);*/
+/*    padding: 0;*/
+/*    width: 0;*/
+/*    height: 0;*/
+/*    margin: 0;*/
+/*    overflow: visible;*/
+/*    border-top: 0 solid;*/
+/*    border-radius: 0;*/
+/*    transform-origin: 50% 50% 0;*/
+/*}*/
+
+
+/*#burst-8 {*/
+/*    background: red;*/
+/*    width: 80px;*/
+/*    height: 80px;*/
+/*    position: relative;*/
+/*    text-align: center;*/
+/*    transform: rotate(20deg);*/
+/*}*/
+
+/*#burst-8:before {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    height: 80px;*/
+/*    width: 80px;*/
+/*    background: red;*/
+/*    transform: rotate(135deg);*/
+/*}*/

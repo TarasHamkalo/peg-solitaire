@@ -10,15 +10,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
+import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
+import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEventHandler;
+import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEventManager;
+import sk.tuke.gamestudio.pegsolitaire.core.events.impl.BombEventHandler;
+import sk.tuke.gamestudio.pegsolitaire.core.events.impl.LightningEventHandler;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
 import sk.tuke.gamestudio.pegsolitaire.core.game.GameUtility;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
 import sk.tuke.gamestudio.server.dto.SetupForm;
+import sk.tuke.gamestudio.server.events.EventsDetector;
 import sk.tuke.gamestudio.server.exception.PegSolitaireException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.*;
@@ -29,6 +35,13 @@ import static org.springframework.http.MediaType.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PegSolitaireController {
 
+    private static final Map<BoardEvent.Type, BoardEventHandler> eventToHandler = Map.ofEntries(
+        Map.entry(BoardEvent.Type.BOMB, new BombEventHandler()),
+        Map.entry(BoardEvent.Type.LIGHTNING, new LightningEventHandler()),
+        Map.entry(BoardEvent.Type.TRIVIAL_MOVE, command -> {}),
+        Map.entry(BoardEvent.Type.TRIVIAL_REMOVE, command -> {})
+    );
+
     @Autowired
     Game game;
 
@@ -36,7 +49,13 @@ public class PegSolitaireController {
     PegFactory pegFactory;
 
     @Autowired
+    BoardEventManager eventManager;
+
+    @Autowired
     List<Class<? extends LevelBuilder>> levelBuilders;
+
+    EventsDetector eventsDetector = new EventsDetector();
+
 
     @ResponseStatus(HttpStatus.SEE_OTHER)
     @PostMapping(value = "/new")
@@ -49,6 +68,10 @@ public class PegSolitaireController {
     public String game(Model model) {
         if (game.isStarted()) {
             model.addAttribute("boardCells", game.getBoard().getBoardCells());
+            for (var row : game.getBoard().getBoardCells()) {
+                System.out.println(Arrays.toString(row));
+            }
+
             model.addAttribute("isIndex", false);
             return "pegsolitaire";
         } else {
@@ -100,7 +123,8 @@ public class PegSolitaireController {
             jsonObject.addProperty("won", game.getBoard().isSolved());
             jsonObject.addProperty("hasMoves", game.getBoard().hasAvailableMoves());
             jsonObject.addProperty("score", game.getScore());
-
+            jsonObject.addProperty("reload", eventsDetector.isEventPublished());
+            //location.reload();
             return jsonObject.toString();
         }
 
@@ -119,15 +143,40 @@ public class PegSolitaireController {
 
 
     @PostMapping("/setup")
-    public String postForm(@ModelAttribute("setupForm") SetupForm formDto) {
-        var optional = Optional.ofNullable(
-            GameUtility.getInstanceOfLevelBuilder(levelBuilders.get(formDto.getLevel()), pegFactory)
+    public String postForm(@ModelAttribute("setupForm") SetupForm setupForm) {
+        var optionalLevel = Optional.ofNullable(
+            GameUtility.getInstanceOfLevelBuilder(levelBuilders.get(setupForm.getLevel()), pegFactory)
         );
 
-        optional.ifPresent(o -> System.out.println(o.getClass()));
-        optional.ifPresent(game::setLevelBuilder);
+        optionalLevel.ifPresent(game::setLevelBuilder);
 
+
+        setEventsToDefault();
+        var optionalEvents = Optional.ofNullable(setupForm.getSelectedEvents());
+
+        optionalEvents.ifPresent(e -> e.stream()
+            .filter(Predicate.not(Objects::isNull))
+            .map(BoardEvent.Type::valueOf)
+            .forEach(pegFactory::addIfNotPresent)
+        );
+
+
+        pegFactory.getPegEvents().forEach(
+            event -> eventManager.subscribe(event, eventToHandler.get(event))
+        );
+
+        Arrays.stream(BoardEvent.Type.values())
+            .forEach(e -> eventManager.subscribe(e, eventsDetector));
+
+        System.out.println(pegFactory.getPegEvents());
         return "forward:play";
+    }
+
+    private void setEventsToDefault() {
+        pegFactory.clearPegEvents();
+        List.of(BoardEvent.Type.TRIVIAL_MOVE, BoardEvent.Type.TRIVIAL_REMOVE).forEach(
+            pegFactory::addIfNotPresent
+        );
     }
 
 }

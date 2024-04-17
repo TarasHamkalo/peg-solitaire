@@ -12,8 +12,8 @@
                 <div class="btn btn-danger">Undo</div>
             </a>
 
-            <form method="POST" action="/pegsolitaire/new">
-                <input type="submit" class="btn btn-info" value="Restart">
+            <form action="/pegsolitaire/new" method="POST">
+                <input class="btn btn-info" type="submit" value="Restart">
             </form>
         </div>
     </nav>
@@ -29,7 +29,19 @@
                              th:each="cell, j: ${row}"
                              th:if="${cell != null}">
 
-                            <div th:class="${cell.isEmpty() ? '' : 'peg'}"></div>
+                            <div class="cross" th:if="${cell.state.name() == 'DESTROYED'}"></div>
+
+                            <span th:remove="tag" th:if="${cell.state.name() == 'OCCUPIED'}">
+                                <span th:remove="tag" th:if="${cell.peg.moveEvent.name() != 'TRIVIAL_MOVE'}">
+                                    <div th:class="${#strings.toLowerCase(cell.peg.moveEvent) + ' peg'}"></div>
+                                </span>
+
+                                <span th:remove="tag" th:if="${cell.peg.moveEvent.name() == 'TRIVIAL_MOVE'}">
+                                    <div class="peg"></div>
+                                </span>
+
+                            </span>
+                            </div>
                         </div>
                     </div>
                 </div>

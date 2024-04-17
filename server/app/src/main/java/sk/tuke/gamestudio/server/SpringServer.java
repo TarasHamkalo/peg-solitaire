@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.annotation.SessionScope;
 import sk.tuke.gamestudio.pegsolitaire.core.board.BoardBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.board.impl.BoardImpl;
+import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
 import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEventManager;
 import sk.tuke.gamestudio.pegsolitaire.core.events.impl.BoardEventManagerImpl;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
@@ -22,7 +23,10 @@ import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.impl.PegFactoryImpl;
 import sk.tuke.gamestudio.server.dto.SetupForm;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Configuration
 @SpringBootApplication
@@ -86,5 +90,16 @@ public class SpringServer {
     @SessionScope
     public SetupForm setupForm() {
         return new SetupForm();
+    }
+
+    @Bean
+    public List<BoardEvent.Type> events() {
+        final var exclude = List.of(
+            BoardEvent.Type.TRIVIAL_MOVE, BoardEvent.Type.TRIVIAL_REMOVE
+        );
+
+        return Arrays.asList(BoardEvent.Type.values()).stream()
+            .filter(Predicate.not(exclude::contains))
+            .toList();
     }
 }

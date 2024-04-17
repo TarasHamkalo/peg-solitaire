@@ -65,3 +65,24 @@
     border: 2px solid #00f; /* Blue */
     box-sizing: border-box;
 }
+
+.cross {
+    background: #ff00bb;
+    position: relative;
+    height: 85%;
+    width: 20%;
+    transform: rotate(45deg);
+    border-radius: 20%;
+}
+
+.cross:before {
+    display: block;
+    content: '';
+    background: #ff00bb;
+    height: 100%;
+    width: 100%;
+    transform: rotate(-90deg);
+    position: relative;
+    border-radius: 20%;
+}
+
