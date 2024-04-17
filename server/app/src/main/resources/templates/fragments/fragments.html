@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="html-head">
     <meta charset="utf-8"/>
@@ -8,7 +8,7 @@
     <meta content="" name="author"/>
     <title>Peg solitaire</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
     <link rel="stylesheet" th:href="@{/css/peg.css}"/>
     <link rel="stylesheet" th:href="@{/css/board.css}"/>
@@ -20,19 +20,20 @@
     <h1>Welcome to <a href="/">Pegsolitaire!</a></h1>
 </header>
 
-<footer th:fragment="footer" class="d-flex flex-wrap justify-content-center align-items-center py-3 border-top" style="text-align: center">
+<footer class="d-flex flex-wrap justify-content-center align-items-center py-3 border-top" style="text-align: center"
+        th:fragment="footer">
     <span>&copy; 2024 Peg Solitaire was developed by Taras Hamkalo</span>
 </footer>
 
 
-<span th:remove="tag" th:fragment="page-scripts">
+<span th:fragment="page-scripts" th:remove="tag">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!--    <script th:src="@{/js/sidebar.js}"></script>-->
+    <!--    <script th:src="@{/js/sidebar.js}"></script>-->
     <script th:src="@{/js/events.js}"></script>
 </span>
 
-<span th:remove="tag" th:fragment="game-scripts">
+<span th:fragment="game-scripts" th:remove="tag">
 <!--    <script th:src="@{/js/animations.js}"></script>-->
     <script th:src="@{/js/board_sizing.js}"></script>
     <script th:src="@{/js/gameplay_rendering.js}"></script>
@@ -43,27 +44,27 @@
     <h2>Top scores</h2>
     <table class="scores gap-5">
         <thead class="gap-5">
-            <tr>
-                <th>No.</th>
-                <th>Player</th>
-                <th>Points</th>
-                <th>Played at</th>
-            </tr>
+        <tr>
+            <th>No.</th>
+            <th>Player</th>
+            <th>Points</th>
+            <th>Played at</th>
+        </tr>
         </thead>
         <tbody>
-            <tr th:each="score, it : ${scores}">
-                <td th:text="${it.index + 1}"/>
-                <td th:text="${score.getPlayer()}"/>
-                <td th:text="${score.getPoints()}"/>
-                <td th:text="${#dates.format(score.getPlayedOn(), 'dd.MM.yyyy HH:mm')}"/>
-            </tr>
+        <tr th:each="score, it : ${scores}">
+            <td th:text="${it.index + 1}"/>
+            <td th:text="${score.getPlayer()}"/>
+            <td th:text="${score.getPoints()}"/>
+            <td th:text="${#dates.format(score.getPlayedOn(), 'dd.MM.yyyy HH:mm')}"/>
+        </tr>
         </tbody>
 
     </table>
 </div>
 
 
-<div th:fragment="slidebar" class="border-bottom-0 border" id="sidebar-wrapper">
+<div class="border-bottom-0 border" id="sidebar-wrapper" th:fragment="slidebar">
     <div class="list-group list-group-flush">
         <a class="list-group-item list-group-item-action p-3" href="#!">Dashboard</a>
         <a class="list-group-item list-group-item-action p-3" href="#!">Shortcuts</a>
@@ -74,8 +75,8 @@
     </div>
 </div>
 
-<nav th:fragment="navbar(levels)" class="navbar navbar-expand-lg border-bottom">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg border-bottom" th:fragment="navbar(levels, setupForm, isIndex)">
+    <div class="container-fluid g-5">
         <button class="btn btn-primary fs-6" id="sidebarToggle">Toggle Menu</button>
 
         <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -83,37 +84,44 @@
                 data-bs-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span>
         </button>
 
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-
-
-                <li>
-                <form th:action="@{/pegsolitaire/setup}" id="play" method="POST">
-                    <!--        <div class="container p-5 my-3 flex-wrap d-flex align-items-center justify-content-center">-->
-                    <label class="form-label" for="level">Pick level</label>
-                    <select class="form-select" id="level" name="level">
-                        <option th:each="level, it: ${levels}"
-                                th:value="${it.index}"
-                                th:text="${ it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}">
-                        </option>
-                    </select>
-
-                    <input class="btn btn-primary" form="play" type="submit" value="Play">
-                </form>
+            <ul class="navbar-nav d-flex flex-grow-1 justify-content-end">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
                 </li>
 
-                <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
-                <li class="nav-item dropdown">
-                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
-                       data-bs-toggle="dropdown"
-                       href="#" id="navbarDropdown" role="button">Dropdown</a>
-                    <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" href="#!">Action</a>
-                        <a class="dropdown-item" href="#!">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#!">Something else here</a>
-                    </div>
+
+                <li aria-expanded="false" aria-haspopup="true" class="nav-item active">
+                    <form id="setup"
+                          method="POST"
+                          th:action="@{/pegsolitaire/setup}"
+                          th:object="${setupForm}">
+
+                        <select class="nav-link rounded-2 border-0 bg-transparent" id="level" name="level"
+                                style="cursor: pointer;"
+                                th:if="${not isIndex}"
+                                th:field="*{level}"
+                                onchange="this.form.submit()">
+                            <option
+                                    th:each="builder, it: ${levels}"
+                                    th:selected="${it.index == setupForm.level}"
+                                    th:text="${it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}"
+                                    th:value="${it.index}">
+                            </option>
+                        </select>
+
+                        <select class="nav-link rounded-2 border-0 bg-transparent" id="level" name="level"
+                                style="cursor: pointer;"
+                                th:field="*{level}"
+                                th:if="${isIndex}">
+                            <option th:each="builder, it: ${levels}"
+                                    th:selected="${it.index == setupForm.level}"
+                                    th:text="${ it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}"
+                                    th:value="${it.index}">
+                            </option>
+                        </select>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -121,3 +129,15 @@
 </nav>
 
 </html>
+<!--                <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>-->
+<!--                <li class="nav-item dropdown">-->
+<!--                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"-->
+<!--                       data-bs-toggle="dropdown"-->
+<!--                       href="#" id="navbarDropdown" role="button">Dropdown</a>-->
+<!--                    <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-end">-->
+<!--                        <a class="dropdown-item" href="#!">Action</a>-->
+<!--                        <a class="dropdown-item" href="#!">Another action</a>-->
+<!--                        <div class="dropdown-divider"></div>-->
+<!--                        <a class="dropdown-item" href="#!">Something else here</a>-->
+<!--                    </div>-->
+<!--                </li>-->

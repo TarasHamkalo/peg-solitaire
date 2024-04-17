@@ -3,11 +3,9 @@ package sk.tuke.gamestudio.server.controller.view;
 import com.google.gson.JsonObject;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.collections.map.MultiValueMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +14,11 @@ import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
 import sk.tuke.gamestudio.pegsolitaire.core.game.GameUtility;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
+import sk.tuke.gamestudio.server.dto.SetupForm;
 import sk.tuke.gamestudio.server.exception.PegSolitaireException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.*;
@@ -51,7 +49,7 @@ public class PegSolitaireController {
     public String game(Model model) {
         if (game.isStarted()) {
             model.addAttribute("boardCells", game.getBoard().getBoardCells());
-//            Class.forName(
+            model.addAttribute("isIndex", false);
             return "pegsolitaire";
         } else {
             throw new PegSolitaireException(BAD_REQUEST, "Game was not started");
@@ -60,7 +58,7 @@ public class PegSolitaireController {
 
     @ResponseStatus(HttpStatus.SEE_OTHER)
     @PostMapping("/play")
-    public String play(Model model) {
+    public String play() {
         if (game.isStarted()) {
             return "redirect:game";
         } else {
@@ -120,14 +118,16 @@ public class PegSolitaireController {
     }
 
 
-    @PostMapping(value = "/setup")
-    public String postForm(@RequestParam String string) {
-//        var optional = Optional.ofNullable(
-//            GameUtility.getInstanceOfLevelBuilder(levelBuilders.get(intLevel), pegFactory)
-//        );
-//
-//        optional.ifPresent(game::setLevelBuilder);
-        return "redirect:play";
+    @PostMapping("/setup")
+    public String postForm(@ModelAttribute("setupForm") SetupForm formDto) {
+        var optional = Optional.ofNullable(
+            GameUtility.getInstanceOfLevelBuilder(levelBuilders.get(formDto.getLevel()), pegFactory)
+        );
+
+        optional.ifPresent(o -> System.out.println(o.getClass()));
+        optional.ifPresent(game::setLevelBuilder);
+
+        return "forward:play";
     }
 
 }

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sk.tuke.gamestudio.data.exception.CommentException;
 import sk.tuke.gamestudio.data.exception.RatingException;
 import sk.tuke.gamestudio.data.exception.ScoreException;
-import sk.tuke.gamestudio.pegsolitaire.core.game.GameUtility;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
+import sk.tuke.gamestudio.server.dto.SetupForm;
 
 import java.net.URI;
 import java.util.List;
@@ -24,6 +24,9 @@ public class GameStudioAdvice {
 
     @Autowired
     List<Class<? extends LevelBuilder>> levelBuilders;
+
+    @Autowired
+    SetupForm setupForm;
 
     private static ResponseEntity<ProblemDetail> createResponse(String message, String errorType) {
         var problemDetail = ProblemDetail.forStatusAndDetail(
@@ -46,5 +49,10 @@ public class GameStudioAdvice {
     @ModelAttribute("levels")
     public List<Class<? extends LevelBuilder>> levels() {
         return levelBuilders;
+    }
+
+    @ModelAttribute("setupForm")
+    public SetupForm setupForm() {
+        return setupForm;
     }
 }

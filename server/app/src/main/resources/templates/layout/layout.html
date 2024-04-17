@@ -13,7 +13,7 @@
 
     <div id="page-content-wrapper">
 
-        <div th:replace="~{fragments/fragments::navbar(${levels})}"></div>
+        <div th:replace="~{fragments/fragments::navbar(${levels}, ${setupForm}, ${isIndex})}"></div>
 
         <main th:remove="tag" layout:fragment="content"></main>
 

@@ -20,6 +20,7 @@ import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.impl.ClassicLevelBuilder;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
 import sk.tuke.gamestudio.pegsolitaire.core.pegs.impl.PegFactoryImpl;
+import sk.tuke.gamestudio.server.dto.SetupForm;
 
 import java.util.List;
 
@@ -79,5 +80,11 @@ public class SpringServer {
     @SessionScope
     public BoardEventManager eventManager() {
         return new BoardEventManagerImpl();
+    }
+
+    @Bean
+    @SessionScope
+    public SetupForm setupForm() {
+        return new SetupForm();
     }
 }

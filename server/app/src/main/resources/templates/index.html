@@ -11,21 +11,9 @@
         <h3>Welcome to Peg Solitaire</h3>
     </div>
 
-    <!--    <form id="play" action="/pegsolitaire/play" method="POST">-->
-<!--    <form th:action="@{/}"  id="play" method="POST">-->
-<!--        &lt;!&ndash;        <div class="container p-5 my-3 flex-wrap d-flex align-items-center justify-content-center">&ndash;&gt;-->
-<!--        <label class="form-label" for="level">Pick level</label>-->
-<!--        <select class="form-select" id="level" name="level">-->
-<!--            <option th:each="level, it: ${levels}"-->
-<!--                    th:value="${it.current.canonicalName}"-->
-<!--                    th:text="${-->
-<!--                        it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))-->
-<!--                    }">-->
-<!--            </option>-->
-<!--        </select>-->
-
-<!--        <input class="btn btn-primary" form="play" type="submit" value="Play">-->
-<!--    </form>-->
+    <div class="container-lg d-flex my-3 justify-content-center align-items-center">
+        <input class="btn btn-primary w-25" form="setup" type="submit" value="Play">
+    </div>
 
     <div th:replace="~{fragments/fragments::score(${scores})}"></div>
 </div>
