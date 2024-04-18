@@ -86,3 +86,11 @@
     border-radius: 20%;
 }
 
+
+select {
+    all: unset;
+}
+
+select option {
+    all: unset;
+}

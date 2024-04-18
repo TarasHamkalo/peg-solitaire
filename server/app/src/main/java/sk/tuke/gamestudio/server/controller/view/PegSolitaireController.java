@@ -124,13 +124,11 @@ public class PegSolitaireController {
             jsonObject.addProperty("hasMoves", game.getBoard().hasAvailableMoves());
             jsonObject.addProperty("score", game.getScore());
             jsonObject.addProperty("reload", eventsDetector.isEventPublished());
-            //location.reload();
             return jsonObject.toString();
         }
 
         throw new PegSolitaireException(BAD_REQUEST);
     }
-
 
     @GetMapping("/undo")
     public String undoMove() {
@@ -140,7 +138,6 @@ public class PegSolitaireController {
 
         throw new PegSolitaireException(BAD_REQUEST);
     }
-
 
     @PostMapping("/setup")
     public String postForm(@ModelAttribute("setupForm") SetupForm setupForm) {
@@ -159,7 +156,6 @@ public class PegSolitaireController {
             .map(BoardEvent.Type::valueOf)
             .forEach(pegFactory::addIfNotPresent)
         );
-
 
         pegFactory.getPegEvents().forEach(
             event -> eventManager.subscribe(event, eventToHandler.get(event))

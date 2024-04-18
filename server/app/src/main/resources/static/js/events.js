@@ -42,4 +42,6 @@ $(document).ready(function () {
     $("#pegsDropDown").click('click',  function (e) {
         e.stopPropagation();
     });
+
+    $('select').selectpicker();
 });
