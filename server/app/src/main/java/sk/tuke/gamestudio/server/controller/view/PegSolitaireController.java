@@ -68,10 +68,6 @@ public class PegSolitaireController {
     public String game(Model model) {
         if (game.isStarted()) {
             model.addAttribute("boardCells", game.getBoard().getBoardCells());
-            for (var row : game.getBoard().getBoardCells()) {
-                System.out.println(Arrays.toString(row));
-            }
-
             model.addAttribute("isIndex", false);
             return "pegsolitaire";
         } else {

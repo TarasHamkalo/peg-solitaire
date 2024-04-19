@@ -9,19 +9,18 @@
 
 <div class="d-flex flex-shrink-1" id="wrapper">
 
-    <div th:replace="~{fragments/fragments::slidebar}"></div>
+    <!--    <div th:replace="~{fragments/fragments::slidebar}"></div>-->
 
     <div id="page-content-wrapper">
 
         <div th:replace="~{fragments/fragments::navbar(${levels}, ${events}, ${setupForm}, ${isIndex})}"></div>
 
-        <main th:remove="tag" layout:fragment="content"></main>
+        <main layout:fragment="content" th:remove="tag"></main>
 
+        <footer th:replace="~{fragments/fragments::footer}"></footer>
     </div>
 </div>
-
-<footer th:replace="~{fragments/fragments::footer}"></footer>
 <span th:replace="~{fragments/fragments::page-scripts}"></span>
-<span th:remove="tag" layout:fragment="additional-scripts"></span>
+<span layout:fragment="additional-scripts" th:remove="tag"></span>
 </body>
 </html>

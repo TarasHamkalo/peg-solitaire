@@ -16,9 +16,14 @@ function getBoardDimensions() {
 
 function getMaxBoardSize() {
     const textContainer = document.querySelector('#text-container');
+    const navbarContainer = document.querySelector('#navbar-container')
     let availableHeight = window.innerHeight;
     if (textContainer != null) {
         availableHeight -= textContainer.offsetHeight;
+    }
+
+    if (navbarContainer != null) {
+        availableHeight -= navbarContainer.offsetHeight;
     }
 
     console.log('board size by height is ' + availableHeight);

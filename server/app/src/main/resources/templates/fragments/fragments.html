@@ -84,7 +84,7 @@
 </div>
 
 <nav class="navbar navbar-expand-lg border-bottom" th:fragment="navbar(levels, events, setupForm, isIndex)">
-    <div class="container-fluid g-5">
+    <div id="navbar-container" class="container-fluid">
         <!--        <button class="btn btn-primary fs-6" id="sidebarToggle">Toggle Menu</button>-->
 
         <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -92,58 +92,64 @@
                 data-bs-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span>
         </button>
 
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav d-flex flex-grow-1 justify-content-end">
-                <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+            <ul class="navbar-nav d-flex flex-grow-1 flex-wrap justify-content-end">
+                <li class="my-3 w-100 d-flex justify-content-center nav-item active">
+                    <div class="w-75 text-center">
+                        <a class="text-bg-dark rounded-5 nav-link" href="/">Home</a>
+                    </div>
                 </li>
-                <form class="d-flex flex-row"
-                      id="setup"
-                      method="POST"
-                      th:action="@{/pegsolitaire/setup}"
-                      th:object="${setupForm}"
-                >
 
-                    <select class="nav-link rounded-2 border-0 bg-transparent" id="level1"
-                            name="level"
-                            onchange="this.form.submit()"
-                            style="cursor: pointer;"
-                            th:field="*{level}"
-                            th:if="${not isIndex}">
-                        <option
-                                th:each="builder, it: ${levels}"
-                                th:selected="${it.index == setupForm.level}"
-                                th:text="${it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}"
-                                th:value="${it.index}">
-                        </option>
-                    </select>
+                <li class="position-relative w-100">
+                    <form class="d-flex flex-wrap justify-content-center"
+                          id="setup"
+                          method="POST"
+                          th:action="@{/pegsolitaire/setup}"
+                          th:object="${setupForm}"
+                    >
 
-                    <select class="nav-link rounded-2 border-0" id="level2"
-                            name="level"
-                            style="cursor: pointer;"
-                            th:field="*{level}"
-                            th:if="${isIndex}">
-                        <option th:each="builder, it: ${levels}"
-                                th:selected="${it.index == setupForm.level}"
-                                th:text="${it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}"
-                                th:value="${it.index}">
-                        </option>
-                    </select>
+                        <select class="mx-3"
+                                form="setup"
+                                id="level1"
+                                name="level"
+                                style="cursor: pointer;"
+                                th:field="*{level}"
+                                th:if="${not isIndex}">
+                            <option
+                                    th:each="builder, it: ${levels}"
+                                    th:text="${it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}"
+                                    th:value="${it.index}">
+                            </option>
+                        </select>
 
-                    <select class="selectpicker"
-                            id="eventSelect"
-                            multiple
-                            name="eventSelect"
-                            style="cursor: pointer;"
-                            th:field="*{selectedEvents}">
-                        <option th:each="event, it: ${events}"
-                                th:id="${event}"
-                                th:text="${#strings.capitalize(#strings.toLowerCase(event))}"
-                                th:value="${event}">
-                        </option>
-                    </select>
+                        <!--                                    th:selected="${it.index == setupForm.level}"-->
+                        <select class="mx-3"
+                                form="setup"
+                                id="level2"
+                                name="level"
+                                style="cursor: pointer;"
+                                th:field="*{level}"
+                                th:if="${isIndex}">
+                            <option th:each="builder, it: ${levels}"
+                                    th:text="${it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}"
+                                    th:value="${it.index}">
+                            </option>
+                        </select>
 
-                </form>
+                        <select class="mx-3 selectpicker"
+                                id="eventSelect"
+                                multiple
+                                name="eventSelect"
+                                style="cursor: pointer;"
+                                th:field="*{selectedEvents}">
+                            <option th:each="event, it: ${events}"
+                                    th:id="${event}"
+                                    th:text="${#strings.capitalize(#strings.toLowerCase(event))}"
+                                    th:value="${event}">
+                            </option>
+                        </select>
+
+                    </form>
                 </li>
             </ul>
         </div>

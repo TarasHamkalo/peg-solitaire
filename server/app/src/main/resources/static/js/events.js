@@ -34,14 +34,10 @@ $(document).ready(function () {
         }
     })
 
-    $("#sidebarToggle").click(function (event) {
-        event.preventDefault();
-        document.body.classList.toggle('sb-sidenav-toggled');
-    });
-
-    $("#pegsDropDown").click('click',  function (e) {
-        e.stopPropagation();
-    });
-
     $('select').selectpicker();
+
+    $('#restartBtn').click(function () {
+        document.getElementById('setup').submit();
+        requestNewGame()
+    });
 });

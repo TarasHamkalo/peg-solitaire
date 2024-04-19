@@ -5,15 +5,14 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         xmlns:th="http://www.thymeleaf.org">
 
-<div class="container-fluid d-flex flex-column" layout:fragment="content">
+<div layout:fragment="content">
 
-    <div class="d-flex mt-auto flex-column border-bottom align-items-center justify-content-center">
-        <h3>Welcome to Peg Solitaire</h3>
+    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center ">
+        <div class="w-75">
+            <h3>Welcome to Peg Solitaire</h3>
+            <input class="btn btn-primary my-2 w-25" form="setup" type="submit" value="Play">
+            <div class="h-25"></div>
+        </div>
+
     </div>
-
-    <div class="container-lg d-flex my-3 justify-content-center align-items-center">
-        <input class="btn btn-primary w-25" form="setup" type="submit" value="Play">
-    </div>
-
-    <div th:replace="~{fragments/fragments::score(${scores})}"></div>
 </div>
