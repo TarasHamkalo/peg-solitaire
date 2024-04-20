@@ -26,9 +26,9 @@ function requestState() {
         url: stateUrl,
         type: "GET",
         success: function (data) {
-            console.log(data)
+            renderMoveResult(data);
+
             if (data.reload) {
-                console.log("reloading")
                 location.reload();
             }
         }

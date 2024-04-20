@@ -1,5 +1,14 @@
+const textWon = "🤩You won🤩";
+const textLose = "🥲You lost🥲";
 const selection = document.createElement("div");
 selection.classList.add("selection");
+
+const resultWindow = document.createElement("div")
+resultWindow.classList.add("result-window")
+
+const popup = document.createElement("div");
+popup.classList.add("win-popup");
+popup.appendChild(resultWindow)
 
 function renderMove(targetBoardCell) {
     const selectedBoardCell = document.querySelector(".selection").parentNode;
@@ -36,4 +45,11 @@ function renderMoves(moves) {
     });
 
     targets.forEach(target => target.classList.toggle("possible-move"));
+}
+
+function renderMoveResult(data) {
+    if (!data.hasMoves) {
+        resultWindow.textContent = data.won ? textWon : textLose;
+        document.body.appendChild(popup)
+    }
 }
