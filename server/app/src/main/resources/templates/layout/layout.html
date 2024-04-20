@@ -20,7 +20,8 @@
         <footer th:replace="~{fragments/fragments::footer}"></footer>
     </div>
 </div>
-<span th:replace="~{fragments/fragments::page-scripts}"></span>
+
 <span layout:fragment="additional-scripts" th:remove="tag"></span>
+<span th:replace="~{fragments/fragments::page-scripts}"></span>
 </body>
 </html>
