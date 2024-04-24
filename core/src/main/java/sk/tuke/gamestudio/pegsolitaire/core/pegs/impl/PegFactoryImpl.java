@@ -25,16 +25,20 @@ public class PegFactoryImpl implements PegFactory {
         Map.entry(BoardEvent.Type.LIGHTNING, Color.BRIGHT_BLUE)
     );
 
+    List<BoardEvent.Type> defaultEvents = List.of(
+        BoardEvent.Type.TRIVIAL_MOVE, BoardEvent.Type.TRIVIAL_REMOVE
+    );
+
     @Getter
     @NonNull
-    List<BoardEvent.Type> pegEvents = new ArrayList<>();
+    List<BoardEvent.Type> selectedEvents = new ArrayList<>();
 
     Random random = new SecureRandom();
 
     @Override
     public Peg getRandomPeg() {
-        if (random.nextInt(7) == 1 && !pegEvents.isEmpty()) {
-            var event = pegEvents.get(random.nextInt(pegEvents.size()));
+        if (random.nextInt(7) == 1 && !selectedEvents.isEmpty()) {
+            var event = selectedEvents.get(random.nextInt(selectedEvents.size()));
             return PegImpl.builder()
                 .moveEventType(event)
                 .removeEventType(event)
@@ -47,13 +51,14 @@ public class PegFactoryImpl implements PegFactory {
 
     @Override
     public void addIfNotPresent(@NonNull BoardEvent.Type pegEvent) {
-        if (!pegEvents.contains(pegEvent)) {
-            pegEvents.add(pegEvent);
+        if (!selectedEvents.contains(pegEvent)) {
+            selectedEvents.add(pegEvent);
         }
     }
 
     @Override
     public void clearPegEvents() {
-        pegEvents.clear();
+        selectedEvents.clear();
+        selectedEvents.addAll(defaultEvents);
     }
 }

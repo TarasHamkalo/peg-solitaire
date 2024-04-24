@@ -10,7 +10,7 @@ public interface PegFactory {
 
     void addIfNotPresent(@NonNull BoardEvent.Type pegEvent);
 
-    List<BoardEvent.Type> getPegEvents();
+    List<BoardEvent.Type> getSelectedEvents();
 
     void clearPegEvents();
 }
