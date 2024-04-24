@@ -1,36 +1,18 @@
-package sk.tuke.gamestudio.server.handlers;
+package sk.tuke.gamestudio.server.controller.advice;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sk.tuke.gamestudio.data.exception.CommentException;
 import sk.tuke.gamestudio.data.exception.RatingException;
 import sk.tuke.gamestudio.data.exception.ScoreException;
-import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
-import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
-import sk.tuke.gamestudio.server.dto.SetupForm;
 
 import java.net.URI;
-import java.util.List;
 
 @RestControllerAdvice
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class GameStudioAdvice {
-
-    @Autowired
-    List<Class<? extends LevelBuilder>> levelBuilders;
-
-    @Autowired
-    SetupForm setupForm;
-
-    @Autowired
-    List<BoardEvent.Type> events;
+public class ExceptionConverterAdvice {
 
     private static ResponseEntity<ProblemDetail> createResponse(String message, String errorType) {
         var problemDetail = ProblemDetail.forStatusAndDetail(
@@ -50,18 +32,4 @@ public class GameStudioAdvice {
         return createResponse(e.getMessage(), e.getClass().getSimpleName());
     }
 
-    @ModelAttribute("levels")
-    public List<Class<? extends LevelBuilder>> levels() {
-        return levelBuilders;
-    }
-
-    @ModelAttribute("events")
-    public List<BoardEvent.Type> getEvents() {
-        return events;
-    }
-
-    @ModelAttribute("setupForm")
-    public SetupForm setupForm() {
-        return setupForm;
-    }
 }

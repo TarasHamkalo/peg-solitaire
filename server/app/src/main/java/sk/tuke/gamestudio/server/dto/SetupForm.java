@@ -11,6 +11,9 @@ import java.util.List;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SetupForm {
+
     Integer level;
+
     List<String> selectedEvents;
+
 }
