@@ -23,7 +23,6 @@ import sk.tuke.gamestudio.server.dto.SetupForm;
 import sk.tuke.gamestudio.server.events.EventsDetector;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -35,7 +34,7 @@ public class GameConfig {
     @SessionScope
     public Game game() {
         return GameImpl.builder()
-            .eventManager(eventManager())
+            .eventManager(boardEventManager())
             .boardBuilder(boardBuilder())
             .levelBuilder(levelBuilder())
             .build();
@@ -61,12 +60,6 @@ public class GameConfig {
 
     @Bean
     @SessionScope
-    public BoardEventManager eventManager() {
-        return new BoardEventManagerImpl();
-    }
-
-    @Bean
-    @SessionScope
     public SetupForm setupForm() {
         return new SetupForm();
     }
@@ -75,7 +68,11 @@ public class GameConfig {
     @SessionScope
     public BoardEventManager boardEventManager() {
         var boardEventManager = new BoardEventManagerImpl();
+
         eventToHandlers().forEach(boardEventManager::subscribe);
+
+        Arrays.stream(BoardEvent.Type.values())
+            .forEach(t -> boardEventManager.subscribe(t, eventsDetector()));
 
         return boardEventManager;
     }
