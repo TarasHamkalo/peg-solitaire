@@ -9,17 +9,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(
-    basePackages = {
-        "sk.tuke.gamestudio.data.service.jpa",
-        "sk.tuke.gamestudio.server"
-    }
+  basePackages = {
+    "sk.tuke.gamestudio.data.service.jpa",
+    "sk.tuke.gamestudio.server"
+  }
 )
 @EntityScan("sk.tuke.gamestudio.data.entity")
 public class ServiceConfig {
 
-    @Bean
-    public Mapper mapper() {
-        return DozerBeanMapperBuilder.buildDefault();
-    }
+  @Bean
+  public Mapper mapper() {
+    return DozerBeanMapperBuilder.buildDefault();
+  }
 
 }

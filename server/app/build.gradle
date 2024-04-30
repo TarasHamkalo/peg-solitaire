@@ -1,25 +1,18 @@
 plugins {
-    id 'application'
+  id 'application'
 }
 
 application {
-    mainClass = 'sk.tuke.gamestudio.server.SpringServer'
+  mainClass = 'sk.tuke.gamestudio.server.SpringServer'
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.1'
+  runtimeOnly "org.postgresql:postgresql:$postgresqlVersion"
 
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.4'
+  implementation "com.github.dozermapper:dozer-spring-boot-starter:$dozerMapperVersion"
 
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'com.google.code.gson:gson:2.10.1'
-
-    implementation 'com.github.dozermapper:dozer-spring-boot-starter:7.0.0'
-
-    implementation 'org.postgresql:postgresql:42.7.3'
-
-    implementation project(':data')
-    implementation project(':core')
-    implementation project(':server:service-rest-api')
+  implementation project(':data')
+  implementation project(':server:service-rest-api')
 }

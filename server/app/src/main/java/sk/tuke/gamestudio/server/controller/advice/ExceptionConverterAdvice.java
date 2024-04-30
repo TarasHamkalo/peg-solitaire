@@ -14,22 +14,22 @@ import java.net.URI;
 @RestControllerAdvice
 public class ExceptionConverterAdvice {
 
-    private static ResponseEntity<ProblemDetail> createResponse(String message, String errorType) {
-        var problemDetail = ProblemDetail.forStatusAndDetail(
-            HttpStatus.BAD_REQUEST, message
-        );
+  private static ResponseEntity<ProblemDetail> createResponse(String message, String errorType) {
+    var problemDetail = ProblemDetail.forStatusAndDetail(
+      HttpStatus.BAD_REQUEST, message
+    );
 
-        problemDetail.setType(URI.create(errorType));
-        return ResponseEntity.badRequest().body(problemDetail);
-    }
+    problemDetail.setType(URI.create(errorType));
+    return ResponseEntity.badRequest().body(problemDetail);
+  }
 
-    @ExceptionHandler({
-        ScoreException.class,
-        RatingException.class,
-        CommentException.class
-    })
-    public ResponseEntity<ProblemDetail> handleProductNotFoundException(Exception e) {
-        return createResponse(e.getMessage(), e.getClass().getSimpleName());
-    }
+  @ExceptionHandler({
+    ScoreException.class,
+    RatingException.class,
+    CommentException.class
+  })
+  public ResponseEntity<ProblemDetail> handleProductNotFoundException(Exception e) {
+    return createResponse(e.getMessage(), e.getClass().getSimpleName());
+  }
 
 }

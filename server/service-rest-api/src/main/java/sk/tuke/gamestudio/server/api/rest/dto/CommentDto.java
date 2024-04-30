@@ -14,22 +14,22 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto implements Serializable {
 
-    Long id;
+  Long id;
 
-    @NonNull
-    String player;
+  @NonNull
+  String player;
 
-    @NonNull
-    String game;
+  @NonNull
+  String game;
 
-    @NonNull
-    String text;
+  @NonNull
+  String text;
 
-    @Builder.Default
-    Date commentedOn = Date.from(Instant.now());
+  @Builder.Default
+  Date commentedOn = Date.from(Instant.now());
 
-    @Override
-    public String toString() {
-        return String.format("%s: %s", player, text);
-    }
+  @Override
+  public String toString() {
+    return String.format("%s: %s", player, text);
+  }
 }

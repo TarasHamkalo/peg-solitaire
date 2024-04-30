@@ -14,22 +14,22 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScoreDto implements Serializable {
 
-    Long id;
+  Long id;
 
-    @NonNull
-    String game;
+  @NonNull
+  String game;
 
-    @NonNull
-    String player;
+  @NonNull
+  String player;
 
-    @NonNull
-    Integer points;
+  @NonNull
+  Integer points;
 
-    @Builder.Default
-    Date playedOn = Date.from(Instant.now());
+  @Builder.Default
+  Date playedOn = Date.from(Instant.now());
 
-    @Override
-    public String toString() {
-        return String.format("%s scored {%d} on %s.", player, points, playedOn);
-    }
+  @Override
+  public String toString() {
+    return String.format("%s scored {%d} on %s.", player, points, playedOn);
+  }
 }

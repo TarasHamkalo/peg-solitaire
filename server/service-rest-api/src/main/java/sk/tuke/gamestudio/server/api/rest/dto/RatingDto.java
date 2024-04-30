@@ -13,22 +13,22 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RatingDto {
 
-    Long id;
+  Long id;
 
-    @NonNull
-    String player;
+  @NonNull
+  String player;
 
-    @NonNull
-    String game;
+  @NonNull
+  String game;
 
-    @NonNull
-    Integer stars;
+  @NonNull
+  Integer stars;
 
-    @Builder.Default
-    Date ratedOn = Date.from(Instant.now());
+  @Builder.Default
+  Date ratedOn = Date.from(Instant.now());
 
-    @Override
-    public String toString() {
-        return String.format("%s rated %s with {%d}", player, game, stars);
-    }
+  @Override
+  public String toString() {
+    return String.format("%s rated %s with {%d}", player, game, stars);
+  }
 }
