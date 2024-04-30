@@ -1,3 +1,6 @@
+.auth-required {
+}
+
 table.scores {
     width: 100%;
     border: black 2px;

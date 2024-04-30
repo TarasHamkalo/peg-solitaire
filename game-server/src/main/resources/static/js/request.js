@@ -66,3 +66,24 @@ function requestNewGame() {
         }
     })
 }
+
+
+function requestWithAuthentication(url, method) {
+    refreshTokenIfRequired();
+
+    const accessToken = localStorage.getItem("access_token");
+    if (accessToken) {
+        const settings = {
+            "url": url,
+            "method": method,
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Bearer " + accessToken
+            },
+        };
+
+        $.ajax(settings).done(function (response) {
+            $("#data").text(response);
+        });
+    }
+}

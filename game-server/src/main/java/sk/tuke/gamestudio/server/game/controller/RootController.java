@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.server.controller.view;
+package sk.tuke.gamestudio.server.game.controller;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,10 +14,10 @@ import org.springframework.web.context.annotation.SessionScope;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RootController {
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("isIndex", true);
-        return "index";
-    }
+  @GetMapping("/")
+  public String index(Model model) {
+    model.addAttribute("isIndex", true);
+    return "index";
+  }
 
 }

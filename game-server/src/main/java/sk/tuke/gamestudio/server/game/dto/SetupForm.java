@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.server.dto;
+package sk.tuke.gamestudio.server.game.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -12,8 +12,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SetupForm {
 
-    Integer level;
+  Integer level;
 
-    List<String> selectedEvents;
+  List<String> selectedEvents;
 
 }

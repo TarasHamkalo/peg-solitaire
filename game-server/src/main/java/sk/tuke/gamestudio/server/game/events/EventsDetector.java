@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.server.events;
+package sk.tuke.gamestudio.server.game.events;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,10 +15,11 @@ import static sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent.Type.TRIVIA
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventsDetector implements BoardEventHandler {
 
-    boolean eventPublished = false;
+  boolean eventPublished = false;
 
-    @Override
-    public void handle(BoardEvent event) {
-        eventPublished = !Set.of(TRIVIAL_MOVE, TRIVIAL_REMOVE).contains(event.getEventType());
-    }
+  @Override
+  public void handle(BoardEvent event) {
+    this.eventPublished =
+      !Set.of(TRIVIAL_MOVE, TRIVIAL_REMOVE).contains(event.getEventType());
+  }
 }
