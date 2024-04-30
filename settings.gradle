@@ -2,8 +2,10 @@ rootProject.name = 'gamestudio-7800'
 
 [
     'client',
+    'game-server',
     'server:app',
     'server:service-rest-api',
+    'oauth-server',
     'data',
     'core'
 ].forEach {
