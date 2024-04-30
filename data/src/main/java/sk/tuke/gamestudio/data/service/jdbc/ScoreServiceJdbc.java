@@ -19,12 +19,12 @@ import java.util.List;
 @Repository
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ScoreServiceJdbc implements ScoreService {
-    public static final String SELECT = "SELECT game, player, points, played_on FROM score WHERE game = ? ORDER BY points DESC LIMIT 10";
+  public static final String SELECT = "SELECT game, player, points, played_on FROM score WHERE game = ? ORDER BY points DESC LIMIT 10";
 
-    public static final String DELETE = "DELETE FROM score";
+  public static final String DELETE = "DELETE FROM score";
 
-    public static final String INSERT =
-        "INSERT INTO score (game, player, points, played_on) VALUES (?, ?, ?, ?)";
+  public static final String INSERT =
+    "INSERT INTO score (game, player, points, played_on) VALUES (?, ?, ?, ?)";
 
     /*
     public static final String INSERT = """
@@ -43,61 +43,61 @@ public class ScoreServiceJdbc implements ScoreService {
         """;
     */
 
-    @NonNull
-    DataSource dataSource;
+  @NonNull
+  DataSource dataSource;
 
-    @Autowired
-    public ScoreServiceJdbc(@NonNull DataSource dataSource) {
-        this.dataSource = dataSource;
+  @Autowired
+  public ScoreServiceJdbc(@NonNull DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
+
+  @Override
+  public void addScore(Score score) {
+    try (var connection = dataSource.getConnection();
+         var preparedInsert = connection.prepareStatement(INSERT)) {
+      preparedInsert.setString(1, score.getGame());
+      preparedInsert.setString(2, score.getPlayer());
+      preparedInsert.setInt(3, score.getPoints());
+      preparedInsert.setTimestamp(4, new Timestamp(score.getPlayedOn().getTime()));
+      preparedInsert.executeUpdate();
+    } catch (SQLException e) {
+      throw new ScoreException("Problem inserting score", e);
     }
+  }
 
-    @Override
-    public void addScore(Score score) {
-        try (var connection = dataSource.getConnection();
-             var preparedInsert = connection.prepareStatement(INSERT)) {
-            preparedInsert.setString(1, score.getGame());
-            preparedInsert.setString(2, score.getPlayer());
-            preparedInsert.setInt(3, score.getPoints());
-            preparedInsert.setTimestamp(4, new Timestamp(score.getPlayedOn().getTime()));
-            preparedInsert.executeUpdate();
-        } catch (SQLException e) {
-            throw new ScoreException("Problem inserting score", e);
+  @Override
+  public List<Score> getTopScores(String game) {
+    try (var connection = dataSource.getConnection();
+         var statement = connection.prepareStatement(SELECT)) {
+      statement.setString(1, game);
+      try (ResultSet rs = statement.executeQuery()) {
+        List<Score> scores = new ArrayList<>();
+        while (rs.next()) {
+          scores.add(
+            Score.builder()
+              .game(rs.getString(1))
+              .player(rs.getString(2))
+              .points(rs.getInt(3))
+              .playedOn(rs.getTimestamp(4))
+              .build()
+          );
         }
-    }
 
-    @Override
-    public List<Score> getTopScores(String game) {
-        try (var connection = dataSource.getConnection();
-             var statement = connection.prepareStatement(SELECT)) {
-            statement.setString(1, game);
-            try (ResultSet rs = statement.executeQuery()) {
-                List<Score> scores = new ArrayList<>();
-                while (rs.next()) {
-                    scores.add(
-                        Score.builder()
-                            .game(rs.getString(1))
-                            .player(rs.getString(2))
-                            .points(rs.getInt(3))
-                            .playedOn(rs.getTimestamp(4))
-                            .build()
-                    );
-                }
-
-                return scores;
-            }
-        } catch (SQLException e) {
-            throw new ScoreException("Problem selecting score", e);
-        }
+        return scores;
+      }
+    } catch (SQLException e) {
+      throw new ScoreException("Problem selecting score", e);
     }
+  }
 
-    @Override
-    public void reset() {
-        try (var connection = dataSource.getConnection();
-             var statement = connection.createStatement();
-        ) {
-            statement.executeUpdate(DELETE);
-        } catch (SQLException e) {
-            throw new ScoreException("Problem deleting score", e);
-        }
+  @Override
+  public void reset() {
+    try (var connection = dataSource.getConnection();
+         var statement = connection.createStatement();
+    ) {
+      statement.executeUpdate(DELETE);
+    } catch (SQLException e) {
+      throw new ScoreException("Problem deleting score", e);
     }
+  }
 }

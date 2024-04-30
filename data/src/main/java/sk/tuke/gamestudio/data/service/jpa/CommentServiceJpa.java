@@ -20,43 +20,43 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentServiceJpa implements CommentService {
 
-    EntityManager entityManager;
+  EntityManager entityManager;
 
-    @Autowired
-    public CommentServiceJpa(EntityManager entityManager) {
-        this.entityManager = entityManager;
+  @Autowired
+  public CommentServiceJpa(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
+
+  @Override
+  public void addComment(Comment comment) throws CommentException {
+    try {
+      entityManager.persist(comment);
+    } catch (ConstraintViolationException | PersistenceException e) {
+      throw new CommentException("Was not able to add comment", e);
     }
+  }
 
-    @Override
-    public void addComment(Comment comment) throws CommentException {
-        try {
-            entityManager.persist(comment);
-        } catch (ConstraintViolationException | PersistenceException e) {
-            throw new CommentException("Was not able to add comment", e);
-        }
+  @Override
+  public List<Comment> getComments(String game) throws CommentException {
+    try {
+      var result = entityManager
+        .createQuery("SELECT c FROM Comment c WHERE c.game = :game", Comment.class)
+        .setParameter("game", game)
+        .setMaxResults(10)
+        .getResultList();
+
+      return result == null ? Collections.emptyList() : result;
+    } catch (ConstraintViolationException | PersistenceException e) {
+      throw new CommentException("Was not able to get comments", e);
     }
+  }
 
-    @Override
-    public List<Comment> getComments(String game) throws CommentException {
-        try {
-            var result = entityManager
-                .createQuery("SELECT c FROM Comment c WHERE c.game = :game", Comment.class)
-                .setParameter("game", game)
-                .setMaxResults(10)
-                .getResultList();
-
-            return result == null ? Collections.emptyList() : result;
-        } catch (ConstraintViolationException | PersistenceException e) {
-            throw new CommentException("Was not able to get comments", e);
-        }
+  @Override
+  public void reset() throws CommentException {
+    try {
+      entityManager.createQuery("DELETE FROM Comment").executeUpdate();
+    } catch (ConstraintViolationException | PersistenceException e) {
+      throw new CommentException("Was not able to delete comments", e);
     }
-
-    @Override
-    public void reset() throws CommentException {
-        try {
-            entityManager.createQuery("DELETE FROM Comment").executeUpdate();
-        } catch (ConstraintViolationException | PersistenceException e) {
-            throw new CommentException("Was not able to delete comments", e);
-        }
-    }
+  }
 }

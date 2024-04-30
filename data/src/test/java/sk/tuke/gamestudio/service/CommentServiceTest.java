@@ -21,46 +21,46 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class CommentServiceTest {
 
-    @Autowired
-    CommentService commentService;
+  @Autowired
+  CommentService commentService;
 
-    @Test
-    void whenCommentWithGivenPlayerDoesNotExistShouldBeInserted() {
-        commentService.reset();
-        final var inserted = Comment.builder()
-            .game("pegsolitaire")
-            .player("Taras")
-            .text("My first comment")
-            .build();
+  @Test
+  void whenCommentWithGivenPlayerDoesNotExistShouldBeInserted() {
+    commentService.reset();
+    final var inserted = Comment.builder()
+      .game("pegsolitaire")
+      .player("Taras")
+      .text("My first comment")
+      .build();
 
-        assertDoesNotThrow(() -> commentService.addComment(inserted));
+    assertDoesNotThrow(() -> commentService.addComment(inserted));
 
-        var retrievedComments = commentService.getComments(inserted.getGame());
-        assertEquals(1, retrievedComments.size());
+    var retrievedComments = commentService.getComments(inserted.getGame());
+    assertEquals(1, retrievedComments.size());
 
-        assertEquals(inserted, retrievedComments.get(0));
-    }
+    assertEquals(inserted, retrievedComments.get(0));
+  }
 
-    @Test
-    void whenGetCommentsCalledAllCommentsShouldBeRetrieved() {
-        commentService.reset();
+  @Test
+  void whenGetCommentsCalledAllCommentsShouldBeRetrieved() {
+    commentService.reset();
 
-        final var insertedComments = List.of(
-            new Comment("Zuzka", "pegsolitaire", "Zuzka's comment"),
-            new Comment("Katka", "pegsolitaire", "Katka's comment"),
-            new Comment("Jaro", "pegsolitaire", "Jaro's comment")
-        );
+    final var insertedComments = List.of(
+      new Comment("Zuzka", "pegsolitaire", "Zuzka's comment"),
+      new Comment("Katka", "pegsolitaire", "Katka's comment"),
+      new Comment("Jaro", "pegsolitaire", "Jaro's comment")
+    );
 
-        insertedComments.forEach(commentService::addComment);
+    insertedComments.forEach(commentService::addComment);
 
-        var retrievedComments = commentService.getComments("pegsolitaire");
+    var retrievedComments = commentService.getComments("pegsolitaire");
 
-        assertEquals(3, retrievedComments.size());
-    }
+    assertEquals(3, retrievedComments.size());
+  }
 
-    @Test
-    void afterResetIsCalledTopScoresShouldBeEmpty() {
-        commentService.reset();
-        assertEquals(0, commentService.getComments("pegsolitaire").size());
-    }
+  @Test
+  void afterResetIsCalledTopScoresShouldBeEmpty() {
+    commentService.reset();
+    assertEquals(0, commentService.getComments("pegsolitaire").size());
+  }
 }

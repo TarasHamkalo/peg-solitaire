@@ -19,40 +19,37 @@ import java.util.Date;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Rating implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
 
-    @NonNull
-    @NotBlank
-    @Column(
-        nullable = false,
-        length = 64
-    )
-    String player;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  Long id;
 
-    @NonNull
-    @NotBlank
-    @Column(
-        nullable = false,
-        length = 64
-    )
-    String game;
+  @NonNull
+  @NotBlank
+  @Column(
+    nullable = false,
+    length = 64
+  )
+  String player;
 
-    @Min(1)
-    @Max(5)
-    @NonNull
-    @Column(
-        nullable = false
-    )
-    Integer stars;
+  @NonNull
+  @NotBlank
+  @Column(
+    nullable = false,
+    length = 64
+  )
+  String game;
 
-    @Builder.Default
-    @Column(nullable = false)
-    Date ratedOn = Date.from(Instant.now());
+  @Min(1)
+  @Max(5)
+  @NonNull
+  @Column(
+    nullable = false
+  )
+  Integer stars;
 
-    @Override
-    public String toString() {
-        return String.format("%s rated %s with {%d}", player, game, stars);
-    }
+  @Builder.Default
+  @Column(nullable = false)
+  Date ratedOn = Date.from(Instant.now());
+
 }

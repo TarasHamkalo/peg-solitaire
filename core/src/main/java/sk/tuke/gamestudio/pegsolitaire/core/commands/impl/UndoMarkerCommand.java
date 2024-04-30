@@ -6,13 +6,13 @@ import sk.tuke.gamestudio.pegsolitaire.core.commands.BoardCommand;
 @SuperBuilder
 public class UndoMarkerCommand extends BoardCommand {
 
-    @Override
-    public boolean exec() {
-        return true;
-    }
+  @Override
+  public boolean exec() {
+    return true;
+  }
 
-    @Override
-    public boolean undo() {
-        return true;
-    }
+  @Override
+  public boolean undo() {
+    return true;
+  }
 }

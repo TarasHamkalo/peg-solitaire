@@ -6,11 +6,11 @@ import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
 import java.util.List;
 
 public interface PegFactory {
-    Peg getRandomPeg();
+  Peg getRandomPeg();
 
-    void addIfNotPresent(@NonNull BoardEvent.Type pegEvent);
+  void addIfNotPresent(@NonNull BoardEvent.Type pegEvent);
 
-    List<BoardEvent.Type> getSelectedEvents();
+  List<BoardEvent.Type> getSelectedEvents();
 
-    void clearPegEvents();
+  void clearPegEvents();
 }

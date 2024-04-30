@@ -14,7 +14,7 @@ import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BoardEventImpl implements BoardEvent {
 
-    BoardEvent.Type eventType;
+  BoardEvent.Type eventType;
 
-    BoardCommand triggerCommand;
+  BoardCommand triggerCommand;
 }

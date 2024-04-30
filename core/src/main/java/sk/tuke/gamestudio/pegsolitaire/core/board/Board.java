@@ -8,33 +8,33 @@ import sk.tuke.gamestudio.pegsolitaire.core.pegs.Peg;
 import java.util.List;
 
 public interface Board {
-    boolean makeMove(int[] from, int[] to);
+  boolean makeMove(int[] from, int[] to);
 
-    boolean removePeg(int[] from);
+  boolean removePeg(int[] from);
 
-    boolean putPeg(@NonNull Peg peg, int[] onto);
+  boolean putPeg(@NonNull Peg peg, int[] onto);
 
-    boolean destroyCell(int[] on);
+  boolean destroyCell(int[] on);
 
-    boolean undoMove();
+  boolean undoMove();
 
-    List<int[]> getPossibleMoves(int x, int y);
+  List<int[]> getPossibleMoves(int x, int y);
 
-    BoardCell getBoardCellAt(int x, int y);
+  BoardCell getBoardCellAt(int x, int y);
 
-    long getPegsCount();
+  long getPegsCount();
 
-    boolean hasAvailableMoves();
+  boolean hasAvailableMoves();
 
-    boolean isSolved();
+  boolean isSolved();
 
-    BoardCell[][] getBoardCells();
+  BoardCell[][] getBoardCells();
 
-    void setBoardCells(BoardCell[][] boardCells);
+  void setBoardCells(BoardCell[][] boardCells);
 
-    void offerEvent(@NonNull BoardEvent event);
+  void offerEvent(@NonNull BoardEvent event);
 
-    void clearHistory();
+  void clearHistory();
 
-    BoardCommand peekHistory();
+  BoardCommand peekHistory();
 }

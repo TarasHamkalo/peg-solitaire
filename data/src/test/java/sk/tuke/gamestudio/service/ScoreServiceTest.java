@@ -20,53 +20,53 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class ScoreServiceTest {
 
-    @Autowired
-    ScoreService scoreService;
+  @Autowired
+  ScoreService scoreService;
 
-    @Test
-    void whenScoreIsAddedToEmptyTableTopScoresShouldContainIt() {
-        scoreService.reset();
+  @Test
+  void whenScoreIsAddedToEmptyTableTopScoresShouldContainIt() {
+    scoreService.reset();
 
-        final var expected = Score.builder()
-            .player("Taras")
-            .game("pegsolitaire")
-            .points(100)
-            .build();
+    final var expected = Score.builder()
+      .player("Taras")
+      .game("pegsolitaire")
+      .points(100)
+      .build();
 
 
-        // when
-        scoreService.addScore(expected);
+    // when
+    scoreService.addScore(expected);
 
-        // then
-        var retrieved = scoreService.getTopScores("pegsolitaire");
-        assertEquals(1, retrieved.size());
-        assertEquals(expected, retrieved.get(0));
+    // then
+    var retrieved = scoreService.getTopScores("pegsolitaire");
+    assertEquals(1, retrieved.size());
+    assertEquals(expected, retrieved.get(0));
+  }
+
+  @Test
+  void whenTopScoresCalledScoresShouldBeRetrievedSortedByScore() {
+    scoreService.reset();
+
+    final var scoreInserted = List.of(
+      new Score("pegsolitaire", "Zuzka", 180),//, date),
+      new Score("pegsolitaire", "Katka", 150),//, date),
+      new Score("pegsolitaire", "Jaro", 120)//, date)
+    );
+
+    scoreInserted.forEach(scoreService::addScore);
+
+    var scoresRetrieved = scoreService.getTopScores("pegsolitaire");
+
+    assertEquals(3, scoresRetrieved.size());
+    for (int i = 0; i < scoreInserted.size(); i++) {
+      assertEquals(scoreInserted.get(0), scoresRetrieved.get(0));
     }
+  }
 
-    @Test
-    void whenTopScoresCalledScoresShouldBeRetrievedSortedByScore() {
-        scoreService.reset();
+  @Test
+  void afterResetIsCalledTopScoresShouldBeEmpty() {
+    scoreService.reset();
 
-        final var scoreInserted = List.of(
-            new Score("pegsolitaire", "Zuzka", 180),//, date),
-            new Score("pegsolitaire", "Katka", 150),//, date),
-            new Score("pegsolitaire", "Jaro", 120)//, date)
-        );
-
-        scoreInserted.forEach(scoreService::addScore);
-
-        var scoresRetrieved = scoreService.getTopScores("pegsolitaire");
-
-        assertEquals(3, scoresRetrieved.size());
-        for (int i = 0; i < scoreInserted.size(); i++) {
-            assertEquals(scoreInserted.get(0), scoresRetrieved.get(0));
-        }
-    }
-
-    @Test
-    void afterResetIsCalledTopScoresShouldBeEmpty() {
-        scoreService.reset();
-
-        assertEquals(0, scoreService.getTopScores("pegsoliatire").size());
-    }
+    assertEquals(0, scoreService.getTopScores("pegsoliatire").size());
+  }
 }

@@ -9,42 +9,42 @@ import sk.tuke.gamestudio.pegsolitaire.core.events.impl.BoardEventImpl;
 @SuperBuilder
 public class RemoveCommand extends BoardCommand {
 
-    @Override
-    public boolean exec() {
-        var removeFrom = this.getBoard().getBoardCellAt(
-            this.getInitialPosition()[0], this.getInitialPosition()[1]
-        );
+  @Override
+  public boolean exec() {
+    var removeFrom = this.getBoard().getBoardCellAt(
+      this.getInitialPosition()[0], this.getInitialPosition()[1]
+    );
 
-        if (isInvalid(removeFrom)) {
-            return false;
-        }
-
-        this.setPeg(removeFrom.getPeg());
-        removeFrom.setPeg(null);
-
-        this.getBoard().offerEvent(
-            BoardEventImpl.builder()
-                .eventType(this.getPeg().getRemoveEvent())
-                .triggerCommand(this)
-                .build()
-        );
-
-        return true;
+    if (isInvalid(removeFrom)) {
+      return false;
     }
 
-    @Override
-    public boolean undo() {
-        var putOnCell = this.getBoard().getBoardCellAt(
-            this.getFinalPosition()[0], this.getFinalPosition()[1]
-        );
+    this.setPeg(removeFrom.getPeg());
+    removeFrom.setPeg(null);
 
-        putOnCell.setPeg(this.getPeg());
-        this.setPeg(null);
-        return true;
-    }
+    this.getBoard().offerEvent(
+      BoardEventImpl.builder()
+        .eventType(this.getPeg().getRemoveEvent())
+        .triggerCommand(this)
+        .build()
+    );
+
+    return true;
+  }
+
+  @Override
+  public boolean undo() {
+    var putOnCell = this.getBoard().getBoardCellAt(
+      this.getFinalPosition()[0], this.getFinalPosition()[1]
+    );
+
+    putOnCell.setPeg(this.getPeg());
+    this.setPeg(null);
+    return true;
+  }
 
 
-    private boolean isInvalid(BoardCell cell) {
-        return cell == null || !cell.getState().equals(BasicCell.State.OCCUPIED);
-    }
+  private boolean isInvalid(BoardCell cell) {
+    return cell == null || !cell.getState().equals(BasicCell.State.OCCUPIED);
+  }
 }

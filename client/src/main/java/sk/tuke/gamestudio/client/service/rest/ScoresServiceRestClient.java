@@ -20,34 +20,34 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScoresServiceRestClient implements ScoreService {
-    @Value("${remote.server.api}")
-    String url;
+  @Value("${remote.server.api}")
+  String url;
 
-    @Autowired
-    RestTemplate restTemplate;
+  @Autowired
+  RestTemplate restTemplate;
 
-    @Override
-    public void addScore(ScoreDto score) throws ServiceException {
-        try {
-            restTemplate.postForEntity(url + "/scores", score, ScoreDto.class);
-        } catch (RestClientException e) {
-            throw new ServiceException("Was not able to add score", e);
-        }
+  @Override
+  public void addScore(ScoreDto score) throws ServiceException {
+    try {
+      restTemplate.postForEntity(url + "/scores", score, ScoreDto.class);
+    } catch (RestClientException e) {
+      throw new ServiceException("Was not able to add score", e);
     }
+  }
 
-    @Override
-    public List<ScoreDto> getTopScores(String game) throws ServiceException {
-        try {
-            var scores = restTemplate.getForEntity(url + "/scores/" + game, ScoreDto[].class).getBody();
+  @Override
+  public List<ScoreDto> getTopScores(String game) throws ServiceException {
+    try {
+      var scores = restTemplate.getForEntity(url + "/scores/" + game, ScoreDto[].class).getBody();
 
-            if (scores == null) {
-                return Collections.emptyList();
-            }
+      if (scores == null) {
+        return Collections.emptyList();
+      }
 
-            return Arrays.asList(scores);
+      return Arrays.asList(scores);
 
-        } catch (RestClientException e) {
-            throw new ServiceException("Was not able to add score", e);
-        }
+    } catch (RestClientException e) {
+      throw new ServiceException("Was not able to add score", e);
     }
+  }
 }

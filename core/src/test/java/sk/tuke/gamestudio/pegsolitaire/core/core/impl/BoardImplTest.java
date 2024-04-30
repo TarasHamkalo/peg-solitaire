@@ -22,96 +22,96 @@ import static org.junit.jupiter.api.Assertions.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 class BoardImplTest {
 
-    PegFactory pegFactory = new PegFactoryImpl();
+  PegFactory pegFactory = new PegFactoryImpl();
 
-    HasMovesLevelBuilder hasMovesLevelBuilder = new HasMovesLevelBuilder(pegFactory);
+  HasMovesLevelBuilder hasMovesLevelBuilder = new HasMovesLevelBuilder(pegFactory);
 
-    NoMovesLevelBuilder noMovesLevelBuilder = new NoMovesLevelBuilder(pegFactory);
+  NoMovesLevelBuilder noMovesLevelBuilder = new NoMovesLevelBuilder(pegFactory);
 
-    BoardEventManagerImpl eventManager = new BoardEventManagerImpl();
+  BoardEventManagerImpl eventManager = new BoardEventManagerImpl();
 
-    @NonFinal
-    Board underTest;
+  @NonFinal
+  Board underTest;
 
-    @BeforeEach
-    void setUpBoard() {
-        var cells = hasMovesLevelBuilder.build();
-        this.underTest = BoardImpl.builder()
-            .eventManager(eventManager)
-            .boardCells(cells)
-            .build();
+  @BeforeEach
+  void setUpBoard() {
+    var cells = hasMovesLevelBuilder.build();
+    this.underTest = BoardImpl.builder()
+      .eventManager(eventManager)
+      .boardCells(cells)
+      .build();
+  }
+
+  @Test
+  void whenBoardHasNoMovesHasAvailableMovesReturnsFalse() {
+    var cells = noMovesLevelBuilder.build();
+    this.underTest.setBoardCells(cells);
+    assertFalse(underTest.hasAvailableMoves());
+  }
+
+  @Test
+  void whenBoardHasMovesHasAvailableMovesReturnsTrue() {
+    assertTrue(underTest.hasAvailableMoves());
+  }
+
+  @Test
+  void onBoardWith12MovesCountHasToBeTheSame() {
+    int movesCount = 0;
+    for (int i = 0; i < this.underTest.getBoardCells().length; i++) {
+      for (int j = 0; j < this.underTest.getBoardCells()[0].length; j++) {
+        movesCount += underTest.getPossibleMoves(j, i).size();
+      }
     }
 
-    @Test
-    void whenBoardHasNoMovesHasAvailableMovesReturnsFalse() {
-        var cells = noMovesLevelBuilder.build();
-        this.underTest.setBoardCells(cells);
-        assertFalse(underTest.hasAvailableMoves());
-    }
+    Assertions.assertEquals(12, movesCount);
+  }
 
-    @Test
-    void whenBoardHasMovesHasAvailableMovesReturnsTrue() {
-        assertTrue(underTest.hasAvailableMoves());
-    }
+  @Test
+  void makeMoveWithValidArgumentsShouldReturnTrueAndModifyBoard() {
+    int[] from = new int[]{0, 0};
+    int[] to = new int[]{0, 2};
+    int[] middle = new int[]{0, 1};
+    assertTrue(underTest.makeMove(from, to));
+    assertEquals(
+      BoardCell.State.EMPTY, underTest.getBoardCellAt(from[0], from[1]).getState()
+    );
+    assertEquals(
+      BoardCell.State.EMPTY, underTest.getBoardCellAt(middle[0], middle[1]).getState()
+    );
+    assertEquals(
+      BoardCell.State.OCCUPIED, underTest.getBoardCellAt(to[0], to[1]).getState()
+    );
+  }
 
-    @Test
-    void onBoardWith12MovesCountHasToBeTheSame() {
-        int movesCount = 0;
-        for (int i = 0; i < this.underTest.getBoardCells().length; i++) {
-            for (int j = 0; j < this.underTest.getBoardCells()[0].length; j++) {
-                movesCount += underTest.getPossibleMoves(j, i).size();
-            }
-        }
+  @CsvSource({
+    "0, 0, 0, 0", // same position
+    "0, 0, 1, 0", // distance < 2
+    "0, 0, 0, 1", // distance < 2
+    "0, 0, 0, 3", // distance > 2
+    "0, 0, 3, 0", // distance > 2
+  })
+  @ParameterizedTest
+  void makeMoveWithInValidArgumentsShouldNotModifyBoard(int fromX, int fromY, int toX, int toY) {
+    assertFalse(underTest.makeMove(new int[]{fromX, fromY}, new int[]{toX, toY}));
+  }
 
-        Assertions.assertEquals(12, movesCount);
-    }
+  @Test
+  void whenUndoMoveCalledBoardStateHasToBeRestored() {
+    int[] from = new int[]{0, 0};
+    int[] to = new int[]{0, 2};
+    int[] middle = new int[]{0, 1};
+    underTest.makeMove(from, to);
 
-    @Test
-    void makeMoveWithValidArgumentsShouldReturnTrueAndModifyBoard() {
-        int[] from = new int[]{0, 0};
-        int[] to = new int[]{0, 2};
-        int[] middle = new int[]{0, 1};
-        assertTrue(underTest.makeMove(from, to));
-        assertEquals(
-            BoardCell.State.EMPTY, underTest.getBoardCellAt(from[0], from[1]).getState()
-        );
-        assertEquals(
-            BoardCell.State.EMPTY, underTest.getBoardCellAt(middle[0], middle[1]).getState()
-        );
-        assertEquals(
-            BoardCell.State.OCCUPIED, underTest.getBoardCellAt(to[0], to[1]).getState()
-        );
-    }
+    assertTrue(underTest.undoMove());
 
-    @CsvSource({
-        "0, 0, 0, 0", // same position
-        "0, 0, 1, 0", // distance < 2
-        "0, 0, 0, 1", // distance < 2
-        "0, 0, 0, 3", // distance > 2
-        "0, 0, 3, 0", // distance > 2
-    })
-    @ParameterizedTest
-    void makeMoveWithInValidArgumentsShouldNotModifyBoard(int fromX, int fromY, int toX, int toY) {
-        assertFalse(underTest.makeMove(new int[]{fromX, fromY}, new int[]{toX, toY}));
-    }
-
-    @Test
-    void whenUndoMoveCalledBoardStateHasToBeRestored() {
-        int[] from = new int[]{0, 0};
-        int[] to = new int[]{0, 2};
-        int[] middle = new int[]{0, 1};
-        underTest.makeMove(from, to);
-
-        assertTrue(underTest.undoMove());
-
-        assertEquals(
-            BoardCell.State.OCCUPIED, underTest.getBoardCellAt(from[0], from[1]).getState()
-        );
-        assertEquals(
-            BoardCell.State.OCCUPIED, underTest.getBoardCellAt(middle[0], middle[1]).getState()
-        );
-        assertEquals(
-            BoardCell.State.EMPTY, underTest.getBoardCellAt(to[0], to[1]).getState()
-        );
-    }
+    assertEquals(
+      BoardCell.State.OCCUPIED, underTest.getBoardCellAt(from[0], from[1]).getState()
+    );
+    assertEquals(
+      BoardCell.State.OCCUPIED, underTest.getBoardCellAt(middle[0], middle[1]).getState()
+    );
+    assertEquals(
+      BoardCell.State.EMPTY, underTest.getBoardCellAt(to[0], to[1]).getState()
+    );
+  }
 }

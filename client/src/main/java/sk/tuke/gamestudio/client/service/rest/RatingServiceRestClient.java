@@ -15,54 +15,54 @@ import sk.tuke.gamestudio.server.api.rest.dto.RatingDto;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RatingServiceRestClient implements RatingService {
 
-    @Value("${remote.server.api}")
-    String url;
+  @Value("${remote.server.api}")
+  String url;
 
-    @Autowired
-    RestTemplate restTemplate;
+  @Autowired
+  RestTemplate restTemplate;
 
-    @Override
-    public void setRating(RatingDto rating) throws ServiceException {
-        try {
-            restTemplate.postForObject(url + "/ratings", rating, RatingDto.class);
-        } catch (RestClientException e) {
-            throw new ServiceException("Was not able to add rating", e);
-        }
+  @Override
+  public void setRating(RatingDto rating) throws ServiceException {
+    try {
+      restTemplate.postForObject(url + "/ratings", rating, RatingDto.class);
+    } catch (RestClientException e) {
+      throw new ServiceException("Was not able to add rating", e);
     }
+  }
 
-    @Override
-    public int getAverageRating(String game) throws ServiceException {
-        try {
-            Integer avgRating = restTemplate.getForObject(
-                url + "/ratings/" + game, Integer.class
-            );
+  @Override
+  public int getAverageRating(String game) throws ServiceException {
+    try {
+      Integer avgRating = restTemplate.getForObject(
+        url + "/ratings/" + game, Integer.class
+      );
 
-            if (avgRating == null) {
-                return 0;
-            }
+      if (avgRating == null) {
+        return 0;
+      }
 
-            return avgRating;
+      return avgRating;
 
-        } catch (RestClientException e) {
-            throw new ServiceException("Was not able to get avg rating", e);
-        }
+    } catch (RestClientException e) {
+      throw new ServiceException("Was not able to get avg rating", e);
     }
+  }
 
-    @Override
-    public int getRating(String game, String player) throws ServiceException {
-        try {
-            Integer rating = restTemplate.getForObject(
-                url + "/ratings/" + game + "/" + player, Integer.class
-            );
+  @Override
+  public int getRating(String game, String player) throws ServiceException {
+    try {
+      Integer rating = restTemplate.getForObject(
+        url + "/ratings/" + game + "/" + player, Integer.class
+      );
 
-            if (rating == null) {
-                return 0;
-            }
+      if (rating == null) {
+        return 0;
+      }
 
-            return rating;
-        } catch (RestClientException e) {
-            throw new ServiceException("Was not able to get rating", e);
-        }
+      return rating;
+    } catch (RestClientException e) {
+      throw new ServiceException("Was not able to get rating", e);
     }
+  }
 
 }

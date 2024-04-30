@@ -8,34 +8,34 @@ import static sk.tuke.gamestudio.pegsolitaire.core.board.BoardCell.State;
 @SuperBuilder
 public class DestroyCommand extends BoardCommand {
 
-    @Override
-    public boolean exec() {
-        var cell = this.getBoard().getBoardCellAt(
-            this.getInitialPosition()[0], this.getInitialPosition()[1]
-        );
+  @Override
+  public boolean exec() {
+    var cell = this.getBoard().getBoardCellAt(
+      this.getInitialPosition()[0], this.getInitialPosition()[1]
+    );
 
-        if (cell == null) {
-            return false;
-        }
-
-        this.getBoard().removePeg(this.getInitialPosition());
-
-        cell.setState(State.DESTROYED);
-
-        return true;
+    if (cell == null) {
+      return false;
     }
 
-    @Override
-    public boolean undo() {
-        var cell = this.getBoard().getBoardCellAt(
-            this.getInitialPosition()[0], this.getInitialPosition()[1]
-        );
+    this.getBoard().removePeg(this.getInitialPosition());
 
-        if (cell == null) {
-            return false;
-        }
+    cell.setState(State.DESTROYED);
 
-        cell.setPeg(cell.getPeg());
-        return true;
+    return true;
+  }
+
+  @Override
+  public boolean undo() {
+    var cell = this.getBoard().getBoardCellAt(
+      this.getInitialPosition()[0], this.getInitialPosition()[1]
+    );
+
+    if (cell == null) {
+      return false;
     }
+
+    cell.setPeg(cell.getPeg());
+    return true;
+  }
 }

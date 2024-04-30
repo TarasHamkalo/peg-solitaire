@@ -1,22 +1,22 @@
 plugins {
-    id 'application'
+  id 'application'
 }
 
 application {
-    mainClass = 'sk.tuke.gamestudio.client.SpringClient'
+  mainClass = 'sk.tuke.gamestudio.client.SpringClient'
 }
 
 run {
-    standardInput = System.in
+  standardInput = System.in
 //    args('--spring.profiles.active=prod')
 }
 
 dependencies {
-    implementation 'com.github.kwhat:jnativehook:2.2.2'
+  implementation "com.github.kwhat:jnativehook:$jnativeHookVersion"
 
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.1'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation project(":server:service-rest-api")
+  implementation project(":server:service-rest-api")
 
-    implementation project(':core')
+  implementation project(':core')
 }

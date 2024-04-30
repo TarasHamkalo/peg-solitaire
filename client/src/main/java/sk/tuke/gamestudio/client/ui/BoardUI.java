@@ -5,23 +5,23 @@ import sk.tuke.gamestudio.pegsolitaire.core.board.BoardCell;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
 
 public interface BoardUI {
-    void printBoard(@NonNull BoardCell[][] cells);
+  void printBoard(@NonNull BoardCell[][] cells);
 
-    void drawPrompt();
+  void drawPrompt();
 
-    void positionPrompt();
+  void positionPrompt();
 
-    void clearScreen();
+  void clearScreen();
 
-    void start(@NonNull Game game);
+  void start(@NonNull Game game);
 
-    void stop();
+  void stop();
 
-    void exit();
+  void exit();
 
-    void adjustCursor(int dx, int dy);
+  void adjustCursor(int dx, int dy);
 
-    void select();
+  void select();
 
-    void undo();
+  void undo();
 }

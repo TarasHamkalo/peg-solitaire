@@ -8,25 +8,25 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class InputHandler {
-    InputHandler next;
+  InputHandler next;
 
-    public static InputHandler link(@NonNull InputHandler first, InputHandler... chain) {
-        InputHandler head = first;
-        for (InputHandler nextInChain : chain) {
-            head.next = nextInChain;
-            head = nextInChain;
-        }
-
-        return first;
+  public static InputHandler link(@NonNull InputHandler first, InputHandler... chain) {
+    InputHandler head = first;
+    for (InputHandler nextInChain : chain) {
+      head.next = nextInChain;
+      head = nextInChain;
     }
 
-    public boolean handleNext(String line) {
-        if (next == null) {
-            return false;
-        }
+    return first;
+  }
 
-        return next.handle(line);
+  public boolean handleNext(String line) {
+    if (next == null) {
+      return false;
     }
 
-    public abstract boolean handle(String line);
+    return next.handle(line);
+  }
+
+  public abstract boolean handle(String line);
 }

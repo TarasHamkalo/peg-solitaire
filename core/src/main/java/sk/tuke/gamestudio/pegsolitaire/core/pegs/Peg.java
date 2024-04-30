@@ -1,15 +1,17 @@
 package sk.tuke.gamestudio.pegsolitaire.core.pegs;
 
-import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
 import sk.tuke.gamestudio.pegsolitaire.core.Color;
+import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
 
 
 public interface Peg {
-    void onMove(BoardEvent.Type type);
-    BoardEvent.Type getMoveEvent();
+  void onMove(BoardEvent.Type type);
 
-    void onRemove(BoardEvent.Type type);
-    BoardEvent.Type getRemoveEvent();
+  BoardEvent.Type getMoveEvent();
 
-    Color getColor();
+  void onRemove(BoardEvent.Type type);
+
+  BoardEvent.Type getRemoveEvent();
+
+  Color getColor();
 }

@@ -10,8 +10,8 @@ import sk.tuke.gamestudio.pegsolitaire.core.pegs.PegFactory;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class LevelBuilder {
-    @NonNull
-    PegFactory pegFactory;
+  @NonNull
+  PegFactory pegFactory;
 
-    public abstract BoardCell[][] build();
+  public abstract BoardCell[][] build();
 }

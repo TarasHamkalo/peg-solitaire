@@ -18,31 +18,33 @@ import java.util.Date;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Score implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
 
-    @NonNull
-    @NotBlank
-    @Column(
-        nullable = false,
-        length = 64
-    )
-    String game;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  Long id;
 
-    @NonNull
-    @NotBlank
-    @Column(
-        nullable = false,
-        length = 64
-    )
-    String player;
+  @NonNull
+  @NotBlank
+  @Column(
+    nullable = false,
+    length = 64
+  )
+  String game;
 
-    @NonNull
-    @Positive
-    Integer points;
+  @NonNull
+  @NotBlank
+  @Column(
+    nullable = false,
+    length = 64
+  )
+  String player;
 
-    @Builder.Default
-    @Column(nullable = false)
-    Date playedOn = Date.from(Instant.now());
+  @NonNull
+  @Positive
+  Integer points;
+
+  @Builder.Default
+  @Column(nullable = false)
+  Date playedOn = Date.from(Instant.now());
+
 }

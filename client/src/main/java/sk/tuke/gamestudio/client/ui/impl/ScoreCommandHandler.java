@@ -17,29 +17,29 @@ import java.util.regex.Pattern;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ScoreCommandHandler extends InputHandler {
 
-    private static final Pattern SCORE_CMD = Pattern.compile("^score\\stop$");
+  private static final Pattern SCORE_CMD = Pattern.compile("^score\\stop$");
 
-    @NonNull
-    ScoreService scoreService;
+  @NonNull
+  ScoreService scoreService;
 
-    @Autowired
-    public ScoreCommandHandler(@NonNull ScoreService scoreService) {
-        this.scoreService = scoreService;
+  @Autowired
+  public ScoreCommandHandler(@NonNull ScoreService scoreService) {
+    this.scoreService = scoreService;
+  }
+
+  @Override
+  public boolean handle(String line) {
+    var matcher = SCORE_CMD.matcher(line);
+    if (matcher.matches()) {
+      try {
+        scoreService.getTopScores("pegsolitaire").forEach(System.out::println);
+      } catch (ServiceException e) {
+        System.out.println(e.getMessage());
+      }
+
+      return true;
     }
 
-    @Override
-    public boolean handle(String line) {
-        var matcher = SCORE_CMD.matcher(line);
-        if (matcher.matches()) {
-            try {
-                scoreService.getTopScores("pegsolitaire").forEach(System.out::println);
-            } catch (ServiceException e) {
-                System.out.println(e.getMessage());
-            }
-
-            return true;
-        }
-
-        return handleNext(line);
-    }
+    return handleNext(line);
+  }
 }

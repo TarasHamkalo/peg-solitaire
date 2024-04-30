@@ -12,31 +12,31 @@ import java.util.Random;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class LightningEventHandler implements BoardEventHandler {
-    Random random = new SecureRandom();
+  Random random = new SecureRandom();
 
-    @Override
-    public void handle(BoardEvent event) {
-        var command = event.getTriggerCommand();
-        if (command instanceof RemoveCommand) {
-            return;
-        }
-
-        destroyNRandomCells(command, 5);
-
-        command.getBoard().removePeg(command.getFinalPosition());
+  @Override
+  public void handle(BoardEvent event) {
+    var command = event.getTriggerCommand();
+    if (command instanceof RemoveCommand) {
+      return;
     }
 
-    private void destroyNRandomCells(BoardCommand command, int n) {
-        var boardCells = command.getBoard().getBoardCells();
-        while (n > 0) {
-            int[] destroyPosition = new int[]{
-                random.nextInt(boardCells[0].length), random.nextInt(boardCells.length)
-            };
+    destroyNRandomCells(command, 5);
 
-            if (command.getBoard().destroyCell(destroyPosition)) {
-                n--;
-            }
-        }
+    command.getBoard().removePeg(command.getFinalPosition());
+  }
+
+  private void destroyNRandomCells(BoardCommand command, int n) {
+    var boardCells = command.getBoard().getBoardCells();
+    while (n > 0) {
+      int[] destroyPosition = new int[]{
+        random.nextInt(boardCells[0].length), random.nextInt(boardCells.length)
+      };
+
+      if (command.getBoard().destroyCell(destroyPosition)) {
+        n--;
+      }
     }
+  }
 
 }

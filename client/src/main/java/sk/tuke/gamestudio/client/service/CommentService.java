@@ -7,7 +7,7 @@ import sk.tuke.gamestudio.server.api.rest.dto.CommentDto;
 import java.util.List;
 
 public interface CommentService {
-    void addComment(CommentDto comment) throws ServiceException;
+  void addComment(CommentDto comment) throws ServiceException;
 
-    List<CommentDto> getComments(String game) throws ServiceException;
+  List<CommentDto> getComments(String game) throws ServiceException;
 }

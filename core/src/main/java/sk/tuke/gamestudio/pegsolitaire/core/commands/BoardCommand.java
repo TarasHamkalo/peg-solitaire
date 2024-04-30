@@ -13,24 +13,24 @@ import sk.tuke.gamestudio.pegsolitaire.core.pegs.Peg;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public abstract class BoardCommand {
 
-    @NonNull
-    @ToString.Exclude
-    Board board;
+  @NonNull
+  @ToString.Exclude
+  Board board;
 
-    @NonFinal
-    Peg peg;
+  @NonFinal
+  Peg peg;
 
-    int[] initialPosition;
+  int[] initialPosition;
 
-    int[] finalPosition;
+  int[] finalPosition;
 
-    /**
-     * @return True if and only if the board was modified
-     */
-    public abstract boolean exec();
+  /**
+   * @return True if and only if the board was modified
+   */
+  public abstract boolean exec();
 
-    /**
-     * @return True if state was restored
-     */
-    public abstract boolean undo();
+  /**
+   * @return True if state was restored
+   */
+  public abstract boolean undo();
 }
