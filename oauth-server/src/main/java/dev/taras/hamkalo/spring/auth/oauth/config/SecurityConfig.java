@@ -36,7 +36,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfig {
 
-  @Value("${oauth.client.main.host}")
+  @Value("${oauth.client.untrusted.host}")
   String clientHost;
 
   @Bean

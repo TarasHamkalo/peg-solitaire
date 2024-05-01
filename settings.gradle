@@ -3,8 +3,8 @@ rootProject.name = 'gamestudio-7800'
 [
     'client',
     'game-server',
-    'server:app',
-    'server:service-rest-api',
+    'resource-server:app',
+    'resource-server:service-rest-api',
     'oauth-server',
     'data',
     'core'

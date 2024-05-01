@@ -25,15 +25,6 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClientsConfig {
 
-  @Value("${oauth.client.main.id}")
-  String clientId;
-
-  @Value("${oauth.client.main.secret}")
-  String clientSecret;
-
-  @Value("${oauth.client.main.uri}")
-  String clientRedirect;
-
   @NonNull
   PasswordEncoder passwordEncoder;
 
@@ -43,7 +34,11 @@ public class ClientsConfig {
   }
 
   @Bean
-  RegisteredClient webClient() {
+  RegisteredClient untrustedClient(
+    @Value("${oauth.client.untrusted.id}") String clientId,
+    @Value("${oauth.client.untrusted.secret}") String clientSecret,
+    @Value("${oauth.client.untrusted.uri}") String clientRedirect) {
+
     return RegisteredClient.withId(UUID.randomUUID().toString())
       .clientId(clientId)
       .clientSecret(passwordEncoder.encode(clientSecret))
@@ -62,4 +57,19 @@ public class ClientsConfig {
         .build())
       .build();
   }
+
+  @Bean
+  RegisteredClient trustedClient(
+    @Value("${oauth.client.trusted.id}") String clientId,
+    @Value("${oauth.client.trusted.secret}") String clientSecret) {
+
+    return RegisteredClient.withId(UUID.randomUUID().toString())
+      .clientId(clientId)
+      .clientSecret(passwordEncoder.encode(clientSecret))
+      .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+      .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+      .scope("manager")
+      .build();
+  }
+
 }
