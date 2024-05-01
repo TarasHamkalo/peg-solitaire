@@ -1,0 +1,65 @@
+package dev.taras.hamkalo.spring.auth.oauth.config;
+
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+
+import java.time.Duration;
+import java.util.UUID;
+
+@Configuration
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ClientsConfig {
+
+  @Value("${oauth.client.main.id}")
+  String clientId;
+
+  @Value("${oauth.client.main.secret}")
+  String clientSecret;
+
+  @Value("${oauth.client.main.uri}")
+  String clientRedirect;
+
+  @NonNull
+  PasswordEncoder passwordEncoder;
+
+  @Bean
+  RegisteredClientRepository registeredClientRepository(RegisteredClient... clients) {
+    return new InMemoryRegisteredClientRepository(clients);
+  }
+
+  @Bean
+  RegisteredClient webClient() {
+    return RegisteredClient.withId(UUID.randomUUID().toString())
+      .clientId(clientId)
+      .clientSecret(passwordEncoder.encode(clientSecret))
+      .redirectUri(clientRedirect)
+      .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+      .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+      .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+      .scope(OidcScopes.OPENID)
+      .scope(OidcScopes.PROFILE)
+      .clientSettings(ClientSettings.builder()
+        .requireProofKey(false)
+        .requireAuthorizationConsent(true).build())
+      .tokenSettings(TokenSettings.builder()
+        .accessTokenTimeToLive(Duration.ofHours(5))
+        .reuseRefreshTokens(false)
+        .build())
+      .build();
+  }
+}
