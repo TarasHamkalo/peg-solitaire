@@ -4,18 +4,16 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/fragments::html-head}"></head>
-
 <body class="sb-sidenav-toggled">
 
-<div class="d-flex flex-shrink-1" id="wrapper">
-
-    <!--    <div th:replace="~{fragments/fragments::slidebar}"></div>-->
+<div class="d-flex flex-grow-0 flex-shrink-1" id="wrapper">
 
     <div id="page-content-wrapper">
 
         <div th:replace="~{fragments/fragments::navbar(${levels}, ${events}, ${setupForm}, ${isIndex})}"></div>
-
-        <main layout:fragment="content" th:remove="tag"></main>
+        <div id="content">
+            <main layout:fragment="content" th:remove="tag"></main>
+        </div>
 
         <footer th:replace="~{fragments/fragments::footer}"></footer>
     </div>
@@ -24,4 +22,5 @@
 <span layout:fragment="additional-scripts" th:remove="tag"></span>
 <span th:replace="~{fragments/fragments::page-scripts}"></span>
 </body>
+
 </html>

@@ -4,14 +4,12 @@ function userHasToBeAuthenticated() {
 
 $(".auth-required").on("click", function (e) {
     e.preventDefault();
-
-    if (userHasToBeAuthenticated()) {
-        window.location.href = authorizationUrl.href;
-    } else {
-        // retrieve method and url from button pressed
-        requestWithAuthentication(config["auth_server"] + "/userinfo", "GET")
-    }
 })
+
+// } else {
+//     // retrieve method and url from button pressed
+//     requestWithAuthentication(config["auth_server"] + "/userinfo", "GET")
+// }
 
 $(window).on("load", function () {
     const urlParams = new URLSearchParams(window.location.search);

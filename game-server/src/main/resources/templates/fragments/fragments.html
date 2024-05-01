@@ -19,6 +19,8 @@
     <link rel="stylesheet" th:href="@{/css/board.css}"/>
     <link rel="stylesheet" th:href="@{/css/service.css}"/>
     <link rel="stylesheet" th:href="@{/css/win-popup.css}"/>
+    <link rel="stylesheet" th:href="@{/css/comments.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 
 <header th:fragment="header">
@@ -41,12 +43,13 @@
     <script th:src="@{/js/events.js}"></script>
     <script th:src="@{/js/auth.js}"></script>
     <script th:src="@{/js/constants.js}"></script>
+    <script th:src="@{/js/comments.js}"></script>
+    <script th:src="@{/js/request.js}"></script>
 </span>
 
 <span th:fragment="game-scripts" th:remove="tag">
     <script th:src="@{/js/board_sizing.js}"></script>
     <script th:src="@{/js/gameplay_rendering.js}"></script>
-    <script th:src="@{/js/request.js}"></script>
 </span>
 
 <div th:fragment="score(scores)">
@@ -159,35 +162,3 @@
 </nav>
 
 </html>
-<!--                <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>-->
-<!--                <li class="nav-item dropdown">-->
-<!--                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"-->
-<!--                       data-bs-toggle="dropdown"-->
-<!--                       href="#" id="navbarDropdown" role="button">Dropdown</a>-->
-<!--                    <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-end">-->
-<!--                        <a class="dropdown-item" href="#!">Action</a>-->
-<!--                        <a class="dropdown-item" href="#!">Another action</a>-->
-<!--                        <div class="dropdown-divider"></div>-->
-<!--                        <a class="dropdown-item" href="#!">Something else here</a>-->
-<!--                    </div>-->
-<!--                </li>-->
-<!--                    <div class="dropdown" id="pegsDropDown">-->
-<!--                        <button class="dropdown-toggle nav-link rounded-2 border-0 bg-transparent"-->
-<!--                                data-bs-toggle="dropdown">Pegs-->
-<!--                        </button>-->
-<!--                        <ul class="dropdown-menu dropdown-menu-end text-center">-->
-<!--                                <span th:each="event: ${events}" th:remove="tag">-->
-<!--                                    <input-->
-<!--                                            autocomplete="off"-->
-<!--                                            class="btn-check"-->
-<!--                                            name="selectedEvents"-->
-<!--                                            th:id="${event}"-->
-<!--                                            th:value="${event}"-->
-<!--                                            type="checkbox">-->
-<!--                                    <label class="btn d-flex justify-content-center flex-grow-1 btn-dark my-1"-->
-<!--                                           th:for="${event}"-->
-<!--                                           th:text="${#strings.toLowerCase(event)}"></label>-->
-<!--                                </span>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                </li>-->

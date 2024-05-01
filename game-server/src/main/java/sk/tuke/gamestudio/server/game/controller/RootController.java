@@ -17,7 +17,8 @@ public class RootController {
   @GetMapping("/")
   public String index(Model model) {
     model.addAttribute("isIndex", true);
-    return "index";
+//    return "index";
+    return "social";
   }
 
 }

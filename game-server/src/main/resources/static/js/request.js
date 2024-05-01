@@ -1,9 +1,3 @@
-const apiUrl = "http://localhost/pegsolitaire";
-const movesUrl = new URL(apiUrl + "/moves");
-const selectUrl = new URL(apiUrl + "/select?x=0&y=0");
-const moveUrl = new URL(apiUrl + "/move?x=0&y=0");
-const stateUrl = new URL(apiUrl + "/state");
-const newGameUrl = new URL(apiUrl + "/new");
 
 function requestSelect(toSelect) {
     let selected = document.querySelector(".selection");
@@ -68,8 +62,12 @@ function requestNewGame() {
 }
 
 
-function requestWithAuthentication(url, method) {
-    refreshTokenIfRequired();
+function requestWithAuthentication(url, method, handle) {
+    if (userHasToBeAuthenticated()) {
+        window.location.href = authorizationUrl.href;
+    } else {
+        refreshTokenIfRequired();
+    }
 
     const accessToken = localStorage.getItem("access_token");
     if (accessToken) {
@@ -82,8 +80,10 @@ function requestWithAuthentication(url, method) {
             },
         };
 
-        $.ajax(settings).done(function (response) {
-            $("#data").text(response);
+        $.ajax(settings).done(function (response, status) {
+            if (status  === "success") {
+                handle(response);
+            }
         });
     }
 }
