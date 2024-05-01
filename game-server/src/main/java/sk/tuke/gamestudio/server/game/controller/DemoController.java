@@ -5,35 +5,40 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import sk.tuke.gamestudio.server.api.rest.dto.CommentDto;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DemoController {
 
-  @Value("${oauth.client.trusted.id}")
-  String clientId;
+  @Value("${resource.server.api.uri}")
+  String url;
 
   @NonNull
-  OAuth2AuthorizedClientManager authorizedClientManager;
+  RestTemplate restTemplate;
 
-  @NonNull
-  ClientRegistration  clientRegistration;
+  @GetMapping("/comments/{game}")
+  public List<CommentDto> getComments(@PathVariable String game) {
+    try {
+      var comments = restTemplate.getForObject(url + "/comments/" + game, CommentDto[].class);
+      if (comments == null) {
+        return Collections.emptyList();
+      }
 
-  @GetMapping("/token")
-  public String token(Authentication auth) {
-    var authRequest = OAuth2AuthorizeRequest
-      .withClientRegistrationId(clientRegistration.getClientId())
-      .principal("client")
-      .build();
-
-    var authorizedClient = authorizedClientManager.authorize(authRequest);
-    return authorizedClient.getAccessToken().getTokenValue();
+      return Arrays.asList(comments);
+    } catch (RestClientException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
+    }
   }
 }

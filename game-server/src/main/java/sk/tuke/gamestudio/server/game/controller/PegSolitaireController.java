@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Controller
+@RestController
 @SessionScope
 @AllArgsConstructor
 @RequestMapping("/pegsolitaire")
@@ -77,7 +77,6 @@ public class PegSolitaireController {
 
     throw new PegSolitaireException(BAD_REQUEST);
   }
-
 
   @ResponseBody
   @GetMapping("moves")
