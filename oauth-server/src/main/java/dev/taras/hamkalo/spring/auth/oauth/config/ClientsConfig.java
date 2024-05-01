@@ -1,6 +1,7 @@
 package dev.taras.hamkalo.spring.auth.oauth.config;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,11 +22,10 @@ import java.time.Duration;
 import java.util.UUID;
 
 @Configuration
-@RequiredArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClientsConfig {
 
-  @NonNull
   PasswordEncoder passwordEncoder;
 
   @Bean
@@ -61,14 +61,18 @@ public class ClientsConfig {
   @Bean
   RegisteredClient trustedClient(
     @Value("${oauth.client.trusted.id}") String clientId,
-    @Value("${oauth.client.trusted.secret}") String clientSecret) {
+    @Value("${oauth.client.trusted.secret}") String clientSecret,
+    @Value("${oauth.manager.scope.name}") String managerScope) {
 
     return RegisteredClient.withId(UUID.randomUUID().toString())
       .clientId(clientId)
       .clientSecret(passwordEncoder.encode(clientSecret))
       .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
       .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-      .scope("manager")
+      .scope(managerScope)
+      .tokenSettings(TokenSettings.builder()
+        .accessTokenTimeToLive(Duration.ofHours(5))
+        .build())
       .build();
   }
 
