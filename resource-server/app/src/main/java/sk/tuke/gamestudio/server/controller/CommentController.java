@@ -2,8 +2,8 @@ package sk.tuke.gamestudio.server.controller;
 
 import com.github.dozermapper.core.Mapper;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sk.tuke.gamestudio.data.entity.Comment;
 import sk.tuke.gamestudio.data.service.CommentService;
@@ -13,18 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/comments")
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentController {
 
   Mapper mapper;
 
   CommentService commentService;
-
-  @Autowired
-  public CommentController(CommentService commentService, Mapper mapper) {
-    this.commentService = commentService;
-    this.mapper = mapper;
-  }
 
   @PostMapping
   public void addComment(@RequestBody CommentDto comment) {

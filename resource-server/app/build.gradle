@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-  mainClass = 'sk.tuke.gamestudio.server.SpringServer'
+  mainClass = 'sk.tuke.gamestudio.server.Application'
 }
 
 dependencies {
@@ -11,8 +11,11 @@ dependencies {
 
   implementation "com.github.dozermapper:dozer-spring-boot-starter:$dozerMapperVersion"
 
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
   implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-security'
 
   implementation project(':data')
-  implementation project(':server:service-rest-api')
+  implementation project(':resource-server:service-rest-api')
 }
