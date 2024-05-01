@@ -10,7 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import sk.tuke.gamestudio.server.security.token.converter.UsernameAuthoritiesJwtTokenConverter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -20,11 +25,16 @@ public class SecurityConfig {
   @Value("${jwk.set.uri}")
   String jwkSetUri;
 
+  @Value("${cors.allowed.host}")
+  String allowedHost;
+
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
       .sessionManagement(session -> session
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .cors(cors -> cors
+        .configurationSource(corsConfigurationSource()))
       .oauth2ResourceServer(resourceServer -> resourceServer
         .jwt(jwtConfigurer -> jwtConfigurer
           .jwtAuthenticationConverter(converter())
@@ -40,9 +50,21 @@ public class SecurityConfig {
       .build();
   }
 
-  /*
-    A lot of cors configuration will be added.....
-   */
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    var corsConfiguration = new CorsConfiguration();
+    corsConfiguration.setAllowedOrigins(List.of(allowedHost));
+    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+    corsConfiguration.setAllowedHeaders(List.of("authorization"));
+    corsConfiguration.setMaxAge(30L);
+
+    corsConfiguration.setAllowCredentials(true);
+    var corsConfigurationSource = new UrlBasedCorsConfigurationSource();
+    corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+
+    return corsConfigurationSource;
+  }
+
 
   @Bean
   UsernameAuthoritiesJwtTokenConverter converter() {
