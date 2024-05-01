@@ -2,8 +2,16 @@ plugins {
   id 'application'
 }
 
+application {
+  mainClass = 'sk.tuke.gamestudio.server.game.Application'
+}
+
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
+
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
   implementation "org.springframework.boot:spring-boot-starter-thymeleaf:$thymeleafVersion"
   implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:$thymeleafLayoutVersion"
 

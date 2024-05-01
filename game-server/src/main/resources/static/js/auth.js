@@ -23,7 +23,6 @@ $(window).on("load", function () {
 })
 
 function retrieveTokenWithCode(code) {
-    console.log("sending request....")
     const settings = {
         "url": config["auth_server"] + "/oauth2/token",
         "method": "POST",

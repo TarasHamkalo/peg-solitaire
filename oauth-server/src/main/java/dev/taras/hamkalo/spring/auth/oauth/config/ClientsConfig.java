@@ -2,8 +2,6 @@ package dev.taras.hamkalo.spring.auth.oauth.config;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
