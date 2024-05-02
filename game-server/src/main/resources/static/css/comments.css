@@ -1,0 +1,52 @@
+.comment {
+    background: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+    box-shadow: 2px 2px 5px 1px #000000;
+    max-width: 10rem;
+    max-height: 10rem;
+    margin-bottom: 2vh;
+    margin-top: auto;
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+
+.social-container {
+    padding-top: 1rem;
+    border-color: #6f42c1;
+    border-width: medium;
+    border-style: solid;
+    border-radius: 5vw;
+    overflow: hidden;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    max-width: 15rem;
+
+    max-height: 35rem;
+    min-height: 15rem;
+}
+
+.comment-list {
+    max-height: 20rem;
+    min-height: 10rem;
+    overflow-y: scroll !important;
+}
+
+.comment-form {
+    max-height: 10rem !important;
+    min-height: 5rem;
+    overflow: hidden;
+}
+
+.comment-form .comment {
+    border-color: #6f42c1;
+    border-style: solid;
+    border-width: medium;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+
+    max-height: inherit;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 50% !important;
+    margin: 0 !important;
+}

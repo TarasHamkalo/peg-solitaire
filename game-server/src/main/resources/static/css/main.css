@@ -1,11 +1,8 @@
-#page-content-wrapper {
-    transform-origin: center top;
-    -moz-transform-origin: center top;
-    overflow-y: hidden;
+input {
+    all: unset;
 }
 
-.comment-container {
-    transform: scale(0.6);
-    transform-origin: center 10vh;
-    -moz-transform-origin: center 10vh;
+form {
+    all: unset;
 }
+

@@ -1,4 +1,3 @@
-
 function requestSelect(toSelect) {
     let selected = document.querySelector(".selection");
     if (selected != null) {
@@ -60,7 +59,6 @@ function requestNewGame() {
         }
     })
 }
-
 
 function requestWithAuthentication(url, method, handle) {
     if (userHasToBeAuthenticated()) {

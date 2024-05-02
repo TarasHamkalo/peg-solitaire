@@ -6,11 +6,6 @@ $(".auth-required").on("click", function (e) {
     e.preventDefault();
 })
 
-// } else {
-//     // retrieve method and url from button pressed
-//     requestWithAuthentication(config["auth_server"] + "/userinfo", "GET")
-// }
-
 $(window).on("load", function () {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("code")) {
@@ -74,6 +69,7 @@ function retrieveTokenWithRefreshToken() {
 function storeToken(response) {
     localStorage.setItem('access_token', response.access_token);
     localStorage.setItem('refresh_token', response.refresh_token);
+    localStorage.setItem('id_token', response.id_token);
     localStorage.setItem('access_token_expiration', Date.now() + response.expires_in * 1000);
 }
 

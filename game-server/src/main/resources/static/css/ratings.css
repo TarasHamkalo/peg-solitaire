@@ -1,0 +1,32 @@
+.rating-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transform-origin: center bottom;
+    position: relative;
+
+    max-height: 10rem !important;
+    min-height: 5rem;
+
+    overflow: hidden;
+    border-color: #6f42c1;
+    border-style: solid;
+    border-width: medium;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+}
+
+.stars {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    font-family: FontAwesome, sans-serif;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+b.active {
+  color: #ff9c1a;
+}

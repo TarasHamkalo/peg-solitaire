@@ -5,28 +5,32 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 
+<span layout:fragment="additional-css">
+    <link rel="stylesheet" th:href="@{/css/peg.css}"/>
+    <link rel="stylesheet" th:href="@{/css/board.css}"/>
+    <link rel="stylesheet" th:href="@{/css/win-popup.css}"/>
+</span>
+
 <div id="main" layout:fragment="content">
     <nav class="navbar m-2 navbar-expand-lg ">
-        <div  class="d-flex w-100 flex-grow-0 justify-content-center">
+        <div class="d-flex w-100 flex-grow-0 justify-content-center">
             <div class="bg-opacity-50 h-25 flex-shrink-1 py-2 p-1 rounded-3 d-flex flex-wrap"
-                 style="
-                     background: rgb(204,30,245);
-                     background: linear-gradient(90deg, rgba(204,30,245,0.22096162683823528) 41%, rgba(30,245,222,0.25177395176820727) 60%, rgba(13,0,249,0.12572353160014005) 94%); "
-                >
+                 style=" background: rgb(204,30,245); background: linear-gradient(90deg, rgba(204,30,245,0.22096162683823528) 41%, rgba(30,245,222,0.25177395176820727) 60%, rgba(13,0,249,0.12572353160014005) 94%); ">
 
                 <a class="mx-1" href="/pegsolitaire/undo">
                     <div class="btn fs-6 btn-outline-dark">Undo</div>
                 </a>
 
-                <form id="newGame" class="mx-1" action="/pegsolitaire/new" method="POST"></form>
-                <div id="restartBtn" class="btn fs-6 btn-outline-dark" th:text="Restart"></div>
+                <form action="/pegsolitaire/new" class="mx-1" id="newGame" method="POST"></form>
+                <div class="btn fs-6 btn-outline-dark" id="restartBtn" th:text="Restart"></div>
 
             </div>
         </div>
     </nav>
 
     <div class="d-flex flex-column">
-        <div class="container-fluid d-flex p-1 flex-column align-items-center" id="pegsolitaire-container">
+        <div class="container-fluid d-flex p-1 flex-column align-items-center"
+             id="pegsolitaire-container">
             <div class="board">
                 <div th:each="row, i: ${boardCells}">
                     <div class="board-row">
@@ -39,11 +43,13 @@
                             <div class="cross" th:if="${cell.state.name() == 'DESTROYED'}"></div>
 
                             <span th:if="${cell.state.name() == 'OCCUPIED'}" th:remove="tag">
-                                <span th:if="${cell.peg.moveEvent.name() != 'TRIVIAL_MOVE'}" th:remove="tag">
+                                <span th:if="${cell.peg.moveEvent.name() != 'TRIVIAL_MOVE'}"
+                                      th:remove="tag">
                                     <div th:class="${#strings.toLowerCase(cell.peg.moveEvent) + ' peg'}"></div>
                                 </span>
 
-                                <span th:if="${cell.peg.moveEvent.name() == 'TRIVIAL_MOVE'}" th:remove="tag">
+                                <span th:if="${cell.peg.moveEvent.name() == 'TRIVIAL_MOVE'}"
+                                      th:remove="tag">
                                     <div class="peg"></div>
                                 </span>
 
@@ -57,5 +63,8 @@
 </div>
 </div>
 
-<span layout:fragment="additional-scripts" th:replace="~{fragments/fragments::game-scripts}"></span>
+<span layout:fragment="additional-scripts">
+    <script th:src="@{/js/board_sizing.js}"></script>
+    <script th:src="@{/js/gameplay_rendering.js}"></script>
+</span>
 </html>

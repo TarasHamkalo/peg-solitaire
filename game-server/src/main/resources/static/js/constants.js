@@ -15,8 +15,8 @@ authorizationUrl.searchParams.set("client_id", config["client_id"]);
 authorizationUrl.searchParams.set("secret", config["secret"]);
 authorizationUrl.searchParams.set("scope", config["scope"]);
 authorizationUrl.searchParams.set("response_type", config["response_type"]);
-authorizationUrl.searchParams.set("redirect_uri", "http://localhost:80/");
-// config["redirect_uri"]
+authorizationUrl.searchParams.set("redirect_uri", config["redirect_uri"]);
+
 const gameServerUrl = "http://localhost/pegsolitaire";
 const movesUrl = new URL(gameServerUrl + "/moves");
 const selectUrl = new URL(gameServerUrl + "/select?x=0&y=0");
@@ -26,3 +26,4 @@ const newGameUrl = new URL(gameServerUrl + "/new");
 
 const serviceApiUrl = "http://localhost:8080/api";
 const commentsApiUrl = serviceApiUrl + "/comments";
+const ratingsApiUrl = serviceApiUrl + "/ratings";

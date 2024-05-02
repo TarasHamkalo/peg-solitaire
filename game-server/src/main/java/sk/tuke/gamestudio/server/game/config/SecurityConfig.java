@@ -15,6 +15,8 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -70,4 +72,8 @@ public class SecurityConfig {
       .build();
   }
 
+  @Bean
+  JwtDecoder jwtDecoder(@Value("${oauth.token.issuer.uri}") String issuer) {
+    return JwtDecoders.fromIssuerLocation(issuer);
+  }
 }

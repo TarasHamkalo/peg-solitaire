@@ -5,71 +5,63 @@
       xmlns="http://www.w3.org/1999/html"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
+<span layout:fragment="additional-css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/comments.css}"/>
+    <link rel="stylesheet" th:href="@{/css/ratings.css}"/>
+</span>
+
 <div layout:fragment="content">
-    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center ">
-        <div class="comment-container">
-            <div class="comment-list">
-                <div class="card comment">
-                    <h5 class="card-header text-center">Taras Hamkalo</h5>
-                    <div class="card-body">
-                        Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
-                        labore culpa sint ad nisi
-                        Lorem pariatur mollit ex esse exercitation amet.
-                    </div>
-                    <div class="card-footer text-center text-muted">
-                        <h6>Posted on 2023</h6>
-                    </div>
-                </div>
-
-                <div class="card comment">
-                    <h5 class="card-header text-center">Taras Hamkalo</h5>
-                    <div class="card-body">
-                        Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
-                        labore culpa sint ad nisi
-                        Lorem pariatur mollit ex esse exercitation amet.
-                    </div>
-                    <div class="card-footer text-center text-muted">
-                        <h6>Posted on 2023</h6>
-                    </div>
-                </div>
-                <div class="card comment">
-                    <h5 class="card-header text-center">Taras Hamkalo</h5>
-                    <div class="card-body">
-                        Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
-                        labore culpa sint ad nisi
-                        Lorem pariatur mollit ex esse exercitation amet.
-                    </div>
-                    <div class="card-footer text-center text-muted">
-                        <h6>Posted on 2023</h6>
-                    </div>
-                </div>
-
-                <div class="card comment">
-                    <h5 class="card-header text-center">Taras Hamkalo</h5>
-                    <div class="card-body">
-                        Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
-                        labore culpa sint ad nisi
-                        Lorem pariatur mollit ex esse exercitation amet.
-                    </div>
-                    <div class="card-footer text-center text-muted">
-                        <h6>Posted on 2023</h6>
-                    </div>
-                </div>
+    <nav aria-label="Comment pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <button class="page-link" id="pg-prev">Prev</button>
+            </li>
+            <li class="page-item">
+                <button class="page-link" id="refresh">Refresh</button>
+            </li>
+            <li class="page-item">
+                <button class="page-link" id="pg-next">Next</button>
+            </li>
+        </ul>
+    </nav>
+    <div class="social-container" data-page="1" id="comment-container">
+        <div class="comment-list">
+            <div class="card comment" id="empty-comment">
+                <div class="card-header text-center"></div>
+                <small class="d-block overflow-auto card-body"></small>
+                <div class="card-footer text-center text-muted"></div>
             </div>
-            <div class="comment-form" id="build-comment">
-                <div class="card comment">
-                    <input class="card-header text-center fs-1" placeholder="Can insert that"
-                           type="text">
-                    <input class="card-body fs-1" placeholder="Can insert that also" type="text">
-                    <div class="card-footer text-center fs-3 text-muted">Why!!</div>
-                </div>
-            </div>
+        </div>
 
-            <button class="btn text btn-outline-dark" form="build-comment" type="submit">
-                <h4>Append comment</h4>
-            </button>
+        <div class="comment-form" id="build-comment">
+            <div class="card comment">
+                <div class="card-header text-center">Login</div>
+                <input class="text-center d-block overflow-auto card-body" placeholder="Insert that"
+                       type="text">
+                <input class="btn card-footer text-center text-muted" type="submit"
+                       value="Post on 2023">
+            </div>
+        </div>
+    </div>
+
+    <div class="visually-hidden social-container" data-page="2" id="rating-container">
+        <div class="rating-box">
+            <b class="stars fa-solid fa-star"></b>
+            <b class="stars fa-solid fa-star"></b>
+            <b class="stars fa-solid fa-star"></b>
+            <b class="stars fa-solid fa-star"></b>
+            <b class="stars fa-solid fa-star"></b>
         </div>
     </div>
 </div>
+
+<span layout:fragment="additional-scripts">
+    <script th:src="@{/js/comments.js}"></script>
+    <script th:src="@{/js/ratings.js}"></script>
+    <script th:src="@{/js/pagination.js}"></script>
+</span>
 
 </html>
