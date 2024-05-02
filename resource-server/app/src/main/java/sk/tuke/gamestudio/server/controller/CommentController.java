@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import sk.tuke.gamestudio.data.entity.Comment;
 import sk.tuke.gamestudio.data.service.CommentService;
+import sk.tuke.gamestudio.server.aop.annotations.ClaimMapping;
+import sk.tuke.gamestudio.server.aop.annotations.MapClaimsToFields;
 import sk.tuke.gamestudio.server.api.rest.dto.CommentDto;
 
 import java.util.List;
@@ -21,6 +23,12 @@ public class CommentController {
 
   CommentService commentService;
 
+  @MapClaimsToFields(
+    claimMappings = {
+      @ClaimMapping(claim = "username", field = "player"),
+      @ClaimMapping(claim = "game", field = "game")
+    }
+  )
   @PostMapping
   public void addComment(@RequestBody CommentDto comment) {
     commentService.addComment(mapper.map(comment, Comment.class));

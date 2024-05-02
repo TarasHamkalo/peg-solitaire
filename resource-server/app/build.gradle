@@ -7,8 +7,9 @@ application {
 }
 
 dependencies {
-  runtimeOnly "org.postgresql:postgresql:$postgresqlVersion"
+  implementation 'org.springframework.boot:spring-boot-devtools'
 
+  runtimeOnly "org.postgresql:postgresql:$postgresqlVersion"
   implementation "com.github.dozermapper:dozer-spring-boot-starter:$dozerMapperVersion"
 
   implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'

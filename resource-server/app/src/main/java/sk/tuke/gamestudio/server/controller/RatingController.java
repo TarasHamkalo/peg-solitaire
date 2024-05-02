@@ -7,6 +7,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import sk.tuke.gamestudio.data.entity.Rating;
 import sk.tuke.gamestudio.data.service.RatingService;
+import sk.tuke.gamestudio.server.aop.annotations.ClaimMapping;
+import sk.tuke.gamestudio.server.aop.annotations.MapClaimsToFields;
+import sk.tuke.gamestudio.server.api.rest.dto.RatingDto;
 
 @RestController
 @AllArgsConstructor
@@ -18,8 +21,14 @@ public class RatingController {
 
   RatingService ratingService;
 
+  @MapClaimsToFields(
+    claimMappings = {
+      @ClaimMapping(claim = "username", field = "player"),
+      @ClaimMapping(claim = "game", field = "game")
+    }
+  )
   @PostMapping
-  public void setRating(@RequestBody Rating rating) {
+  public void setRating(@RequestBody RatingDto rating) {
     ratingService.setRating(mapper.map(rating, Rating.class));
   }
 

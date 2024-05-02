@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import sk.tuke.gamestudio.server.aop.aspects.AuthenticationJwtClaimMapper;
 import sk.tuke.gamestudio.server.security.token.converter.UsernameAuthoritiesJwtTokenConverter;
 
 import java.util.List;
@@ -65,10 +66,14 @@ public class SecurityConfig {
     return corsConfigurationSource;
   }
 
-
   @Bean
   UsernameAuthoritiesJwtTokenConverter converter() {
     return new UsernameAuthoritiesJwtTokenConverter();
+  }
+
+  @Bean
+  AuthenticationJwtClaimMapper authenticationJwtClaimMapper() {
+    return new AuthenticationJwtClaimMapper();
   }
 
 }

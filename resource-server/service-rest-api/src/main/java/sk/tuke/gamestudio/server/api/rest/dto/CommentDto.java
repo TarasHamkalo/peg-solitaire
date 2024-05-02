@@ -16,10 +16,8 @@ public class CommentDto implements Serializable {
 
   Long id;
 
-  @NonNull
   String player;
 
-  @NonNull
   String game;
 
   @NonNull

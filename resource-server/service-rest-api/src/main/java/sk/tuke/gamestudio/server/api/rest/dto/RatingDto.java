@@ -15,10 +15,8 @@ public class RatingDto {
 
   Long id;
 
-  @NonNull
   String player;
 
-  @NonNull
   String game;
 
   @NonNull
