@@ -3,41 +3,36 @@ function retrieveAvgRating() {
         ratingsApiUrl + "/" + gameName,
         "GET",
         (response) => {
-            response.forEach(avg => {
-                console.log(avg);
-            })
+            emojiRain(response)
         }
     )
 }
 
-function retrieveAvgRating() {
+function retrieveRatingForPlayer(player) {
     requestWithAuthentication(
-        ratingsApiUrl + "/" + gameName,
+        ratingsApiUrl + "/" + gameName + "/" + player,
         "GET",
         (response) => {
-            response.forEach(avg => {
-                console.log(avg);
-            })
+            emojiRain(response)
         }
     )
 }
 
-function postRating(points) {
+function postRating(stars) {
     requestWithAuthentication(
-        ratingsApiUrl + "/" + gameName,
+        ratingsApiUrl,
         "POST",
-        (response) => {
-            response.forEach(avg => {
-                console.log(avg);
-            })
-        }
+        () => {
+            emojiRain(stars);
+        },
+        {"stars": stars}
     )
 }
 
 const stars = document.querySelectorAll(".stars");
 stars.forEach((star, i) => {
     star.addEventListener("click", () => {
-        postRating(i);
+        postRating(i + 1);
         stars.forEach((other, j) => {
             if (i >= j) {
                 other.classList.add("active");
@@ -46,4 +41,15 @@ stars.forEach((star, i) => {
             }
         });
     });
+});
+
+$('#search-input').keypress(function (e) {
+    if (e.which === 13) {
+        let player = document.getElementById('search-input').value;
+        if (player.toLowerCase() === "avg") {
+            retrieveAvgRating()
+        } else {
+            retrieveRatingForPlayer(player);
+        }
+    }
 });

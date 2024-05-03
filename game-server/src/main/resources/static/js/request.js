@@ -60,7 +60,7 @@ function requestNewGame() {
     })
 }
 
-function requestWithAuthentication(url, method, handle) {
+function requestWithAuthentication(url, method, handle, data) {
     if (userHasToBeAuthenticated()) {
         window.location.href = authorizationUrl.href;
     } else {
@@ -72,10 +72,14 @@ function requestWithAuthentication(url, method, handle) {
         const settings = {
             "url": url,
             "method": method,
+            "content-type": "application/json",
             "timeout": 0,
             "headers": {
-                "Authorization": "Bearer " + accessToken
+                "Authorization": "Bearer " + accessToken,
+                "Content-type": "application/json"
             },
+
+            "data": JSON.stringify(data),
         };
 
         $.ajax(settings).done(function (response, status) {

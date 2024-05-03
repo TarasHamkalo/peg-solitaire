@@ -33,8 +33,9 @@ function retrieveTokenWithCode(code) {
 
     $.ajax(settings).done(function (response, status, xhr) {
         window.location.search = "";
-        if (status  === "success") {
+        if (status === "success") {
             storeToken(response);
+            storeUserInfo()
         } else {
             throw new Error("Unable to retrieve token");
         }
@@ -58,8 +59,9 @@ function retrieveTokenWithRefreshToken() {
     };
 
     $.ajax(settings).done(function (response, status) {
-        if (status  === "success") {
+        if (status === "success") {
             storeToken(response);
+            storeUserInfo()
         } else {
             throw new Error("Unable to retrieve token");
         }
@@ -71,6 +73,17 @@ function storeToken(response) {
     localStorage.setItem('refresh_token', response.refresh_token);
     localStorage.setItem('id_token', response.id_token);
     localStorage.setItem('access_token_expiration', Date.now() + response.expires_in * 1000);
+}
+
+function storeUserInfo() {
+    requestWithAuthentication(
+        config["auth_server"] + "/userinfo",
+        "GET",
+        (response) => {
+            localStorage.setItem("username", response.username);
+            localStorage.setItem("game", response.game);
+        }
+    )
 }
 
 function refreshTokenIfRequired() {

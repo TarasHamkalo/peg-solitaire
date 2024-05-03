@@ -28,26 +28,25 @@
         </ul>
     </nav>
     <div class="social-container" data-page="1" id="comment-container">
-        <div class="comment-list">
-            <div class="card comment" id="empty-comment">
-                <div class="card-header text-center"></div>
-                <small class="d-block overflow-auto card-body"></small>
-                <div class="card-footer text-center text-muted"></div>
-            </div>
+        <div class="card comment" id="empty-comment">
+            <div class="card-header text-center"></div>
+            <small class="d-block overflow-auto card-body"></small>
+            <div class="card-footer text-center text-muted"></div>
         </div>
+        <div class="comment-list"></div>
 
-        <div class="comment-form" id="build-comment">
+        <div class="comment-form">
             <div class="card comment">
-                <div class="card-header text-center">Login</div>
-                <input class="text-center d-block overflow-auto card-body" placeholder="Insert that"
+                <input id="comment-text" class="text-center d-block overflow-auto card-body" placeholder="Insert that"
                        type="text">
-                <input class="btn card-footer text-center text-muted" type="submit"
-                       value="Post on 2023">
+                <input id="post-comment" class="btn card-footer text-center text-muted" type="submit"
+                       th:value="${#strings.concat('Post on ', #dates.year(#dates.createNow()))}">
             </div>
         </div>
     </div>
 
     <div class="visually-hidden social-container" data-page="2" id="rating-container">
+        <div id="animate" class="rating-bottle"></div>
         <div class="rating-box">
             <b class="stars fa-solid fa-star"></b>
             <b class="stars fa-solid fa-star"></b>
@@ -55,10 +54,18 @@
             <b class="stars fa-solid fa-star"></b>
             <b class="stars fa-solid fa-star"></b>
         </div>
+        <div class="card rating-form">
+            <div class="rating-search-bar">
+                <input id="search-input" class="my-auto text-center card-body"
+                       placeholder="Find out users rating?" type="text">
+            </div>
+        </div>
     </div>
+</div>
 </div>
 
 <span layout:fragment="additional-scripts">
+    <script th:src="@{/js/emojis.js}"></script>
     <script th:src="@{/js/comments.js}"></script>
     <script th:src="@{/js/ratings.js}"></script>
     <script th:src="@{/js/pagination.js}"></script>

@@ -1,14 +1,3 @@
-.comment {
-    background: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
-    box-shadow: 2px 2px 5px 1px #000000;
-    max-width: 10rem;
-    max-height: 10rem;
-    margin-bottom: 2vh;
-    margin-top: auto;
-    margin-right: auto !important;
-    margin-left: auto !important;
-}
-
 .social-container {
     padding-top: 1rem;
     border-color: #6f42c1;
@@ -19,9 +8,19 @@
     margin-right: auto !important;
     margin-left: auto !important;
     max-width: 15rem;
-
     max-height: 35rem;
     min-height: 15rem;
+}
+
+.comment {
+    background: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+    box-shadow: 2px 2px 5px 1px #000000;
+    max-width: 10rem;
+    max-height: 10rem;
+    margin-bottom: 2vh;
+    margin-top: auto;
+    margin-right: auto !important;
+    margin-left: auto !important;
 }
 
 .comment-list {

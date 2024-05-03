@@ -31,6 +31,12 @@ $(document).ready(function () {
         switch (page) {
             case 1:
                 retrieveCommentList();
+                break
+            case 2:
+                emojiRain();
+                break
+            default:
+                break
         }
     })
 })
