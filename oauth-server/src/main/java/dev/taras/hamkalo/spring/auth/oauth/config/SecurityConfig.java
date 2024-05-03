@@ -16,9 +16,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationContext;
+import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -27,6 +32,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /*
   Almost whole this configuration can be done in properties file
@@ -45,14 +52,15 @@ public class SecurityConfig {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
     http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-      .oidc(Customizer.withDefaults());
+      .oidc(oidc -> oidc
+        .userInfoEndpoint(userInfo -> userInfo
+          .userInfoMapper(userInfoMapper())));
 
     http
       .exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
           new LoginUrlAuthenticationEntryPoint("/login"),
-          new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-        ))
+          new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
       .cors(conf -> conf
         .configurationSource(corsConfigurationSource()))
       .oauth2ResourceServer(resourceServer -> resourceServer
@@ -91,6 +99,27 @@ public class SecurityConfig {
     corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
     return corsConfigurationSource;
+  }
+
+  @Bean
+  Function<OidcUserInfoAuthenticationContext, OidcUserInfo> userInfoMapper() {
+    return context -> {
+      OidcUserInfoAuthenticationToken authentication = context.getAuthentication();
+      if (authentication.getPrincipal() instanceof JwtAuthenticationToken authenticationToken) {
+        Jwt token = authenticationToken.getToken();
+
+        return new OidcUserInfo(
+          Map.of(
+            "username", token.getClaim("username"),
+            "game", token.getClaim("game")
+          )
+        );
+      }
+
+      throw new IllegalArgumentException(
+        "Unsupported authentication: " + authentication.getClass()
+      );
+    };
   }
 
   @Bean
