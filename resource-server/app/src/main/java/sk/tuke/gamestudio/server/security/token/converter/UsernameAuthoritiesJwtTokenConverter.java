@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import sk.tuke.gamestudio.server.security.token.authentication.UsernameJwtAuthenticationToken;
 
+// TODO: remove unused
 public class UsernameAuthoritiesJwtTokenConverter
   implements Converter<Jwt, UsernameJwtAuthenticationToken> {
 
