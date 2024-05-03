@@ -40,7 +40,8 @@ public class CommentServiceJpa implements CommentService {
   public List<Comment> getComments(String game) throws CommentException {
     try {
       var result = entityManager
-        .createQuery("SELECT c FROM Comment c WHERE c.game = :game", Comment.class)
+        .createQuery(
+          "SELECT c FROM Comment c WHERE c.game = :game ORDER BY commentedOn DESC", Comment.class)
         .setParameter("game", game)
         .setMaxResults(10)
         .getResultList();
