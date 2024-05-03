@@ -160,8 +160,8 @@ public class PromptImpl implements Prompt {
 
   public void displayPegEvents() {
     System.out.println("In use:");
-    for (int i = 0; i < pegFactory.getPegEvents().size(); i++) {
-      System.out.printf("%4d. %s\n", i, pegFactory.getPegEvents().get(i).toString());
+    for (int i = 0; i < pegFactory.getSelectedEvents().size(); i++) {
+      System.out.printf("%4d. %s\n", i, pegFactory.getSelectedEvents().get(i).toString());
     }
 
     System.out.println("Can be used:");
@@ -215,7 +215,7 @@ public class PromptImpl implements Prompt {
     }
 
     eventManager.clearAll();
-    pegFactory.getPegEvents().forEach(
+    pegFactory.getSelectedEvents().forEach(
       event -> eventManager.subscribe(event, eventToHandler.get(event))
     );
 

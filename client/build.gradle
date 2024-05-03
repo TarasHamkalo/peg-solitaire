@@ -16,7 +16,7 @@ dependencies {
 
   implementation 'org.springframework.boot:spring-boot-starter-web'
 
-  implementation project(":server:service-rest-api")
+  implementation project(":resource-server:service-rest-api")
 
   implementation project(':core')
 }
