@@ -1,14 +1,12 @@
 const textWon = "🤩You won🤩";
 const textLose = "🥲You lost🥲";
+
 const selection = document.createElement("div");
 selection.classList.add("selection");
 
-const resultWindow = document.createElement("div")
-resultWindow.classList.add("result-window")
-
-const popup = document.createElement("div");
-popup.classList.add("win-popup");
-popup.appendChild(resultWindow)
+const popup = document.querySelector(".win-popup");
+const resultTextContainer = document.querySelector("#game-result-text");
+const resultScoreContainer = document.querySelector("#game-result-score");
 
 function renderMove(targetBoardCell) {
     const selectedBoardCell = document.querySelector(".selection").parentNode;
@@ -49,7 +47,8 @@ function renderMoves(moves) {
 
 function renderMoveResult(data) {
     if (!data.hasMoves) {
-        resultWindow.textContent = data.won ? textWon : textLose;
-        document.body.appendChild(popup)
+        resultTextContainer.textContent = data.won ? textWon : textLose;
+        resultScoreContainer.textContent = data.score;
+        popup.removeAttribute("hidden")
     }
 }

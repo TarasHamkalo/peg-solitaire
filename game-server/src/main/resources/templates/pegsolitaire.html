@@ -12,7 +12,18 @@
 </span>
 
 <div id="main" layout:fragment="content">
-    <nav class="navbar m-2 navbar-expand-lg ">
+    <div class="win-popup" hidden="hidden">
+        <div class="result-window">
+            <small id="game-result-text"></small>
+            <small id="game-result-score"></small>
+            <div class="d-flex mx-auto flex-row" style="max-height: 2rem">
+                <small id="save-score" class="mx-1 btn btn-outline-primary">Save?</small>
+                <small id="game-result-quit" class="mx-1 btn btn-outline-dark">Quit?</small>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar m-2 navbar-expand-lg">
         <div class="d-flex w-100 flex-grow-0 justify-content-center">
             <div class="bg-opacity-50 h-25 flex-shrink-1 py-2 p-1 rounded-3 d-flex flex-wrap"
                  style=" background: rgb(204,30,245); background: linear-gradient(90deg, rgba(204,30,245,0.22096162683823528) 41%, rgba(30,245,222,0.25177395176820727) 60%, rgba(13,0,249,0.12572353160014005) 94%); ">
@@ -66,5 +77,6 @@
 <span layout:fragment="additional-scripts">
     <script th:src="@{/js/board_sizing.js}"></script>
     <script th:src="@{/js/gameplay_rendering.js}"></script>
+    <script th:src="@{/js/scores.js}"></script>
 </span>
 </html>

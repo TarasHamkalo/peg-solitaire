@@ -1,4 +1,4 @@
-const commentList = document.querySelector(".comment-list");
+const commentList = document.querySelector(".cards-list");
 
 function retrieveCommentList() {
     requestWithAuthentication(
@@ -37,7 +37,7 @@ function appendComment(player, text, date) {
     newCard.find(".card-body").text(text);
     newCard.find(".card-footer").text("Posted on " + new Date(date).getFullYear());
 
-    newCard.appendTo($(".comment-list"));
+    newCard.appendTo($("#comment-list"));
     newCard.show();
 }
 

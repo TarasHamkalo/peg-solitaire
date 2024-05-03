@@ -35,6 +35,9 @@ $(document).ready(function () {
             case 2:
                 emojiRain();
                 break
+            case 3:
+                retrieveGameScores();
+                break
             default:
                 break
         }

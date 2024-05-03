@@ -38,6 +38,9 @@ $(document).ready(function () {
 
     $('#restartBtn').click(function () {
         document.getElementById('setup').submit();
-        requestNewGame()
+    });
+
+    $('#game-result-quit').click(function () {
+        document.querySelector(".win-popup").hidden = "hidden";
     });
 });

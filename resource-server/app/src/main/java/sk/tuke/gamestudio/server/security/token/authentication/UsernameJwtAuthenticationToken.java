@@ -9,7 +9,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.Collection;
 import java.util.Collections;
 
-// TODO: remove unused
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)

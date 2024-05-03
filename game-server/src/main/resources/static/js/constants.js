@@ -23,7 +23,9 @@ const selectUrl = new URL(gameServerUrl + "/select?x=0&y=0");
 const moveUrl = new URL(gameServerUrl + "/move?x=0&y=0");
 const stateUrl = new URL(gameServerUrl + "/state");
 const newGameUrl = new URL(gameServerUrl + "/new");
+const postGameScore = new URL(gameServerUrl + "/score");
 
 const serviceApiUrl = "http://localhost:8080/api";
 const commentsApiUrl = serviceApiUrl + "/comments";
 const ratingsApiUrl = serviceApiUrl + "/ratings";
+const scoresApiUrl = serviceApiUrl + "/scores";

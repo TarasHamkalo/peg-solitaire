@@ -23,7 +23,7 @@
 <div id="wrapper">
     <div id="page-content-wrapper">
 
-        <div th:replace="~{fragments/fragments::navbar(${levels}, ${events}, ${setupForm}, ${isIndex})}"></div>
+        <div th:replace="~{fragments/fragments::navbar(${levels}, ${events}, ${setupForm})}"></div>
 
         <div id="content">
             <main layout:fragment="content" th:remove="tag"></main>
@@ -42,6 +42,7 @@
 <script th:src="@{/js/auth.js}"></script>
 <script th:src="@{/js/constants.js}"></script>
 <script th:src="@{/js/request.js}"></script>
+<script th:src="@{/js/scores.js}"></script>
 
 <span layout:fragment="additional-scripts" th:remove="tag"></span>
 </body>

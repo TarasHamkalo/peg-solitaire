@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@RestController
+@Controller
 @SessionScope
 @AllArgsConstructor
 @RequestMapping("/pegsolitaire")
@@ -138,6 +138,7 @@ public class PegSolitaireController {
     );
 
     System.out.println(pegFactory.getSelectedEvents());
+    game.stop();
     return "forward:play";
   }
 

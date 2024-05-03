@@ -61,11 +61,7 @@ function requestNewGame() {
 }
 
 function requestWithAuthentication(url, method, handle, data) {
-    if (userHasToBeAuthenticated()) {
-        window.location.href = authorizationUrl.href;
-    } else {
-        refreshTokenIfRequired();
-    }
+    refreshTokenIfRequired();
 
     const accessToken = localStorage.getItem("access_token");
     if (accessToken) {

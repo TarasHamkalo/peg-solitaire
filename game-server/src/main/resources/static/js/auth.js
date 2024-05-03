@@ -2,18 +2,18 @@ function userHasToBeAuthenticated() {
     return localStorage.getItem("refresh_token") == null;
 }
 
-$(".auth-required").on("click", function (e) {
-    e.preventDefault();
-})
-
-$(window).on("load", function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("code")) {
-        console.log(urlParams.get("code"));
-        const code = urlParams.get("code");
-        retrieveTokenWithCode(code);
+function refreshTokenIfRequired() {
+    if (userHasToBeAuthenticated()) {
+        window.location.href = authorizationUrl.href;
+        return
     }
-})
+
+    const expiration = localStorage.getItem("access_token_expiration");
+    const accessToken = localStorage.getItem("access_token");
+    if (accessToken == null || expiration < Date.now()) {
+        retrieveTokenWithRefreshToken();
+    }
+}
 
 function retrieveTokenWithCode(code) {
     const settings = {
@@ -29,13 +29,14 @@ function retrieveTokenWithCode(code) {
             "grant_type": "authorization_code",
             "redirect_uri": config["redirect_uri"]
         },
+        async: false
     };
 
     $.ajax(settings).done(function (response, status, xhr) {
         window.location.search = "";
         if (status === "success") {
             storeToken(response);
-            storeUserInfo()
+            storeUserInfo();
         } else {
             throw new Error("Unable to retrieve token");
         }
@@ -76,6 +77,7 @@ function storeToken(response) {
 }
 
 function storeUserInfo() {
+    console.log('user info')
     requestWithAuthentication(
         config["auth_server"] + "/userinfo",
         "GET",
@@ -86,10 +88,11 @@ function storeUserInfo() {
     )
 }
 
-function refreshTokenIfRequired() {
-    const expiration = localStorage.getItem("access_token_expiration");
-    const accessToken = localStorage.getItem("access_token");
-    if (accessToken == null || expiration < Date.now()) {
-        retrieveTokenWithRefreshToken();
+$(window).on("load", function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("code")) {
+        const code = urlParams.get("code");
+        console.log(code)
+        retrieveTokenWithCode(code);
     }
-}
+})

@@ -23,7 +23,7 @@
     margin-left: auto !important;
 }
 
-.comment-list {
+.cards-list {
     max-height: 20rem;
     min-height: 10rem;
     overflow-y: scroll !important;
