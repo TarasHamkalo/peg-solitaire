@@ -71,7 +71,8 @@
                           th:object="${setupForm}"
                     >
 
-                        <select class="mx-3" form="setup" id="level2" name="level" style="cursor: pointer;" th:field="*{level}">
+                        <select class="mx-3" form="setup" id="level2" name="level"
+                                style="cursor: pointer;" th:field="*{level}">
                             <option th:each="builder, it: ${levels}"
                                     th:text="${it.current.simpleName.substring(0, it.current.simpleName.indexOf('Builder'))}"
                                     th:value="${it.index}">

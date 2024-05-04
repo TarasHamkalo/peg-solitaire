@@ -53,15 +53,16 @@
 }
 
 .lightning {
-    background: rgb(135,49,242) !important;
-    background: radial-gradient(circle, rgba(135,49,242,1) 15%, rgba(49,178,242,1) 63%, rgba(249,160,0,0.9267605633802817) 100%) !important;
+    background: rgb(135, 49, 242) !important;
+    background: radial-gradient(circle, rgba(135, 49, 242, 1) 15%, rgba(49, 178, 242, 1) 63%, rgba(249, 160, 0, 0.9267605633802817) 100%) !important;
 }
 
 
 .bomb {
-    background: rgb(245,103,30);
-    background: radial-gradient(circle, rgba(245,103,30,1) 26%, rgba(245,152,30,0.8563685636856369) 60%, rgba(249,184,0,0.8401084010840109) 94%);
+    background: rgb(245, 103, 30);
+    background: radial-gradient(circle, rgba(245, 103, 30, 1) 26%, rgba(245, 152, 30, 0.8563685636856369) 60%, rgba(249, 184, 0, 0.8401084010840109) 94%);
 }
+
 /*.bolt {*/
 /*    z-index: 5;*/
 /*    position: absolute;*/

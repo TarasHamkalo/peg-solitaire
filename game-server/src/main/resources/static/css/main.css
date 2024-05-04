@@ -1,3 +1,97 @@
+.button1 {
+    width: 160px;
+    height: 60px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    outline: none;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 10px;
+    background-color: #0c0c0c;
+    box-shadow: inset 2px 2px 2px 0px rgba(49, 49, 49, 0.5),
+      7px 7px 20px 0px rgba(20, 20, 20, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.button1:hover {
+    background-color: #2b2bff;
+    top: 2px;
+}
+
+.button26 {
+    width: 160px;
+    height: 60px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    background: linear-gradient(to right, #3838ff, #7a00ff);
+    transition-duration: 0.3s;
+    letter-spacing: 1.4px;
+}
+.button26:hover {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+}
+.button26::before {
+    content: "";
+    position: absolute;
+    width: 80%;
+    height: 30%;
+    background: linear-gradient(to right, #2b2bff, #7a00ff);
+    filter: blur(10px);
+    bottom: -3px;
+    z-index: -1;
+    transition-duration: 0.3s;
+}
+.button26:hover::before {
+    bottom: -1px;
+    filter: blur(5px);
+    transition-duration: 0.3s;
+}
+
+.button23 {
+    width: 160px;
+    height: 60px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: 0.8s;
+    background-size: 280% auto;
+    background-image: linear-gradient(
+        325deg,
+        #3838ff 0%,
+        rgb(156, 231, 253) 55%,
+        #3838ff 90%
+    );
+    border: none;
+    border-radius: 10px;
+    color: hsla(360 100% 100% / 1);
+    box-shadow: 0px 0px 20px rgba(71, 184, 255, 0.5),
+      0px 5px 5px -1px rgba(58, 125, 233, 0.25),
+      inset 4px 4px 8px rgba(175, 230, 255, 0.5),
+      inset -4px -4px 8px rgba(19, 95, 216, 0.35);
+    font-weight: bold;
+}
+.button23:hover {
+    background-position: right top;
+}
+.button23:is(:focus, :focus-visible, :active) {
+    outline: none;
+    box-shadow: 0 0 0 3px hsla(360 100% 100% / 1), 0 0 0 6px #3838ff;
+}
 input {
     all: unset;
 }

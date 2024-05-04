@@ -14,6 +14,8 @@ function retrieveCommentList() {
 }
 
 function postComment(text) {
+    storeUserInfo();
+
     const data = {
         "text": text,
         "commentedOn": Date.now()

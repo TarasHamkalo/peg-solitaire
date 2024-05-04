@@ -88,6 +88,10 @@ function storeUserInfo() {
     )
 }
 
+function logout() {
+    localStorage.clear();
+}
+
 $(window).on("load", function () {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("code")) {
@@ -96,3 +100,4 @@ $(window).on("load", function () {
         retrieveTokenWithCode(code);
     }
 })
+

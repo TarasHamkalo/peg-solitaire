@@ -3,15 +3,16 @@
       lang="en"
       layout:decorate="~{layout/layout.html}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        xmlns:th="http://www.thymeleaf.org">
+>
 
 <div layout:fragment="content">
-    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center">
-        <div class="w-75">
-            <h3>Welcome to Peg Solitaire</h3>
-            <input class="btn btn-primary my-2 w-25" form="setup" type="submit" value="Play">
-            <div class="h-25"></div>
-        </div>
-
+    <div class="d-flex flex-column" style="min-height: 50vh;">
+        <h3 class="mx-auto">Welcome to Peg Solitaire</h3>
+        <button class="button23 mx-auto my-auto -5 w-25" id="login">Login</button>
+        <input class="button26 mx-auto my-auto  w-50" form="setup" type="submit" value="Play">
     </div>
 </div>
+
+<span layout:fragment="additional-scripts">
+    <script th:src="@{/js/index.js}"></script>
+</span>

@@ -10,6 +10,7 @@ function postScore() {
         async: false
     })
 }
+
 function retrieveGameScores() {
     requestWithAuthentication(
         scoresApiUrl + "/" + gameName,
@@ -40,6 +41,10 @@ $(document).ready(function () {
 })
 
 $('#save-score').click(function () {
+    if (userHasToBeAuthenticated()) {
+        alert("Oops.\nTo save scores you should be logged in.");
+    }
+
     postScore();
     window.setTimeout(function () {
         window.location.href = "http://localhost/";

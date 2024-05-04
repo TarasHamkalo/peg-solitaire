@@ -14,6 +14,7 @@
     animation-fill-mode: forwards;
 
 }
+
 @keyframes win-grow-from-center {
     0% {
         width: 0%;

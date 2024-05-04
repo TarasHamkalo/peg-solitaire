@@ -49,6 +49,7 @@ function renderMoveResult(data) {
     if (!data.hasMoves) {
         resultTextContainer.textContent = data.won ? textWon : textLose;
         resultScoreContainer.textContent = data.score;
+        document.getElementById("game-result-text")
         popup.removeAttribute("hidden")
     }
 }

@@ -1,3 +1,4 @@
+const pageLabel = document.querySelector('#page-label');
 const pagesCount = document.querySelectorAll('.social-container').length;
 let page = 1;
 
@@ -5,8 +6,9 @@ let page = 1;
 function changePageFromTo(from, to) {
     document.querySelector(`[data-page="${from}"]`)
         .classList.toggle('visually-hidden');
-    document.querySelector(`[data-page="${to}"]`)
-        .classList.toggle('visually-hidden');
+    let currentPage = document.querySelector(`[data-page="${to}"]`);
+    currentPage.classList.toggle('visually-hidden');
+    pageLabel.textContent = currentPage.getAttribute('data-page-name');
 }
 
 $(document).ready(function () {

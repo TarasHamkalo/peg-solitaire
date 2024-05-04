@@ -14,7 +14,7 @@
 </span>
 
 <div layout:fragment="content">
-    <nav aria-label="Comment pagination">
+    <nav aria-label="pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item">
                 <button class="page-link" id="pg-prev">Prev</button>
@@ -27,7 +27,12 @@
             </li>
         </ul>
     </nav>
-    <div class="social-container" data-page="1" id="comment-container">
+
+    <div class="min-vw-100 text-center">
+        <h3 id="page-label" class="text-muted">Comments!!!</h3>
+    </div>
+
+    <div class="social-container" data-page-name="Comments!!!" data-page="1" id="comment-container">
         <div class="card comment" id="empty-comment">
             <div class="card-header text-center"></div>
             <small class="d-block overflow-auto card-body"></small>
@@ -38,15 +43,17 @@
 
         <div class="comment-form">
             <div class="card comment">
-                <input id="comment-text" class="text-center d-block overflow-auto card-body" placeholder="Insert that"
+                <input id="comment-text" class="text-center d-block overflow-auto card-body"
+                       placeholder="Insert that"
                        type="text">
-                <input id="post-comment" class="btn card-footer text-center text-muted" type="submit"
+                <input id="post-comment" class="btn card-footer text-center text-muted"
+                       type="submit"
                        th:value="${#strings.concat('Post on ', #dates.year(#dates.createNow()))}">
             </div>
         </div>
     </div>
 
-    <div class="visually-hidden social-container" data-page="2" id="rating-container">
+    <div class="visually-hidden social-container" data-page-name="Ratings!!!" data-page="2" id="rating-container">
         <div id="animate" class="rating-bottle"></div>
         <div class="rating-box">
             <b class="stars fa-solid fa-star"></b>
@@ -63,7 +70,7 @@
         </div>
     </div>
 
-    <div class="visually-hidden social-container" data-page="3" id="score-container">
+    <div class="visually-hidden social-container" data-page-name="Scores!!!" data-page="3" id="score-container">
         <div class="card comment" id="empty-score">
             <div class="card-header text-center"></div>
             <small class="d-block overflow-auto card-body"></small>

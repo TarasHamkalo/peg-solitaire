@@ -41,8 +41,8 @@
     left: 0;
     width: 50%;
     height: 50%;
-    animation:  possible-move-animation 1.5s infinite alternate;
-    animation-timing-function: cubic-bezier(.34,-0.1,.85,1.02);
+    animation: possible-move-animation 1.5s infinite alternate;
+    animation-timing-function: cubic-bezier(.34, -0.1, .85, 1.02);
     border: 2px solid rgba(0, 0, 255, 0.25);
     box-sizing: border-box;
     border-radius: 50%;
@@ -50,8 +50,12 @@
 }
 
 @keyframes possible-move-animation {
-    from { scale: 0.5; }
-    to { scale: 1; }
+    from {
+        scale: 0.5;
+    }
+    to {
+        scale: 1;
+    }
 }
 
 
