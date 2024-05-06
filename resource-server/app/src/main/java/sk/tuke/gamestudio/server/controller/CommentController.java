@@ -4,6 +4,10 @@ import com.github.dozermapper.core.Mapper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import sk.tuke.gamestudio.data.entity.Comment;
 import sk.tuke.gamestudio.data.service.CommentService;
@@ -14,8 +18,9 @@ import sk.tuke.gamestudio.server.api.rest.dto.CommentDto;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments")
 @AllArgsConstructor
+@RequestMapping("/api/comments")
+@CacheConfig(cacheNames = "comments")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentController {
 
@@ -23,6 +28,7 @@ public class CommentController {
 
   CommentService commentService;
 
+  @CacheEvict(allEntries = true)
   @MapClaimsToFields(
     claimMappings = {
       @ClaimMapping(claim = "username", field = "player"),
@@ -34,6 +40,7 @@ public class CommentController {
     commentService.addComment(mapper.map(comment, Comment.class));
   }
 
+  @Cacheable
   @GetMapping("/{game}")
   public List<CommentDto> getComments(@PathVariable String game) {
     return commentService.getComments(game).parallelStream()

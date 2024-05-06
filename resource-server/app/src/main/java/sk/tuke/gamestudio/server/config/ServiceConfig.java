@@ -3,11 +3,13 @@ package sk.tuke.gamestudio.server.config;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@EnableCaching
 @ComponentScan(
   basePackages = {
     "sk.tuke.gamestudio.data.service.jpa",
