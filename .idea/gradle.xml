@@ -12,9 +12,11 @@
             <option value="$PROJECT_DIR$/client" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data" />
-            <option value="$PROJECT_DIR$/server" />
-            <option value="$PROJECT_DIR$/server/app" />
-            <option value="$PROJECT_DIR$/server/service-rest-api" />
+            <option value="$PROJECT_DIR$/game-server" />
+            <option value="$PROJECT_DIR$/oauth-server" />
+            <option value="$PROJECT_DIR$/resource-server" />
+            <option value="$PROJECT_DIR$/resource-server/app" />
+            <option value="$PROJECT_DIR$/resource-server/service-rest-api" />
           </set>
         </option>
       </GradleProjectSettings>
