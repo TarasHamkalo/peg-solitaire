@@ -39,9 +39,9 @@ public class StatisticsCollector implements BoardEventHandler {
 
     var timeBetweenEvents = System.currentTimeMillis() - previousEventTime;
     if (timeBetweenEvents == 0) {
-      score += base * 1000;
+      score += base * 100;
     } else {
-      score += base * 100 * 1000 / timeBetweenEvents;
+      score += base * 10 * 1000 / timeBetweenEvents;
     }
 
     this.previousEventTime = System.currentTimeMillis();

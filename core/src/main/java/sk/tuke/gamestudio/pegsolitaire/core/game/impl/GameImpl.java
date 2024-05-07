@@ -44,9 +44,7 @@ public class GameImpl implements Game {
     }
 
     startStatistic();
-
     initializeBoard();
-
     this.started = true;
   }
 
