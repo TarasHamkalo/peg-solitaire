@@ -55,7 +55,7 @@ $(document).ready(function () {
 $('#save-score').click(function () {
     if (userHasToBeAuthenticated()) {
         alert("Oops.\nTo save scores you should be logged in.");
-        return
+        // return
     }
 
     postScore();

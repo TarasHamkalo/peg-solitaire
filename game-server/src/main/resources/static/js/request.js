@@ -19,10 +19,12 @@ function requestState() {
         url: stateUrl,
         type: "GET",
         success: function (data) {
-            renderMoveResult(data);
-
+            localStorage.setItem("game-state", JSON.stringify(data));
             if (data.reload) {
                 location.reload();
+            } else {
+                renderMoveResult(data)
+                localStorage.removeItem("game-state")
             }
         }
     })

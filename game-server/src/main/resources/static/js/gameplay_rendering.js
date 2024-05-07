@@ -45,6 +45,13 @@ function renderMoves(moves) {
     targets.forEach(target => target.classList.toggle("possible-move"));
 }
 
+$(document).ready(function () {
+    if (localStorage.getItem("game-state")) {
+        renderMoveResult(JSON.parse(localStorage.getItem("game-state")));
+        localStorage.removeItem("game-state")
+    }
+})
+
 function renderMoveResult(data) {
     if (!data.hasMoves) {
         resultTextContainer.textContent = data.won ? textWon : textLose;
