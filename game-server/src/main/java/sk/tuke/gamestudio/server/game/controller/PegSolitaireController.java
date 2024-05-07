@@ -52,7 +52,6 @@ public class PegSolitaireController {
   public String game(Model model) {
     if (game.isStarted()) {
       model.addAttribute("boardCells", game.getBoard().getBoardCells());
-      model.addAttribute("isIndex", false);
       return "pegsolitaire";
     } else {
       throw new PegSolitaireException(BAD_REQUEST, "Game was not started");
@@ -131,6 +130,7 @@ public class PegSolitaireController {
 
     var optionalEvents = Optional.ofNullable(setupForm.getSelectedEvents());
 
+    pegFactory.clearPegEvents();
     optionalEvents.ifPresent(e -> e.stream()
       .filter(Predicate.not(Objects::isNull))
       .map(BoardEvent.Type::valueOf)

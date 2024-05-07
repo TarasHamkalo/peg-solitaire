@@ -23,8 +23,11 @@ function retrieveRatingForPlayer(player) {
         type: "GET",
         success: function (rating) {
             stars.forEach((star, i) => {
-                if (i < rating)
+                if (i < rating) {
                     star.classList.add("active")
+                } else {
+                    star.classList.remove("active")
+                }
             })
             emojiRain(rating)
         }
