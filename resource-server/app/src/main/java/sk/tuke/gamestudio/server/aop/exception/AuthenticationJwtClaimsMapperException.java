@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.server.aop.expection;
+package sk.tuke.gamestudio.server.aop.exception;
 
 public class AuthenticationJwtClaimsMapperException extends RuntimeException {
 

@@ -41,12 +41,15 @@ public class SecurityConfig {
           .jwtAuthenticationConverter(converter())
           .jwkSetUri(jwkSetUri)))
       .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-        .requestMatchers(HttpMethod.GET, "/api/comments/*").hasAnyRole("USER", "MANAGER")
-        .requestMatchers(HttpMethod.GET, "/api/scores/*").hasAnyRole("USER", "MANAGER")
-        .requestMatchers(HttpMethod.GET, "/api/ratings/**").hasAnyRole("USER", "MANAGER")
+//        .requestMatchers(HttpMethod.GET, "/api/comments/*").hasAnyRole("USER", "MANAGER")
+//        .requestMatchers(HttpMethod.GET, "/api/scores/*").hasAnyRole("USER", "MANAGER")
+//        .requestMatchers(HttpMethod.GET, "/api/ratings/**").hasAnyRole("USER", "MANAGER")
         .requestMatchers(HttpMethod.POST, "/api/comments/*").hasRole("USER")
         .requestMatchers(HttpMethod.POST, "/api/ratings").hasRole("USER")
         .requestMatchers(HttpMethod.POST, "/api/scores").hasRole("MANAGER")
+        .requestMatchers(HttpMethod.GET, "/api/comments/*").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/scores/*").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/ratings/**").permitAll()
         .anyRequest().authenticated())
       .build();
   }

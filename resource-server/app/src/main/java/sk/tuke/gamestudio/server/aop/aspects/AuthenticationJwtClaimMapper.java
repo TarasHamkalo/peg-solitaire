@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import sk.tuke.gamestudio.server.aop.annotations.ClaimMapping;
 import sk.tuke.gamestudio.server.aop.annotations.MapClaimsToFields;
-import sk.tuke.gamestudio.server.aop.expection.AuthenticationJwtClaimsMapperException;
+import sk.tuke.gamestudio.server.aop.exception.AuthenticationJwtClaimsMapperException;
 
 @Aspect
 @AllArgsConstructor
