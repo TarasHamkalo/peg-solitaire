@@ -1,23 +1,35 @@
 const commentList = document.querySelector(".cards-list");
 
 function retrieveCommentList() {
-    requestWithAuthentication(
-        commentsApiUrl + "/" + gameName,
-        "GET",
-        (response) => {
+    $.ajax({
+        url: commentsApiUrl + "/" + gameName,
+        type: "GET",
+        success: function (comments) {
             commentList.innerHTML = "";
-            response.forEach(comment => {
+            comments.forEach(comment => {
                 appendComment(comment.player, comment.text, comment.commentedOn)
             })
         }
-    )
+    })
+
+    // requestWithAuthentication(
+    //     commentsApiUrl + "/" + gameName,
+    //     "GET",
+    //     (response) => {
+    //         commentList.innerHTML = "";
+    //         response.forEach(comment => {
+    //             appendComment(comment.player, comment.text, comment.commentedOn)
+    //         })
+    //     }
+    // )
 }
 
-function postComment(text) {
+function postComment() {
+
     storeUserInfo();
 
     const data = {
-        "text": text,
+        "text": localStorage.getItem("comment-text"),
         "commentedOn": Date.now()
     }
 
@@ -26,6 +38,7 @@ function postComment(text) {
         "POST",
         () => {
             appendComment(localStorage.getItem("username"), data.text, data.commentedOn)
+            localStorage.removeItem("comment-text")
         },
         data
     )
@@ -45,9 +58,14 @@ function appendComment(player, text, date) {
 
 $(document).ready(function () {
     $("#empty-comment").hide();
+
+    document.getElementById("comment-text").value = localStorage.getItem("comment-text");
+
     $("#post-comment").click(function () {
         let commentText = document.getElementById("comment-text")
-        postComment(commentText.value)
+        console.log(commentText.value);
+        localStorage.setItem("comment-text", commentText.value);
         commentText.value = "";
+        postComment()
     })
 });

@@ -35,7 +35,7 @@ $(document).ready(function () {
                 retrieveCommentList();
                 break
             case 2:
-                emojiRain();
+                showCurrentPlayerRating();
                 break
             case 3:
                 retrieveGameScores();

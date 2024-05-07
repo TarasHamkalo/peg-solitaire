@@ -12,16 +12,28 @@ function postScore() {
 }
 
 function retrieveGameScores() {
-    requestWithAuthentication(
-        scoresApiUrl + "/" + gameName,
-        "GET",
-        (response) => {
+
+    $.ajax({
+        url: scoresApiUrl + "/" + gameName,
+        type: "GET",
+        success: function (scores) {
             scoresList.innerHTML = "";
-            response.forEach(score => {
+            scores.forEach(score => {
                 appendScore(score.player, score.points, score.playedOn)
             })
         }
-    )
+    })
+
+    // requestWithAuthentication(
+    //     scoresApiUrl + "/" + gameName,
+    //     "GET",
+    //     (response) => {
+    //         scoresList.innerHTML = "";
+    //         response.forEach(score => {
+    //             appendScore(score.player, score.points, score.playedOn)
+    //         })
+    //     }
+    // )
 }
 
 function appendScore(player, points, date) {
@@ -43,6 +55,7 @@ $(document).ready(function () {
 $('#save-score').click(function () {
     if (userHasToBeAuthenticated()) {
         alert("Oops.\nTo save scores you should be logged in.");
+        return
     }
 
     postScore();

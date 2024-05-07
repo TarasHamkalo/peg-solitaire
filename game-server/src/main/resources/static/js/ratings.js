@@ -1,21 +1,42 @@
+
 function retrieveAvgRating() {
-    requestWithAuthentication(
-        ratingsApiUrl + "/" + gameName,
-        "GET",
-        (response) => {
-            emojiRain(response)
+    $.ajax({
+        url: ratingsApiUrl + "/" + gameName,
+        type: "GET",
+        success: function (rating) {
+            emojiRain(rating)
         }
-    )
+    })
+
+    // requestWithAuthentication(
+    //     ratingsApiUrl + "/" + gameName,
+    //     "GET",
+    //     (response) => {
+    //         emojiRain(response)
+    //     }
+    // )
 }
 
 function retrieveRatingForPlayer(player) {
-    requestWithAuthentication(
-        ratingsApiUrl + "/" + gameName + "/" + player,
-        "GET",
-        (response) => {
-            emojiRain(response)
+    $.ajax({
+        url: ratingsApiUrl + "/" + gameName + "/" + player,
+        type: "GET",
+        success: function (rating) {
+            stars.forEach((star, i) => {
+                if (i < rating)
+                    star.classList.add("active")
+            })
+            emojiRain(rating)
         }
-    )
+    })
+
+    // requestWithAuthentication(
+    //     ratingsApiUrl + "/" + gameName + "/" + player,
+    //     "GET",
+    //     (response) => {
+    //         emojiRain(response)
+    //     }
+    // )
 }
 
 function postRating(stars) {
@@ -27,6 +48,12 @@ function postRating(stars) {
         },
         {"stars": stars}
     )
+}
+
+function showCurrentPlayerRating() {
+    if (localStorage.getItem("username") != null) {
+        retrieveRatingForPlayer(localStorage.getItem("username"));
+    }
 }
 
 const stars = document.querySelectorAll(".stars");
@@ -53,3 +80,4 @@ $('#search-input').keypress(function (e) {
         }
     }
 });
+
