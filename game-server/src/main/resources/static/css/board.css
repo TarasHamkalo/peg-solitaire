@@ -22,12 +22,13 @@
     border: 1px solid #000000;
     display: flex;
     position: relative;
-    aspect-ratio: 1;
     align-items: center;
     justify-content: center;
     gap: 0;
     column-gap: 0;
     padding: 5px;
+    min-width: min(9vw, 9vh);
+    aspect-ratio: 1;
 }
 
 .possible-move {
