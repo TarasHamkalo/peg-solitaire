@@ -12,6 +12,7 @@ import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEventManager;
 import sk.tuke.gamestudio.pegsolitaire.core.events.impl.BoardEventManagerImpl;
 import sk.tuke.gamestudio.pegsolitaire.core.events.impl.BombEventHandler;
 import sk.tuke.gamestudio.pegsolitaire.core.events.impl.LightningEventHandler;
+import sk.tuke.gamestudio.pegsolitaire.core.events.impl.StatisticsCollector;
 import sk.tuke.gamestudio.pegsolitaire.core.game.Game;
 import sk.tuke.gamestudio.pegsolitaire.core.game.GameUtility;
 import sk.tuke.gamestudio.pegsolitaire.core.game.impl.GameImpl;
@@ -34,10 +35,17 @@ public class GameConfig {
   @SessionScope
   public Game game() {
     return GameImpl.builder()
+      .statisticsCollector(statisticsCollector())
       .eventManager(boardEventManager())
       .boardBuilder(boardBuilder())
       .levelBuilder(levelBuilder())
       .build();
+  }
+
+  @Bean
+  @SessionScope
+  public StatisticsCollector statisticsCollector() {
+    return new StatisticsCollector();
   }
 
   @Bean
