@@ -6,17 +6,18 @@ import lombok.experimental.FieldDefaults;
 import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
 import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEventHandler;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatisticsCollector implements BoardEventHandler {
 
-  long score;
-
-  long previousEventTime;
+  AtomicLong score = new AtomicLong(0);
+  AtomicLong previousEventTime = new AtomicLong(System.currentTimeMillis());
 
   public void reset() {
-    this.previousEventTime = System.currentTimeMillis();
-    this.score = 0;
+    previousEventTime.set(System.currentTimeMillis());
+    score.set(0);
   }
 
   @Override
@@ -26,24 +27,23 @@ public class StatisticsCollector implements BoardEventHandler {
     }
 
     long base = switch (event.getEventType()) {
-      case BOMB:
-        yield 4;
-      case LIGHTNING:
-        yield 5;
-      case TRIVIAL_MOVE:
-        yield 2;
-      default:
-        yield 0;
+      case BOMB -> 4;
+      case LIGHTNING -> 5;
+      case TRIVIAL_MOVE -> 2;
+      default -> 0;
     };
 
+    long currentTime = System.currentTimeMillis();
+    long timeBetweenEvents = currentTime - previousEventTime.getAndSet(currentTime);
 
-    var timeBetweenEvents = System.currentTimeMillis() - previousEventTime;
     if (timeBetweenEvents == 0) {
-      score += base * 100;
+      score.addAndGet(base * 100);
     } else {
-      score += base * 10 * 1000 / timeBetweenEvents;
+      score.addAndGet(base * 10 * 1000 / timeBetweenEvents);
     }
+  }
 
-    this.previousEventTime = System.currentTimeMillis();
+  public long getScore() {
+    return score.get();
   }
 }

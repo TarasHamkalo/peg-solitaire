@@ -30,6 +30,7 @@ public class GameImpl implements Game {
   @NonNull
   BoardBuilder boardBuilder;
 
+  @NonNull
   StatisticsCollector statisticsCollector;
 
   Board board;
@@ -61,21 +62,15 @@ public class GameImpl implements Game {
   }
 
   private void startStatistic() {
-    if (statisticsCollector == null) {
-      this.statisticsCollector = new StatisticsCollector();
-    }
-
     statisticsCollector.reset();
     Arrays.stream(BoardEvent.Type.values())
       .forEach(e -> eventManager.subscribe(e, statisticsCollector));
   }
 
   private void stopStatistic() {
-    if (statisticsCollector != null) {
-      statisticsCollector.reset();
-      Arrays.stream(BoardEvent.Type.values())
-        .forEach(e -> eventManager.unsubscribe(e, statisticsCollector));
-    }
+    statisticsCollector.reset();
+    Arrays.stream(BoardEvent.Type.values())
+      .forEach(e -> eventManager.unsubscribe(e, statisticsCollector));
   }
 
   public void stop() {
