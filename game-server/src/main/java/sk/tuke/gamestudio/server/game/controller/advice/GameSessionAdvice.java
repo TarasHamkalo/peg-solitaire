@@ -4,10 +4,12 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import sk.tuke.gamestudio.pegsolitaire.core.events.BoardEvent;
 import sk.tuke.gamestudio.pegsolitaire.core.levels.LevelBuilder;
 import sk.tuke.gamestudio.server.game.dto.SetupForm;
+import sk.tuke.gamestudio.server.game.exception.PegSolitaireException;
 
 import java.util.List;
 
@@ -35,6 +37,12 @@ public class GameSessionAdvice {
   @ModelAttribute("events")
   public List<BoardEvent.Type> getEvents() {
     return events;
+  }
+
+
+  @ExceptionHandler(PegSolitaireException.class)
+  public String index() {
+    return "redirect:/";
   }
 
 }
