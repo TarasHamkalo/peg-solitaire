@@ -39,10 +39,4 @@ public class GameSessionAdvice {
     return events;
   }
 
-
-  @ExceptionHandler(PegSolitaireException.class)
-  public String index() {
-    return "redirect:/";
-  }
-
 }
