@@ -6,6 +6,10 @@ application {
   mainClass = 'sk.tuke.gamestudio.server.Application'
 }
 
+bootJar {
+  archiveFileName = "resource-server-${version}.${archiveExtension.get()}"
+}
+
 dependencies {
   implementation 'org.springframework.boot:spring-boot-devtools'
 
