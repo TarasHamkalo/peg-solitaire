@@ -1,5 +1,17 @@
 #!/usr/bin/bash
 
+# communication_using_host() {
+#   docker run -d --rm \
+#     --name users-and-feedback-db \
+#     -e POSTGRES_USER=taras \
+#     -e POSTGRES_PASSWORD=taras \
+#     -e POSTGRES_DB=gamestudio \
+#     -v pg_data:/var/lib/postgresql/data \
+#     -p 5432:5432 \
+#     postgres 
+# }
+
+
 docker run -d --rm \
   --name users-and-feedback-db \
   -e POSTGRES_USER=taras \
@@ -8,4 +20,3 @@ docker run -d --rm \
   -v pg_data:/var/lib/postgresql/data \
   -p 5432:5432 \
   postgres 
-
