@@ -44,7 +44,7 @@ import java.util.function.Function;
 public class SecurityConfig {
 
   @Value("${oauth.client.untrusted.host}")
-  String clientHost;
+  List<String> clientHosts;
 
   @Bean
   @Order(1)
@@ -89,7 +89,7 @@ public class SecurityConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     var corsConfiguration = new CorsConfiguration();
-    corsConfiguration.setAllowedOrigins(List.of(clientHost));
+    corsConfiguration.setAllowedOrigins(clientHosts);
     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
     corsConfiguration.setAllowedHeaders(
       List.of(

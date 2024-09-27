@@ -27,7 +27,7 @@ public class SecurityConfig {
   String jwkSetUri;
 
   @Value("${cors.allowed.host}")
-  String allowedHost;
+  List<String> allowedHosts;
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,7 +57,7 @@ public class SecurityConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     var corsConfiguration = new CorsConfiguration();
-    corsConfiguration.setAllowedOrigins(List.of(allowedHost));
+    corsConfiguration.setAllowedOrigins(allowedHosts);
     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
     corsConfiguration.setAllowedHeaders(
       List.of(
